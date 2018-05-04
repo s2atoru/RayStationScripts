@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CsvHelper;
+using System.IO;
 
 namespace Juntendo.MedPhys
 {
@@ -15,7 +12,7 @@ namespace Juntendo.MedPhys
         public string StructureName { get; set; }
         public string StructureNameTps { get; set; }
 
-        public DvhType  Type { get; private set; }
+        public DvhType Type { get; private set; }
         public DvhTargetType TargetType { get; private set; }
         public DvhPresentationType ValueType { get; private set; }
 
