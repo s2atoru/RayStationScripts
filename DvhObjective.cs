@@ -1,6 +1,4 @@
-﻿using CsvHelper;
-using System.IO;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 using System;
 
 namespace Juntendo.MedPhys
@@ -22,6 +20,16 @@ namespace Juntendo.MedPhys
             set
             {
                 this.SetProperty(ref this.title, value);
+            }
+        }
+
+        private bool inUse;
+        public bool InUse
+        {
+            get { return inUse; }
+            set
+            {
+                this.SetProperty(ref this.inUse, value);
             }
         }
 
