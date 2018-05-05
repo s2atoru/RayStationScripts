@@ -3,7 +3,7 @@ using System;
 
 namespace Juntendo.MedPhys
 {
-    public enum DvhObjectiveType { Max, Min, Mean, Upper, Lower, Spare };
+    public enum DvhObjectiveType { Max, Min, MeanUpper, MeanLower, Upper, Lower, Spare };
     public enum DvhTargetType { Dose, Volume };
     public enum DvhPresentationType { None, Abs, Rel };
 
@@ -120,6 +120,16 @@ namespace Juntendo.MedPhys
             private set
             {
                 this.SetProperty(ref this.doseUnit, value);
+            }
+        }
+
+        private double value;
+        public double Value
+        {
+            get { return value; }
+            set
+            {
+                this.SetProperty(ref this.value, value);
             }
         }
 
