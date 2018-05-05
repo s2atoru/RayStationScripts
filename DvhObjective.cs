@@ -1,17 +1,23 @@
 ﻿using CsvHelper;
 using System.IO;
 using Prism.Mvvm;
+using System;
 
 namespace Juntendo.MedPhys
 {
-    public enum DvhType { Dose, Volume };
-    public enum DvhTargetType { Max, Min, Mean, Upper, Lower, Spare };
-    public enum DvhPresentationType { Abs, Rel };
+    public enum DvhObjectiveType { Max, Min, Mean, Upper, Lower, Spare };
+    public enum DvhTargetType { Dose, Volume };
+    public enum DvhPresentationType { None, Abs, Rel };
+
+    public enum DvhDoseUnit { None, Percent, Gy };
+
+    public enum DvhVolumeUnit { None, Percent, cc };
 
     public class DvhObjective : BindableBase
     {
         private string title;
-        public string Title {
+        public string Title
+        {
             get { return title; }
             set
             {
@@ -20,7 +26,8 @@ namespace Juntendo.MedPhys
         }
 
         private string structureName;
-        public string StructureName {
+        public string StructureName
+        {
             get { return structureName; }
             set
             {
@@ -38,17 +45,19 @@ namespace Juntendo.MedPhys
             }
         }
 
-        private DvhType type; 
-        public DvhType Type {
-            get { return type; }
+        private DvhObjectiveType objectiveType;
+        public DvhObjectiveType ObjectiveType
+        {
+            get { return objectiveType; }
             set
             {
-                this.SetProperty(ref this.type, value);
+                this.SetProperty(ref this.objectiveType, value);
             }
         }
 
         private DvhTargetType targetType;
-        public DvhTargetType TargetType {
+        public DvhTargetType TargetType
+        {
             get { return targetType; }
             private set
             {
@@ -56,53 +65,79 @@ namespace Juntendo.MedPhys
             }
         }
 
-        private DvhPresentationType valueType;
-        public DvhPresentationType ValueType {
-            get { return valueType; }
+        private DvhPresentationType targetUnit;
+        public DvhPresentationType TargetUnit
+        {
+            get { return targetUnit; }
             private set
             {
-                this.SetProperty(ref this.valueType, value);
+                this.SetProperty(ref this.targetUnit, value);
             }
         }
 
-        private double volume;
-        public double Volume {
-            get { return volume; }
+        private double targetValue;
+        public double TargetValue
+        {
+            get { return targetValue; }
             private set
             {
-                this.SetProperty(ref this.volume, value);
+                this.SetProperty(ref this.targetValue, value);
             }
         }
 
-        private DvhPresentationType argumentType;
-        public DvhPresentationType ArgumentType {
-            get { return argumentType; }
+        private DvhPresentationType argumentUnit;
+        public DvhPresentationType ArgumentUnit
+        {
+            get { return argumentUnit; }
             private set
             {
-                this.SetProperty(ref this.argumentType, value);
+                this.SetProperty(ref this.argumentUnit, value);
             }
         }
 
-        private double tolerance;
-        public double Tolerance {
-            get { return tolerance; }
+        private double argumentValue;
+        public double ArgumentValue
+        {
+            get { return argumentValue; }
             private set
             {
-                this.SetProperty(ref this.tolerance, value);
+                this.SetProperty(ref this.argumentValue, value);
             }
         }
 
-        private double acceptableLimit;
-        public double AcceptableLimit {
-            get { return acceptableLimit; }
+        private DvhDoseUnit doseUnit;
+        public DvhDoseUnit DoseUnit
+        {
+            get { return doseUnit; }
             private set
             {
-                this.SetProperty(ref this.acceptableLimit, value);
+                this.SetProperty(ref this.doseUnit, value);
+            }
+        }
+
+        private DvhVolumeUnit volumeUnit;
+        public DvhVolumeUnit VolumeUnit
+        {
+            get { return volumeUnit; }
+            private set
+            {
+                this.SetProperty(ref this.volumeUnit, value);
+            }
+        }
+
+        private double acceptableLimitValue;
+        public double AcceptableLimitValue
+        {
+            get { return acceptableLimitValue; }
+            private set
+            {
+                this.SetProperty(ref this.acceptableLimitValue, value);
             }
         }
 
         private string remarks;
-        public string Remarks {
+        public string Remarks
+        {
             get { return remarks; }
             set
             {
@@ -111,12 +146,116 @@ namespace Juntendo.MedPhys
         }
 
         private bool isPassed;
-        public bool IsPassed {
+        public bool IsPassed
+        {
             get { return isPassed; }
             set
             {
                 this.SetProperty(ref this.isPassed, value);
             }
         }
+
+        private double volume;
+        public double Volume
+        {
+            get { return volume; }
+            private set
+            {
+                this.SetProperty(ref this.volume, value);
+            }
+        }
+
+        public DvhObjective(ObjectiveCsv objectiveCsv)
+        {
+            Title = objectiveCsv.Title;
+            StructureName = objectiveCsv.StructureName;
+            ObjectiveType = (DvhObjectiveType)Enum.Parse(typeof(DvhObjectiveType), objectiveCsv.ObjectiveType);
+            TargetType = (DvhTargetType)Enum.Parse(typeof(DvhTargetType), objectiveCsv.TargetType);
+            ArgumentValue = string.IsNullOrEmpty(objectiveCsv.ArgumentValue) ? 0.0 : double.Parse(objectiveCsv.ArgumentValue);
+            TargetValue = double.Parse(objectiveCsv.TargetValue);
+            AcceptableLimitValue = string.IsNullOrEmpty(objectiveCsv.AcceptableLimitValue) ? 0.0 : double.Parse(objectiveCsv.AcceptableLimitValue);
+            Remarks = objectiveCsv.Remarks;
+
+            string argumentUnit = objectiveCsv.ArgumentUnit;
+            if (argumentUnit == "%")
+            {
+                argumentUnit = "Percent";
+            }
+            string targetUnit = objectiveCsv.TargetUnit; ;
+            if (targetUnit == "%")
+            {
+                targetUnit = "Percent";
+            }
+
+            switch (TargetType)
+            {
+                case DvhTargetType.Dose:
+                    DoseUnit = (DvhDoseUnit)Enum.Parse(typeof(DvhDoseUnit), targetUnit);
+                    VolumeUnit = string.IsNullOrEmpty(argumentUnit) ? DvhVolumeUnit.None : (DvhVolumeUnit)Enum.Parse(typeof(DvhVolumeUnit), argumentUnit);
+                    if (DoseUnit == DvhDoseUnit.Percent)
+                    {
+                        TargetUnit = DvhPresentationType.Rel;
+                    }
+                    else
+                    {
+                        TargetUnit = DvhPresentationType.Abs;
+                    }
+
+                    if (VolumeUnit == DvhVolumeUnit.Percent)
+                    {
+                        ArgumentUnit = DvhPresentationType.Rel;
+                    }
+                    else if (VolumeUnit == DvhVolumeUnit.None)
+                    {
+                        ArgumentUnit = DvhPresentationType.None;
+                    }
+                    else
+                    {
+                        ArgumentUnit = DvhPresentationType.Abs;
+                    }
+                    break;
+
+                case DvhTargetType.Volume:
+                    DoseUnit = string.IsNullOrEmpty(argumentUnit) ? DvhDoseUnit.None : (DvhDoseUnit)Enum.Parse(typeof(DvhDoseUnit), argumentUnit);
+                    VolumeUnit = (DvhVolumeUnit)Enum.Parse(typeof(DvhVolumeUnit), targetUnit);
+                    if (VolumeUnit == DvhVolumeUnit.Percent)
+                    {
+                        TargetUnit = DvhPresentationType.Rel;
+                    }
+                    else
+                    {
+                        TargetUnit = DvhPresentationType.Abs;
+                    }
+
+                    if (DoseUnit == DvhDoseUnit.Percent)
+                    {
+                        ArgumentUnit = DvhPresentationType.Rel;
+                    }
+                    else if (DoseUnit == DvhDoseUnit.None)
+                    {
+                        ArgumentUnit = DvhPresentationType.None;
+                    }
+                    else
+                    {
+                        ArgumentUnit = DvhPresentationType.Abs;
+                    }
+                    break;
+            }
+
+        }
+    }
+
+    public struct ObjectiveCsv
+    {
+        public string Title;
+        public string StructureName;
+        public string ObjectiveType;
+        public string TargetType;
+        public string ArgumentValue;
+        public string ArgumentUnit;
+        public string TargetValue;
+        public string TargetUnit;
+        public string AcceptableLimitValue;
+        public string Remarks;
     }
 }
