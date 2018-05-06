@@ -1,5 +1,8 @@
-﻿using Prism.Mvvm;
+﻿using CsvHelper;
+using Prism.Mvvm;
 using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Juntendo.MedPhys
 {
@@ -13,6 +16,9 @@ namespace Juntendo.MedPhys
 
     public class DvhObjective : BindableBase
     {
+
+        public string ProtocolName { get; private set; }
+
         private string title;
         public string Title
         {
@@ -185,6 +191,7 @@ namespace Juntendo.MedPhys
 
         public DvhObjective(ObjectiveCsv objectiveCsv)
         {
+            ProtocolName = objectiveCsv.ProtocolName;
             Title = objectiveCsv.Title;
             StructureName = objectiveCsv.StructureName;
             ObjectiveType = (DvhObjectiveType)Enum.Parse(typeof(DvhObjectiveType), objectiveCsv.ObjectiveType);
@@ -261,10 +268,58 @@ namespace Juntendo.MedPhys
             }
 
         }
+
+        public static List<DvhObjective> ReadObjectivesFromCsv(string filePath)
+        {
+            List<DvhObjective> objectives = new List<DvhObjective>();
+            using (StreamReader sr = new StreamReader(filePath))
+            {
+                var csv = new CsvReader(sr);
+                csv.Read();
+                csv.ReadHeader();
+                var protocolName = csv["Protocol Name"];
+                csv.Read();
+                csv.ReadHeader();
+                while (csv.Read())
+                {
+                    string title = csv["Title"];
+                    string structureName = csv["Structure Name"];
+                    string objectiveType = csv["Objective Type"];
+                    string targetType = csv["Target Type"];
+                    string targetValue = csv["Target Value"];
+                    string targetUnit = csv["Target Unit"];
+                    string acceptableLimitValue = csv["Acceptable Limit Value"];
+                    string argumentValue = csv["Argument Value"];
+                    string argumentUnit = csv["Argument Unit"];
+                    string remarks = csv["Remarks"];
+
+                    var objectiveCsv = new ObjectiveCsv()
+                    {
+                        ProtocolName = protocolName,
+                        Title = title,
+                        StructureName = structureName,
+                        ObjectiveType = objectiveType,
+                        TargetType = targetType,
+                        TargetValue = targetValue,
+                        TargetUnit = targetUnit,
+                        AcceptableLimitValue = acceptableLimitValue,
+                        ArgumentValue = argumentValue,
+                        ArgumentUnit = argumentUnit,
+                        Remarks = remarks
+                    };
+
+                    var objective = new DvhObjective(objectiveCsv);
+                    objectives.Add(objective);
+                }
+            }
+            return objectives;
+        }
+
     }
 
     public struct ObjectiveCsv
     {
+        public string ProtocolName;
         public string Title;
         public string StructureName;
         public string ObjectiveType;
