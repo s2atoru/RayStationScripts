@@ -277,6 +277,7 @@ namespace Juntendo.MedPhys
                 var csv = new CsvReader(sr);
                 csv.Read();
                 csv.ReadHeader();
+                csv.Read();
                 var protocolName = csv["Protocol Name"];
                 csv.Read();
                 csv.ReadHeader();
