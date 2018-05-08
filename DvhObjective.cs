@@ -17,7 +17,7 @@ namespace Juntendo.MedPhys
     public class DvhObjective : BindableBase
     {
 
-        public string ProtocolName { get; private set; }
+        public string ProtocolId { get; private set; }
 
         private string title;
         public string Title
@@ -191,7 +191,7 @@ namespace Juntendo.MedPhys
 
         public DvhObjective(ObjectiveCsv objectiveCsv)
         {
-            ProtocolName = objectiveCsv.ProtocolName;
+            ProtocolId = objectiveCsv.ProtocolId;
             Title = objectiveCsv.Title;
             StructureName = objectiveCsv.StructureName;
             ObjectiveType = (DvhObjectiveType)Enum.Parse(typeof(DvhObjectiveType), objectiveCsv.ObjectiveType);
@@ -278,7 +278,7 @@ namespace Juntendo.MedPhys
                 csv.Read();
                 csv.ReadHeader();
                 csv.Read();
-                var protocolName = csv["Protocol Name"];
+                var protocolId = csv["Protocol Id"];
                 csv.Read();
                 csv.ReadHeader();
                 while (csv.Read())
@@ -296,7 +296,7 @@ namespace Juntendo.MedPhys
 
                     var objectiveCsv = new ObjectiveCsv()
                     {
-                        ProtocolName = protocolName,
+                        ProtocolId = protocolId,
                         Title = title,
                         StructureName = structureName,
                         ObjectiveType = objectiveType,
@@ -320,7 +320,7 @@ namespace Juntendo.MedPhys
 
     public struct ObjectiveCsv
     {
-        public string ProtocolName;
+        public string ProtocolId;
         public string Title;
         public string StructureName;
         public string ObjectiveType;
