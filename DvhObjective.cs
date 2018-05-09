@@ -278,7 +278,7 @@ namespace Juntendo.MedPhys
                 csv.Read();
                 csv.ReadHeader();
                 csv.Read();
-                var protocolId = csv["Protocol Id"];
+                var protocolId = csv["Protocol ID"];
                 csv.Read();
                 csv.ReadHeader();
                 while (csv.Read())
