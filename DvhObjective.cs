@@ -202,6 +202,8 @@ namespace Juntendo.MedPhys
             AcceptableLimitValue = string.IsNullOrEmpty(objectiveCsv.AcceptableLimitValue) ? 0.0 : double.Parse(objectiveCsv.AcceptableLimitValue);
             Remarks = objectiveCsv.Remarks;
 
+            StructureNameTps = objectiveCsv.StructureNameTps;
+
             string argumentUnit = objectiveCsv.ArgumentUnit;
             if (argumentUnit == "%")
             {
@@ -294,6 +296,7 @@ namespace Juntendo.MedPhys
                     string argumentValue = csv["Argument Value"];
                     string argumentUnit = csv["Argument Unit"];
                     string remarks = csv["Remarks"];
+                    string structureNameTps = csv["Structure Name TPS"];
 
                     var objectiveCsv = new ObjectiveCsv()
                     {
@@ -307,7 +310,8 @@ namespace Juntendo.MedPhys
                         AcceptableLimitValue = acceptableLimitValue,
                         ArgumentValue = argumentValue,
                         ArgumentUnit = argumentUnit,
-                        Remarks = remarks
+                        Remarks = remarks,
+                        StructureNameTps = structureNameTps
                     };
 
                     var objective = new DvhObjective(objectiveCsv);
@@ -315,6 +319,102 @@ namespace Juntendo.MedPhys
                 }
             }
             return objectives;
+        }
+
+        public static void WriteObjectivesToFile(List<DvhObjective> objectives, string protocolName, string filePath)
+        {
+            using (StreamWriter sw = new StreamWriter(filePath, false, Encoding.GetEncoding("shift_jis")))
+            {
+                sw.WriteLine("Protocol ID");
+                sw.WriteLine(protocolName);
+                sw.WriteLine("Title,Structure Name,Structure Name TPS,Objective Type,Target Type,Target Value,Target Unit,Acceptable Limit Value,Argument Value,Argument Unit,Remarks");
+                foreach (var o in objectives)
+                {
+                    var line = o.Title + ",";
+                    line += o.StructureName + ",";
+                    line += o.StructureNameTps + ",";
+                    line += o.ObjectiveType + ",";
+                    line += o.TargetType + ",";
+                    line += o.TargetValue + ",";
+                    line += getTargetUnit(o.TargetType, o.TargetUnit) + ",";
+                    line += o.AcceptableLimitValue + ",";
+                    line += o.ArgumentValue + ",";
+                    line += getArgumentUnit(o.TargetType, o.ArgumentUnit) + ",";
+                    line += o.Remarks;
+
+                    sw.WriteLine(line);
+                }
+            }
+        }
+
+        private static string getTargetUnit(DvhTargetType targetType, DvhPresentationType presentationType)
+        {
+            switch (targetType)
+            {
+                case DvhTargetType.Dose:
+                    if(presentationType == DvhPresentationType.Abs)
+                    {
+                        return "Gy";
+                    }
+                    else if (presentationType == DvhPresentationType.Rel)
+                    {
+                        return "%";
+                    }
+                    else
+                    {
+                        return string.Empty;
+                    }
+                case DvhTargetType.Volume:
+                    if (presentationType == DvhPresentationType.Abs)
+                    {
+                        return "cc";
+                    }
+                    else if (presentationType == DvhPresentationType.Rel)
+                    {
+                        return "%";
+                    }
+                    else
+                    {
+                        return string.Empty;
+                    }
+                default:
+                    return string.Empty;
+            }
+        }
+
+        private static string getArgumentUnit(DvhTargetType targetType, DvhPresentationType presentationType)
+        {
+            switch (targetType)
+            {
+                case DvhTargetType.Volume:
+                    if (presentationType == DvhPresentationType.Abs)
+                    {
+                        return "Gy";
+                    }
+                    else if (presentationType == DvhPresentationType.Rel)
+                    {
+                        return "%";
+                    }
+                    else
+                    {
+                        return string.Empty;
+                    }
+                case DvhTargetType.Dose:
+                    if (presentationType == DvhPresentationType.Abs)
+                    {
+                        return "cc";
+                    }
+                    else if (presentationType == DvhPresentationType.Rel)
+                    {
+                        return "%";
+                    }
+                    else
+                    {
+                        return string.Empty;
+                    }
+                default:
+                    return string.Empty;
+            }
         }
 
     }
@@ -332,5 +432,6 @@ namespace Juntendo.MedPhys
         public string TargetUnit;
         public string AcceptableLimitValue;
         public string Remarks;
+        public string StructureNameTps;
     }
 }
