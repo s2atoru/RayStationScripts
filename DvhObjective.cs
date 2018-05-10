@@ -3,6 +3,7 @@ using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Juntendo.MedPhys
 {
@@ -183,7 +184,7 @@ namespace Juntendo.MedPhys
         public double Volume
         {
             get { return volume; }
-            private set
+            set
             {
                 this.SetProperty(ref this.volume, value);
             }
@@ -272,7 +273,7 @@ namespace Juntendo.MedPhys
         public static List<DvhObjective> ReadObjectivesFromCsv(string filePath)
         {
             List<DvhObjective> objectives = new List<DvhObjective>();
-            using (StreamReader sr = new StreamReader(filePath))
+            using (StreamReader sr = new StreamReader(filePath, Encoding.GetEncoding("shift_jis")))
             {
                 var csv = new CsvReader(sr);
                 csv.Read();
