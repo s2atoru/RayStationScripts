@@ -327,7 +327,7 @@ namespace Juntendo.MedPhys
             {
                 sw.WriteLine("Protocol ID");
                 sw.WriteLine(protocolName);
-                sw.WriteLine("Title,Structure Name,Structure Name TPS,Objective Type,Target Type,Target Value,Target Unit,Acceptable Limit Value,Argument Value,Argument Unit,Remarks,Value");
+                sw.WriteLine("Title,Structure Name,Structure Name TPS,Objective Type,Target Type,Target Value,Target Unit,Acceptable Limit Value,Argument Value,Argument Unit,Remarks,Value,Volume,IsPassed");
                 foreach (var o in objectives)
                 {
                     var line = o.Title + ",";
@@ -341,7 +341,9 @@ namespace Juntendo.MedPhys
                     line += o.ArgumentValue + ",";
                     line += getArgumentUnit(o.TargetType, o.ArgumentUnit) + ",";
                     line += o.Remarks+",";
-                    line += o.Value;
+                    line += o.Value + ",";
+                    line += o.Volume + ",";
+                    line += o.IsPassed;
 
                     sw.WriteLine(line);
                 }
