@@ -321,12 +321,13 @@ namespace Juntendo.MedPhys
             return objectives;
         }
 
-        public static void WriteObjectivesToFile(List<DvhObjective> objectives, string protocolName, string filePath)
+        public static void WriteObjectivesToFile(List<DvhObjective> objectives, string protocolName, string filePath, PlanInfo planInfo)
         {
             using (StreamWriter sw = new StreamWriter(filePath, false, Encoding.GetEncoding("shift_jis")))
             {
-                sw.WriteLine("Protocol ID");
-                sw.WriteLine(protocolName);
+                
+                sw.WriteLine("Protocol ID,Plan ID,Course ID,Patient Name,Patient ID");
+                sw.WriteLine(protocolName + ',' + planInfo.PlanId + ',' + planInfo.CourseId + ',' + planInfo.PatientName + ',' + planInfo.PatientId);
                 sw.WriteLine("Title,Structure Name,Structure Name TPS,Objective Type,Target Type,Target Value,Target Unit,Acceptable Limit Value,Argument Value,Argument Unit,Remarks,Value,Volume,IsPassed");
                 foreach (var o in objectives)
                 {
@@ -436,5 +437,14 @@ namespace Juntendo.MedPhys
         public string AcceptableLimitValue;
         public string Remarks;
         public string StructureNameTps;
+    }
+
+    public struct PlanInfo
+    {
+        public string PatientId;
+        public string PatientName;
+        public string CourseId;
+        public string PlanId;
+ 
     }
 }
