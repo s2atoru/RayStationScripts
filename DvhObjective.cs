@@ -150,6 +150,7 @@ namespace Juntendo.MedPhys
             }
         }
 
+        // If Acceptable Limit is not given, set to -1
         private double acceptableLimitValue;
         public double AcceptableLimitValue
         {
@@ -180,6 +181,16 @@ namespace Juntendo.MedPhys
             }
         }
 
+        private bool isAcceptable;
+        public bool IsAcceptable
+        {
+            get { return isAcceptable; }
+            set
+            {
+                this.SetProperty(ref this.isAcceptable, value);
+            }
+        }
+
         private double volume;
         public double Volume
         {
@@ -199,7 +210,9 @@ namespace Juntendo.MedPhys
             TargetType = (DvhTargetType)Enum.Parse(typeof(DvhTargetType), objectiveCsv.TargetType);
             ArgumentValue = string.IsNullOrEmpty(objectiveCsv.ArgumentValue) ? 0.0 : double.Parse(objectiveCsv.ArgumentValue);
             TargetValue = double.Parse(objectiveCsv.TargetValue);
-            AcceptableLimitValue = string.IsNullOrEmpty(objectiveCsv.AcceptableLimitValue) ? 0.0 : double.Parse(objectiveCsv.AcceptableLimitValue);
+
+            // If Acceptable Limit is not given, set to -1
+            AcceptableLimitValue = string.IsNullOrEmpty(objectiveCsv.AcceptableLimitValue) ? -1 : double.Parse(objectiveCsv.AcceptableLimitValue);
             Remarks = objectiveCsv.Remarks;
 
             StructureNameTps = objectiveCsv.StructureNameTps;
@@ -326,25 +339,26 @@ namespace Juntendo.MedPhys
             using (StreamWriter sw = new StreamWriter(filePath, false, Encoding.GetEncoding("shift_jis")))
             {
                 
-                sw.WriteLine("Protocol ID,Plan ID,Course ID,Patient Name,Patient ID");
-                sw.WriteLine(protocolName + ',' + planInfo.PlanId + ',' + planInfo.CourseId + ',' + planInfo.PatientName + ',' + planInfo.PatientId);
-                sw.WriteLine("Title,Structure Name,Structure Name TPS,Objective Type,Target Type,Target Value,Target Unit,Acceptable Limit Value,Argument Value,Argument Unit,Remarks,Value,Volume,IsPassed");
+                sw.WriteLine("\"Protocol ID\",\"Plan ID\",\"Course ID\",\"Patient Name\",\"Patient ID\",\"Prescribed Dose [Gy]\",\"Max Does [Gy]\"");
+                sw.WriteLine("\"" + protocolName + "\",\"" + planInfo.PlanId + "\",\"" + planInfo.CourseId + "\",\"" + planInfo.PatientName + "\",\"" + planInfo.PatientId + "\",\"" + planInfo.PrescribedDose + "\",\"" + planInfo.MaxDose + "\"");
+                sw.WriteLine("\"Title\",\"Structure Name\",\"Structure Name TPS\",\"Objective Type\",\"Target Type\",\"Target Value\",\"Target Unit\",\"Acceptable Limit Value\",\"Argument Value\",\"Argument Unit\",\"Remarks\",\"Value\",\"Volume\",\"IsPassed\",\"IsAcceptable\"");
                 foreach (var o in objectives)
                 {
-                    var line = o.Title + ",";
-                    line += o.StructureName + ",";
-                    line += o.StructureNameTps + ",";
-                    line += o.ObjectiveType + ",";
-                    line += o.TargetType + ",";
-                    line += o.TargetValue + ",";
-                    line += getTargetUnit(o.TargetType, o.TargetUnit) + ",";
-                    line += o.AcceptableLimitValue + ",";
-                    line += o.ArgumentValue + ",";
-                    line += getArgumentUnit(o.TargetType, o.ArgumentUnit) + ",";
-                    line += o.Remarks+",";
-                    line += o.Value + ",";
-                    line += o.Volume + ",";
-                    line += o.IsPassed;
+                    var line = "\"" + o.Title + "\",";
+                    line += "\"" + o.StructureName + "\",";
+                    line += "\"" + o.StructureNameTps + "\",";
+                    line += "\"" + o.ObjectiveType + "\",";
+                    line += "\"" + o.TargetType + "\",";
+                    line += "\"" + o.TargetValue + "\",";
+                    line += "\"" + getTargetUnit(o.TargetType, o.TargetUnit) + "\",";
+                    line += "\"" + o.AcceptableLimitValue + "\",";
+                    line += "\"" + o.ArgumentValue + "\",";
+                    line += "\"" + getArgumentUnit(o.TargetType, o.ArgumentUnit) + "\",";
+                    line += "\"" + o.Remarks+ "\",";
+                    line += "\"" + o.Value + "\",";
+                    line += "\"" + o.Volume + "\",";
+                    line += "\"" + o.IsPassed + "\",";
+                    line += "\"" + o.IsAcceptable+"\"";
 
                     sw.WriteLine(line);
                 }
@@ -445,6 +459,7 @@ namespace Juntendo.MedPhys
         public string PatientName;
         public string CourseId;
         public string PlanId;
- 
+        public double PrescribedDose;
+        public double MaxDose;
     }
 }
