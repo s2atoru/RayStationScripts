@@ -15,6 +15,8 @@ namespace Juntendo.MedPhys
 
     public enum DvhVolumeUnit { None, Percent, cc };
 
+    public enum DvhEvalResult { Na, Pass, Acceptable, Fail}
+
     public class DvhObjective : BindableBase
     {
 
@@ -201,6 +203,15 @@ namespace Juntendo.MedPhys
             }
         }
 
+        private DvhEvalResult evalResult = DvhEvalResult.Na;
+        public DvhEvalResult EvalResult
+        {
+            get { return evalResult; }
+            set
+            {
+                this.SetProperty(ref this.evalResult, value);
+            }
+        }
         public DvhObjective(ObjectiveCsv objectiveCsv)
         {
             ProtocolId = objectiveCsv.ProtocolId;
