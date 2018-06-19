@@ -22,6 +22,8 @@ namespace Juntendo.MedPhys
 
         public string ProtocolId { get; private set; }
 
+        public string OriginalProtocolId { get; private set; } = String.Empty;
+
         private string title;
         public string Title
         {
@@ -215,6 +217,7 @@ namespace Juntendo.MedPhys
         public DvhObjective(ObjectiveCsv objectiveCsv)
         {
             ProtocolId = objectiveCsv.ProtocolId;
+            OriginalProtocolId = objectiveCsv.OriginalProtocolId;
             Title = objectiveCsv.Title;
             StructureName = objectiveCsv.StructureName;
             ObjectiveType = (DvhObjectiveType)Enum.Parse(typeof(DvhObjectiveType), objectiveCsv.ObjectiveType);
@@ -305,7 +308,20 @@ namespace Juntendo.MedPhys
                 csv.Read();
                 csv.ReadHeader();
                 csv.Read();
+                csv.Configuration.MissingFieldFound = null;
+
                 var protocolId = csv["Protocol ID"];
+                var originalProtocolId = csv["Original Protocol ID"];
+
+                if (string.IsNullOrEmpty(protocolId))
+                {
+                    throw new InvalidOperationException("Protocol ID is empty");
+                }
+                if (string.IsNullOrEmpty(originalProtocolId))
+                {
+                    originalProtocolId = protocolId;
+                }
+
                 csv.Read();
                 csv.ReadHeader();
                 while (csv.Read())
@@ -325,6 +341,7 @@ namespace Juntendo.MedPhys
                     var objectiveCsv = new ObjectiveCsv()
                     {
                         ProtocolId = protocolId,
+                        OriginalProtocolId = originalProtocolId,
                         Title = title,
                         StructureName = structureName,
                         ObjectiveType = objectiveType,
@@ -347,11 +364,17 @@ namespace Juntendo.MedPhys
 
         public static void WriteObjectivesToFile(List<DvhObjective> objectives, string protocolName, string filePath, PlanInfo planInfo)
         {
+
+            if(objectives.Count == 0)
+            {
+                throw new ArgumentException("No item in objectives");
+            }
+            var originalProtocolId = objectives[0].OriginalProtocolId;
+
             using (StreamWriter sw = new StreamWriter(filePath, false, Encoding.GetEncoding("shift_jis")))
             {
-                
-                sw.WriteLine("\"Protocol ID\",\"Plan ID\",\"Course ID\",\"Patient Name\",\"Patient ID\",\"Prescribed Dose [Gy]\",\"Max Does [Gy]\"");
-                sw.WriteLine("\"" + protocolName + "\",\"" + planInfo.PlanId + "\",\"" + planInfo.CourseId + "\",\"" + planInfo.PatientName + "\",\"" + planInfo.PatientId + "\",\"" + planInfo.PrescribedDose + "\",\"" + planInfo.MaxDose + "\"");
+                sw.WriteLine("\"Protocol ID\",\"Plan ID\",\"Course ID\",\"Patient Name\",\"Patient ID\",\"Prescribed Dose [Gy]\",\"Max Does [Gy]\",\"Original Protocol ID\"");
+                sw.WriteLine("\"" + protocolName + "\",\"" + planInfo.PlanId + "\",\"" + planInfo.CourseId + "\",\"" + planInfo.PatientName + "\",\"" + planInfo.PatientId + "\",\"" + planInfo.PrescribedDose + "\",\"" + planInfo.MaxDose + "\",\"" + originalProtocolId + "\"");
                 sw.WriteLine("\"Title\",\"Structure Name\",\"Structure Name TPS\",\"Objective Type\",\"Target Type\",\"Target Value\",\"Target Unit\",\"Acceptable Limit Value\",\"Argument Value\",\"Argument Unit\",\"Remarks\",\"Value\",\"Volume\",\"IsPassed\",\"IsAcceptable\"");
                 foreach (var o in objectives)
                 {
@@ -451,6 +474,7 @@ namespace Juntendo.MedPhys
     public struct ObjectiveCsv
     {
         public string ProtocolId;
+        public string OriginalProtocolId;
         public string Title;
         public string StructureName;
         public string ObjectiveType;
