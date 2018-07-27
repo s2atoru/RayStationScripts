@@ -17,6 +17,13 @@ namespace Juntendo.MedPhys
             Objectives = objectives;
         }
 
+        public Protocol(string id, string filePath)
+        {
+            Id = id;
+            FilePath = filePath;
+            Objectives = DvhObjective.ReadObjectivesFromCsv(filePath);
+        }
+
         public static List<Protocol> GetProtocolsFromFolder(string folderPath)
         {
             var protocols = new List<Protocol>();
