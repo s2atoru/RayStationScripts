@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Juntendo.MedPhys
 {
-    public enum DvhObjectiveType { Max, Min, MeanUpper, MeanLower, Upper, Lower, Spare };
+    public enum DvhObjectiveType { Max, Min, MeanUpper, MeanLower, Upper, Lower, Spare, Veff };
     public enum DvhTargetType { Dose, Volume };
     public enum DvhPresentationType { None, Abs, Rel };
 
