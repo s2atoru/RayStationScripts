@@ -1,0 +1,17 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OptimizatoinSettings"
+        xmlns:Views="clr-namespace:OptimizatoinSettings.Views" x:Class="OptimizatoinSettings.MainWindow"
+        xmlns:vm="clr-namespace:OptimizatoinSettings.ViewModels" 
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vm:MainWindowViewModel}"
+        Title="Optimization Settings" Height="450" Width="800" SizeToContent="WidthAndHeight">
+    <Grid>
+
+        <Views:SetParametersView DataContext="{Binding SetParametersViewModel}"/>
+
+    </Grid>
+</Window>
