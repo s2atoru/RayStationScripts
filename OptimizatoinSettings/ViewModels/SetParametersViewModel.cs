@@ -11,7 +11,19 @@ namespace OptimizatoinSettings.ViewModels
 {
     public class SetParametersViewModel : BindableBase, INotifyDataErrorInfo
     {
-        public Models.SettingParameters SettingParameters { get; set; }
+        private Models.SettingParameters settingParameters;
+        public Models.SettingParameters SettingParameters
+        {
+            get { return settingParameters; }
+            set
+            {
+                settingParameters = value;
+                MaxNumberOfIterations = settingParameters.MaxNumberOfIterations.ToString();
+                IterationsInPreparationsPhase = settingParameters.IterationsInPreparationsPhase.ToString();
+                ComputeFinalDose = settingParameters.ComputeFinalDose;
+                CanOk = settingParameters.IsValid;
+            }
+        }
 
         private bool canOk;
         public bool CanOk
@@ -64,7 +76,27 @@ namespace OptimizatoinSettings.ViewModels
             }
         }
 
-        public bool ComputeFinalDose { get; set; } = true;
+        private bool computeFinalDose;
+        public bool ComputeFinalDose
+        {
+            get { return computeFinalDose; }
+            set
+            {
+                SetProperty(ref computeFinalDose, value);
+                SettingParameters.ComputeFinalDose = computeFinalDose;
+            }
+        }
+
+        //private bool computeFinalDose = true;
+        //public bool ComputeFinalDose
+        //{
+        //    get { return computeFinalDose; }
+        //    set
+        //    {
+        //        computeFinalDose = value;
+        //        SettingParameters.ComputeFinalDose = computeFinalDose;
+        //    }
+        //}
 
         public SetParametersViewModel()
         {

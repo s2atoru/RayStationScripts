@@ -6,7 +6,7 @@
         xmlns:prism="http://prismlibrary.com/"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:OptimizatoinSettings"
-        xmlns:Views="clr-namespace:OptimizatoinSettings.Views" x:Class="OptimizatoinSettings.MainWindow"
+        xmlns:Views="clr-namespace:OptimizatoinSettings.Views" x:Class="OptimizatoinSettings.Views.MainWindow"
         xmlns:vm="clr-namespace:OptimizatoinSettings.ViewModels"
         xmlns:ac="clr-namespace:OptimizatoinSettings.Actions"
         mc:Ignorable="d"

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace OptimizatoinSettings
+namespace OptimizatoinSettings.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -12,6 +12,13 @@ namespace OptimizatoinSettings
             InitializeComponent();
 
             DataContext = new ViewModels.MainWindowViewModel();
+        }
+
+        public MainWindow(Models.SettingParameters settingParameters)
+        {
+            InitializeComponent();
+
+            DataContext = new ViewModels.MainWindowViewModel(settingParameters);
         }
     }
 }
