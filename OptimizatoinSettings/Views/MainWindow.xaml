@@ -3,15 +3,36 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:prism="http://prismlibrary.com/"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:OptimizatoinSettings"
         xmlns:Views="clr-namespace:OptimizatoinSettings.Views" x:Class="OptimizatoinSettings.MainWindow"
-        xmlns:vm="clr-namespace:OptimizatoinSettings.ViewModels" 
+        xmlns:vm="clr-namespace:OptimizatoinSettings.ViewModels"
+        xmlns:ac="clr-namespace:OptimizatoinSettings.Actions"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:MainWindowViewModel}"
-        Title="Optimization Settings" Height="450" Width="800" SizeToContent="WidthAndHeight">
+        Title="Optimization Settings" Height="450" Width="800" SizeToContent="WidthAndHeight" FontSize="24">
     <Grid>
-
-        <Views:SetParametersView DataContext="{Binding SetParametersViewModel}"/>
-
+        <StackPanel>
+            <Views:SetParametersView DataContext="{Binding SetParametersViewModel}"/>
+            <StackPanel Orientation="Horizontal" >
+            <Button Content="OK" Width="120" Margin="3" IsEnabled="{Binding SetParametersViewModel.CanOk}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <prism:InvokeCommandAction Command="{Binding OkCommand}"/>
+                            <ac:CloseWindowAction/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            <Button Content="Cancel" Width="120" Margin="3">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <prism:InvokeCommandAction Command="{Binding CancelCommand}"/>
+                            <ac:CloseWindowAction/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Window>

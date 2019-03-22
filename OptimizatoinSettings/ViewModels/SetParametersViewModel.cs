@@ -11,6 +11,15 @@ namespace OptimizatoinSettings.ViewModels
 {
     public class SetParametersViewModel : BindableBase, INotifyDataErrorInfo
     {
+        public Models.SettingParameters SettingParameters { get; set; }
+
+        private bool canOk;
+        public bool CanOk
+        {
+            get { return canOk; }
+            set { SetProperty(ref canOk, value); }
+        }
+
         private string maximumNumberOfIterations = "40";
         [Required(ErrorMessage = "Required")]
         [RegularExpression(@"([1-9]\d*)", ErrorMessage = "Input integer ≧ 1")]
@@ -18,7 +27,19 @@ namespace OptimizatoinSettings.ViewModels
         public string MaximumNumberOfIterations
         {
             get { return maximumNumberOfIterations; }
-            set { SetProperty(ref maximumNumberOfIterations, value); }
+            set
+            {
+                SetProperty(ref maximumNumberOfIterations, value);
+                if (!this.HasErrors)
+                {
+                    SettingParameters.MaximumNumberOfIterations = int.Parse(value);
+                    CanOk = true;
+                }
+                else
+                {
+                    CanOk = false;
+                }
+            }
         }
 
         private string initialNumberOfIterations = "20";
@@ -27,16 +48,32 @@ namespace OptimizatoinSettings.ViewModels
         public string InitialNumberOfIterations
         {
             get { return initialNumberOfIterations; }
-            set { SetProperty(ref initialNumberOfIterations, value);
-            this.ValidateProperty(MaximumNumberOfIterations, nameof(MaximumNumberOfIterations)); }
+            set
+            {
+                SetProperty(ref initialNumberOfIterations, value);
+                this.ValidateProperty(MaximumNumberOfIterations, nameof(MaximumNumberOfIterations));
+                if (!this.HasErrors)
+                {
+                    SettingParameters.InitialNumberOfIterations = int.Parse(value);
+                    CanOk = true;
+                }
+                else
+                {
+                    CanOk = false;
+                }
+            }
         }
 
-        public bool FinalDoseCalculation { get; set; } = true;
+        public bool FinalDoseCalculation { get; set; }
 
         public SetParametersViewModel()
         {
             this.ErrorsContainer = new ErrorsContainer<string>(
                 x => this.ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(x)));
+
+            SettingParameters = new Models.SettingParameters();
+
+            CanOk = SettingParameters.IsValid;
         }
 
         public static ValidationResult MaximumNumberOfIterationsConstraint(string value, ValidationContext context)
@@ -47,7 +84,7 @@ namespace OptimizatoinSettings.ViewModels
                 int maximumNumberOfIterations = 0;
                 int initialNumberOfIterations = 0;
 
-                if(!(int.TryParse(obj.MaximumNumberOfIterations, out maximumNumberOfIterations)))
+                if (!(int.TryParse(obj.MaximumNumberOfIterations, out maximumNumberOfIterations)))
                 {
                     var msg = "Maximum number of iterations should be integer";
                     return new ValidationResult(msg);

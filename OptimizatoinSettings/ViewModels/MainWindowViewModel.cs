@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using Prism.Commands;
+using Prism.Mvvm;
 
 namespace OptimizatoinSettings.ViewModels
 {
@@ -9,6 +10,13 @@ namespace OptimizatoinSettings.ViewModels
         public MainWindowViewModel()
         {
             SetParametersViewModel = new SetParametersViewModel();
+
+            OkCommand = new DelegateCommand(() => { SetParametersViewModel.SettingParameters.CanSetParameters = true; }).ObservesCanExecute(() => SetParametersViewModel.CanOk);
+            CancelCommand = new DelegateCommand(() => SetParametersViewModel.SettingParameters.CanSetParameters = false);
         }
+
+        public DelegateCommand OkCommand { get; private set; }
+        public DelegateCommand CancelCommand { get; private set; }
+
     }
 }
