@@ -11,29 +11,29 @@ namespace OptimizatoinSettings.Models
             set { SetProperty(ref isValid, value); }
         }
 
-        private int maximumNumberOfIterations = 40;
-        public int MaximumNumberOfIterations
+        private int maxNumberOfIterations = 40;
+        public int MaxNumberOfIterations
         {
-            get { return maximumNumberOfIterations; }
+            get { return maxNumberOfIterations; }
             set
             {
-                maximumNumberOfIterations = value;
+                maxNumberOfIterations = value;
                 IsValid = CheckValidity();
             }
         }
 
-        private int initialNumberOfIterations = 20;
-        public int InitialNumberOfIterations
+        private int iterationsInPreparationsPhase = 20;
+        public int IterationsInPreparationsPhase
         {
-            get { return initialNumberOfIterations; }
+            get { return iterationsInPreparationsPhase; }
             set
             {
-                initialNumberOfIterations = value;
+                iterationsInPreparationsPhase = value;
                 IsValid = CheckValidity();
             }
         }
 
-        public bool FinalDoseCalculation { get; set; } = true;
+        public bool ComputeFinalDose { get; set; } = true;
 
         public bool CanSetParameters { get; set; } = false;
 
@@ -44,7 +44,7 @@ namespace OptimizatoinSettings.Models
 
         private bool CheckValidity()
         {
-            return (MaximumNumberOfIterations >= 1) && (InitialNumberOfIterations >= 0) && (MaximumNumberOfIterations >= InitialNumberOfIterations);
+            return (MaxNumberOfIterations >= 1) && (IterationsInPreparationsPhase >= 0) && (MaxNumberOfIterations >= IterationsInPreparationsPhase);
         } 
     }
 }

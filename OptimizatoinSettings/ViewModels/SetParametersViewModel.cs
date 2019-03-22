@@ -20,19 +20,19 @@ namespace OptimizatoinSettings.ViewModels
             set { SetProperty(ref canOk, value); }
         }
 
-        private string maximumNumberOfIterations = "40";
+        private string maxNumberOfIterations = "40";
         [Required(ErrorMessage = "Required")]
         [RegularExpression(@"([1-9]\d*)", ErrorMessage = "Input integer ≧ 1")]
-        [CustomValidation(typeof(SetParametersViewModel), "MaximumNumberOfIterationsConstraint")]
-        public string MaximumNumberOfIterations
+        [CustomValidation(typeof(SetParametersViewModel), "MaxNumberOfIterationsConstraint")]
+        public string MaxNumberOfIterations
         {
-            get { return maximumNumberOfIterations; }
+            get { return maxNumberOfIterations; }
             set
             {
-                SetProperty(ref maximumNumberOfIterations, value);
+                SetProperty(ref maxNumberOfIterations, value);
                 if (!this.HasErrors)
                 {
-                    SettingParameters.MaximumNumberOfIterations = int.Parse(value);
+                    SettingParameters.MaxNumberOfIterations = int.Parse(value);
                     CanOk = true;
                 }
                 else
@@ -42,19 +42,19 @@ namespace OptimizatoinSettings.ViewModels
             }
         }
 
-        private string initialNumberOfIterations = "20";
+        private string iterationsInPreparationsPhase = "20";
         [Required(ErrorMessage = "Required")]
         [RegularExpression(@"([1-9]\d*|0)", ErrorMessage = "Input integer ≧ 0")]
-        public string InitialNumberOfIterations
+        public string IterationsInPreparationsPhase
         {
-            get { return initialNumberOfIterations; }
+            get { return iterationsInPreparationsPhase; }
             set
             {
-                SetProperty(ref initialNumberOfIterations, value);
-                this.ValidateProperty(MaximumNumberOfIterations, nameof(MaximumNumberOfIterations));
+                SetProperty(ref iterationsInPreparationsPhase, value);
+                this.ValidateProperty(MaxNumberOfIterations, nameof(MaxNumberOfIterations));
                 if (!this.HasErrors)
                 {
-                    SettingParameters.InitialNumberOfIterations = int.Parse(value);
+                    SettingParameters.IterationsInPreparationsPhase = int.Parse(value);
                     CanOk = true;
                 }
                 else
@@ -64,7 +64,7 @@ namespace OptimizatoinSettings.ViewModels
             }
         }
 
-        public bool FinalDoseCalculation { get; set; }
+        public bool ComputeFinalDose { get; set; } = true;
 
         public SetParametersViewModel()
         {
@@ -76,29 +76,27 @@ namespace OptimizatoinSettings.ViewModels
             CanOk = SettingParameters.IsValid;
         }
 
-        public static ValidationResult MaximumNumberOfIterationsConstraint(string value, ValidationContext context)
+        public static ValidationResult MaxNumberOfIterationsConstraint(string value, ValidationContext context)
         {
             var obj = context.ObjectInstance as SetParametersViewModel;
             if (obj != null)
             {
-                int maximumNumberOfIterations = 0;
-                int initialNumberOfIterations = 0;
 
-                if (!(int.TryParse(obj.MaximumNumberOfIterations, out maximumNumberOfIterations)))
+                if (!(int.TryParse(obj.MaxNumberOfIterations, out int m)))
                 {
-                    var msg = "Maximum number of iterations should be integer";
+                    var msg = "Max number of iterations should be integer";
                     return new ValidationResult(msg);
                 }
 
-                if (!(int.TryParse(obj.InitialNumberOfIterations, out initialNumberOfIterations)))
+                if (!(int.TryParse(obj.IterationsInPreparationsPhase, out int i)))
                 {
-                    var msg = "Initial number of iterations should be integer";
+                    var msg = "Iterations before conversion should be integer";
                     return new ValidationResult(msg);
                 }
 
-                if (maximumNumberOfIterations < initialNumberOfIterations)
+                if (m < i)
                 {
-                    var msg = $"Maximum number of iterations ≧ Initial number of iterations ({initialNumberOfIterations})";
+                    var msg = $"Max number of iterations ≧ Iterations before conversion ({i})";
                     return new ValidationResult(msg);
                 }
             }
