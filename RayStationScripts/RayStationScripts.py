@@ -4,26 +4,32 @@ clr.AddReference("PresentationCore")
 
 import sys
 
-sys.path.append(r"C:\Users\satoru\Source\Repos\RayStationScripts\OptimizatoinSettings\bin\Debug")
-clr.AddReference("OptimizatoinSettings")
+from System.Collections.Generic import List
 
-from OptimizatoinSettings.Models import SettingParameters
-from OptimizatoinSettings.Views import MainWindow
+rois = List[List[str]]()
 
-settingParameters = SettingParameters()
+rois.Add(List[str](['rectum', 'bladder']))
 
-settingParameters.MaxNumberOfIterations = 50
+#sys.path.append(r"C:\Users\satoru\Source\Repos\RayStationScripts\OptimizatoinSettings\bin\Debug")
+#clr.AddReference("OptimizatoinSettings")
 
-print("{0}, {1}, {2}, {3}, {4}".format(settingParameters.MaxNumberOfIterations, settingParameters.IterationsInPreparationsPhase, settingParameters.ComputeFinalDose, settingParameters.IsValid, settingParameters.CanSetParameters))
+#from OptimizatoinSettings.Models import SettingParameters
+#from OptimizatoinSettings.Views import MainWindow
 
-settingParameters.MaxNumberOfIterations = 10
+#settingParameters = SettingParameters()
 
-print("{0}, {1}, {2}, {3}, {4}".format(settingParameters.MaxNumberOfIterations, settingParameters.IterationsInPreparationsPhase, settingParameters.ComputeFinalDose, settingParameters.IsValid, settingParameters.CanSetParameters))
+#settingParameters.MaxNumberOfIterations = 50
 
-mainWindow = MainWindow(settingParameters)
+#print("{0}, {1}, {2}, {3}, {4}".format(settingParameters.MaxNumberOfIterations, settingParameters.IterationsInPreparationsPhase, settingParameters.ComputeFinalDose, settingParameters.IsValid, settingParameters.CanSetParameters))
 
-mainWindow.ShowDialog()
+#settingParameters.MaxNumberOfIterations = 10
 
-print("{0}, {1}, {2}, {3}, {4}".format(settingParameters.MaxNumberOfIterations, settingParameters.IterationsInPreparationsPhase, settingParameters.ComputeFinalDose, settingParameters.IsValid, settingParameters.CanSetParameters))
+#print("{0}, {1}, {2}, {3}, {4}".format(settingParameters.MaxNumberOfIterations, settingParameters.IterationsInPreparationsPhase, settingParameters.ComputeFinalDose, settingParameters.IsValid, settingParameters.CanSetParameters))
+
+#mainWindow = MainWindow(settingParameters)
+
+#mainWindow.ShowDialog()
+
+#print("{0}, {1}, {2}, {3}, {4}".format(settingParameters.MaxNumberOfIterations, settingParameters.IterationsInPreparationsPhase, settingParameters.ComputeFinalDose, settingParameters.IsValid, settingParameters.CanSetParameters))
 
 print('Hello world')
