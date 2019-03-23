@@ -45,6 +45,7 @@ namespace OptimizatoinSettings.ViewModels
                 if (!this.HasErrors)
                 {
                     SettingParameters.MaxNumberOfIterations = int.Parse(value);
+                    SettingParameters.IterationsInPreparationsPhase = int.Parse(IterationsInPreparationsPhase);
                     CanOk = true;
                 }
                 else
@@ -67,6 +68,7 @@ namespace OptimizatoinSettings.ViewModels
                 if (!this.HasErrors)
                 {
                     SettingParameters.IterationsInPreparationsPhase = int.Parse(value);
+                    SettingParameters.MaxNumberOfIterations = int.Parse(MaxNumberOfIterations);
                     CanOk = true;
                 }
                 else
