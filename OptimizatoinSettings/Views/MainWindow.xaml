@@ -11,12 +11,12 @@
         xmlns:ac="clr-namespace:OptimizatoinSettings.Actions"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:MainWindowViewModel}"
-        Title="Optimization Settings" Height="450" Width="800" SizeToContent="WidthAndHeight" FontSize="24">
+        Title="Optimization Settings" d:DesignHeight="450" d:DesignWidth="800" SizeToContent="WidthAndHeight" FontSize="24">
     <Grid>
         <StackPanel>
             <Views:SetParametersView DataContext="{Binding SetParametersViewModel}"/>
             <StackPanel Orientation="Horizontal" >
-            <Button Content="OK" Width="120" Margin="3" IsEnabled="{Binding SetParametersViewModel.CanOk}">
+            <Button Content="OK" Width="120" Margin="3">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <prism:InvokeCommandAction Command="{Binding OkCommand}"/>
