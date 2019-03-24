@@ -2,13 +2,14 @@
 {
     public class MarginAddedRoiParameters
     {
+        public string FormulaType { get; } = "MarginAddedRoi";
         public string StructureName { get; set; }
         public string BaseStructureName { get; set; }
         public int Margin { get; set; }
 
         public override string ToString()
         {
-            return $"Margin Added ROI: {StructureName}, BaseStrucutre : {BaseStructureName}, Margin = {Margin} mm";
+            return $"Margin Added ROI: {StructureName}, Base Structure : {BaseStructureName}, Margin = {Margin} mm";
         }
 
         //Return true if obj is equivalent to this

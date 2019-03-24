@@ -27,8 +27,8 @@ namespace RoiFormulaMaker.ViewModels
 
         public ObservableCollection<string> StructureNames { get; set; } = new ObservableCollection<string> { "PTV", "Rectum", "Bladder" };
 
-        public InteractionRequest<MakeRingNotification> MakeRingRequest { get; set; }
-        public DelegateCommand MakeRingCommand { get; set; }
+        public InteractionRequest<MakeRingRoiNotification> MakeRingRoiRequest { get; set; }
+        public DelegateCommand MakeRingRoiCommand { get; set; }
 
         public InteractionRequest<MakeTargetSubtractedRoiNotification> MakeTargetSubtractedRoiRequest { get; set; }
         public DelegateCommand MakeTargetSubtractedRoiCommand { get; set; }
@@ -47,8 +47,8 @@ namespace RoiFormulaMaker.ViewModels
         public MainWindowViewModel()
         {
 
-            MakeRingRequest = new InteractionRequest<MakeRingNotification>();
-            MakeRingCommand = new DelegateCommand(RaiseMakeRingInteraction);
+            MakeRingRoiRequest = new InteractionRequest<MakeRingRoiNotification>();
+            MakeRingRoiCommand = new DelegateCommand(RaiseMakeRingRoiInteraction);
 
             MakeTargetSubtractedRoiRequest = new InteractionRequest<MakeTargetSubtractedRoiNotification>();
             MakeTargetSubtractedRoiCommand = new DelegateCommand(RaiseMakeTargetSubtractedRoiInteraction);
@@ -57,11 +57,11 @@ namespace RoiFormulaMaker.ViewModels
             MakeMarginAddedRoiCommand = new DelegateCommand(RaiseMakeMarginAddedRoiInteraction);
         }
 
-        private void RaiseMakeRingInteraction()
+        private void RaiseMakeRingRoiInteraction()
         {
-            MakeRingRequest.Raise(new MakeRingNotification
+            MakeRingRoiRequest.Raise(new MakeRingRoiNotification
             {
-                Title = "Make Ring",
+                Title = "Make Ring ROI",
                 OuterMargin = 15,
                 InnerMargin = 0,
                 StructureNames = this.StructureNames
@@ -71,21 +71,21 @@ namespace RoiFormulaMaker.ViewModels
                 if (r.Confirmed && r.BaseStructureName != null)
                 {
                     Message = $"User selected: { r.BaseStructureName}";
-                    var ringParameters = new RingParameters
+                    var ringRoiParameters = new RingRoiParameters
                     {
                         StructureName = r.StructureName,
                         BaseStructureName = r.BaseStructureName,
                         OuterMargin = r.OuterMargin,
                         InnerMargin = r.InnerMargin
                     };
-                    if (StructureDesigns.Contains(ringParameters))
+                    if (StructureDesigns.Contains(ringRoiParameters))
                     {
                         Message = "The same ring is already in the list";
                         return;
                         ;
                     }
-                    StructureDesigns.Add(ringParameters);
-                    var structureDescription = ringParameters.ToString();
+                    StructureDesigns.Add(ringRoiParameters);
+                    var structureDescription = ringRoiParameters.ToString();
                     if (string.IsNullOrEmpty(StructureDescriptions))
                     {
                         StructureDescriptions = structureDescription;
@@ -96,7 +96,7 @@ namespace RoiFormulaMaker.ViewModels
                     }
                 }
                 else
-                    Message = "User cancelled or didn't select structure";
+                    Message = "User canceled or didn't select structure";
             });
         }
 
@@ -138,7 +138,7 @@ namespace RoiFormulaMaker.ViewModels
                     }
                 }
                 else
-                    Message = "User cancelled or didn't select structures";
+                    Message = "User canceled or didn't select structures";
             });
         }
 
@@ -179,7 +179,7 @@ namespace RoiFormulaMaker.ViewModels
                     }
                 }
                 else
-                    Message = "User cancelled or didn't select structures";
+                    Message = "User canceled or didn't select structures";
             });
         }
     }

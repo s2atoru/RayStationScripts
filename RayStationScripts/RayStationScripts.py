@@ -15,9 +15,11 @@ scriptsPath = RayStationScriptsPath + "Scripts"
 print(scriptsPath)
 sys.path.append(scriptsPath)
 
-import TestSetOptimizationParameters
+from Helpers import MarginDict
 
-TestSetOptimizationParameters.SetOptimizationParameters()
+marginDict = MarginDict([4]*8)
+
+print marginDict
 
 #sys.path.append(r"C:\Users\satoru\Source\Repos\RayStationScripts\OptimizatoinSettings\bin\Debug")
 #clr.AddReference("OptimizatoinSettings")

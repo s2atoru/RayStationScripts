@@ -7,17 +7,17 @@ using RoiFormulaMaker.Notifications;
 
 namespace RoiFormulaMaker.ViewModels
 {
-    public class MakeRingViewModel : BindableBase, IInteractionRequestAware
+    public class MakeRingRoiViewModel : BindableBase, IInteractionRequestAware
     {
         public string SelectedStructureName { get; set; }
 
-        public DelegateCommand MakeRingCommand { get; private set; }
+        public DelegateCommand MakeRingRoiCommand { get; private set; }
 
         public DelegateCommand CancelCommand { get; private set; }
 
-        public MakeRingViewModel()
+        public MakeRingRoiViewModel()
         {
-            MakeRingCommand = new DelegateCommand(AcceptMakingRing);
+            MakeRingRoiCommand = new DelegateCommand(AcceptMakingRingRoi);
             CancelCommand = new DelegateCommand(CancelInteraction);
         }
 
@@ -30,7 +30,7 @@ namespace RoiFormulaMaker.ViewModels
             FinishInteraction?.Invoke();
         }
 
-        private void AcceptMakingRing()
+        private void AcceptMakingRingRoi()
         {
             notification.BaseStructureName = SelectedStructureName;
             if (string.IsNullOrEmpty(notification.StructureName))
@@ -51,12 +51,12 @@ namespace RoiFormulaMaker.ViewModels
 
         public Action FinishInteraction { get; set; }
 
-        private MakeRingNotification notification;
+        private MakeRingRoiNotification notification;
 
         public INotification Notification
         {
             get { return notification; }
-            set { SetProperty(ref notification, (MakeRingNotification)value); }
+            set { SetProperty(ref notification, (MakeRingRoiNotification)value); }
         }
     }
 }   

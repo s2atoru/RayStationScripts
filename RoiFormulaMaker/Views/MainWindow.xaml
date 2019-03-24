@@ -23,10 +23,10 @@
         </Style>
     </Window.Resources>
     <i:Interaction.Triggers>
-        <prism:InteractionRequestTrigger SourceObject="{Binding MakeRingRequest}">
+        <prism:InteractionRequestTrigger SourceObject="{Binding MakeRingRoiRequest}">
             <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True">
                 <prism:PopupWindowAction.WindowContent>
-                    <views:MakeRingView />
+                    <views:MakeRingRoiView />
                 </prism:PopupWindowAction.WindowContent>
             </prism:PopupWindowAction>
         </prism:InteractionRequestTrigger>
@@ -51,7 +51,7 @@
         <StackPanel Orientation="Vertical">
 
             <!--<views:MakeRing DataContext="{Binding MakeRingViewModel}"/>-->
-            <Button Content="Add Ring" Command="{Binding MakeRingCommand}"/>
+            <Button Content="Add Ring ROI" Command="{Binding MakeRingRoiCommand}"/>
             <Button Content="Add Target Subtracted ROI" Command="{Binding MakeTargetSubtractedRoiCommand}"/>
             <Button Content="Add Margin Added ROI" Command="{Binding MakeMarginAddedRoiCommand}"/>
             <TextBlock  TextWrapping="Wrap" Text="{Binding Message}"/>

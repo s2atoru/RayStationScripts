@@ -64,17 +64,17 @@
     </ApplicationDefinition>
     <Compile Include="Actions\CloseWindowAction.cs" />
     <Compile Include="Models\MarginAddedRoiParameters.cs" />
-    <Compile Include="Models\RingParameters.cs" />
+    <Compile Include="Models\RingRoiParameters.cs" />
     <Compile Include="Models\StructureDesigns.cs" />
     <Compile Include="Models\TargetSubtractedRoiParameters.cs" />
-    <Compile Include="Notifications\MakeRingNotification.cs" />
+    <Compile Include="Notifications\MakeRingRoiNotification.cs" />
     <Compile Include="Notifications\MakeMarginAddedRoiNotification.cs" />
     <Compile Include="Notifications\MakeTargetSubtractedRoiNotification.cs" />
-    <Compile Include="ViewModels\MakeRingViewModel.cs" />
+    <Compile Include="ViewModels\MakeRingRoiViewModel.cs" />
     <Compile Include="ViewModels\MakeMarginAddedRoiViewModel.cs" />
     <Compile Include="ViewModels\MakeTargetSubtractedRoiViewModel.cs" />
-    <Compile Include="Views\MakeRingView.xaml.cs">
-      <DependentUpon>MakeRingView.xaml</DependentUpon>
+    <Compile Include="Views\MakeRingRoiView.xaml.cs">
+      <DependentUpon>MakeRingRoiView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MakeMarginAddedRoiView.xaml.cs">
       <DependentUpon>MakeMarginAddedRoiView.xaml</DependentUpon>
@@ -95,7 +95,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\MakeRingView.xaml">
+    <Page Include="Views\MakeRingRoiView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

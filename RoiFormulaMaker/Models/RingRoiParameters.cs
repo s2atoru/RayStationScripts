@@ -1,7 +1,8 @@
 ﻿namespace RoiFormulaMaker.Models
 {
-    public class RingParameters
+    public class RingRoiParameters
     {
+        public string FormulaType { get; } = "RingRoi";
         public string StructureName { get; set; }
         public string BaseStructureName { get; set; }
         public int InnerMargin { get; set; }
@@ -9,7 +10,7 @@
 
         public override string ToString()
         {
-            return $"Ring: {StructureName}, BaseStrucutre : {BaseStructureName}, Outer Margin = {OuterMargin} mm, Inner Margin = {InnerMargin} mm";
+            return $"Ring ROI: {StructureName}, Base Structure : {BaseStructureName}, Outer Margin = {OuterMargin} mm, Inner Margin = {InnerMargin} mm";
         }
 
         //Return true if obj is equivalent to this
@@ -21,7 +22,7 @@
                 return false;
             }
             //Compare BaseStructureName, InnerMargin, and OuterMargin
-            RingParameters c = (RingParameters)obj;
+            RingRoiParameters c = (RingRoiParameters)obj;
             return (this.BaseStructureName == c.BaseStructureName) && (this.InnerMargin == c.InnerMargin) && (this.OuterMargin == c.OuterMargin);
         }
 
@@ -33,7 +34,7 @@
         }
 
         //Overload of equality operators, == and !=
-        public static bool operator ==(RingParameters c1, RingParameters c2)
+        public static bool operator ==(RingRoiParameters c1, RingRoiParameters c2)
         {
             //Check if null
             if ((object)c1 == null)
@@ -48,7 +49,7 @@
             return c1.Equals(c2);
         }
 
-        public static bool operator !=(RingParameters c1, RingParameters c2)
+        public static bool operator !=(RingRoiParameters c1, RingRoiParameters c2)
         {
             //Return the opposite of ==
             return !(c1 == c2);

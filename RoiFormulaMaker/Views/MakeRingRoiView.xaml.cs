@@ -3,11 +3,11 @@
 namespace RoiFormulaMaker.Views
 {
     /// <summary>
-    /// MakeRing.xaml の相互作用ロジック
+    /// MakeRingRoi.xaml の相互作用ロジック
     /// </summary>
-    public partial class MakeRingView : UserControl
+    public partial class MakeRingRoiView : UserControl
     {
-        public MakeRingView()
+        public MakeRingRoiView()
         {
             InitializeComponent();
         }

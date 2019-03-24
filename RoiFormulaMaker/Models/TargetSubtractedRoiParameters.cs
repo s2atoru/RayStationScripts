@@ -2,6 +2,7 @@
 {
     class TargetSubtractedRoiParameters
     {
+        public string FormulaType { get; } = "TargetSubtractedRoi";
         public string StructureName { get; set; }
         public string BaseStructureName { get; set; }
         public string SubtractedTargetName { get; set; }
@@ -9,7 +10,7 @@
 
         public override string ToString()
         {
-            return $"Target Subtracted ROI: {StructureName}, Base Strucutre : {BaseStructureName}, Subtracted Target = {SubtractedTargetName}, Margin = {Margin} mm";
+            return $"Target Subtracted ROI: {StructureName}, Base Structure : {BaseStructureName}, Subtracted Target = {SubtractedTargetName}, Margin = {Margin} mm";
         }
 
         //Return true if obj is equivalent to this
