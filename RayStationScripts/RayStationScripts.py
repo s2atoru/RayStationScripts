@@ -2,13 +2,22 @@ import clr
 clr.AddReference("PresentationFramework")
 clr.AddReference("PresentationCore")
 
-import sys
+import sys, os
 
 from System.Collections.Generic import List
 
-rois = List[List[str]]()
+RayStationScriptsPath = os.environ["USERPROFILE"] + r"\DeskTop\RayStationScripts" + "\\"
+dllsPath = RayStationScriptsPath + "Dlls"
+print(dllsPath)
+sys.path.append(dllsPath)
 
-rois.Add(List[str](['rectum', 'bladder']))
+scriptsPath = RayStationScriptsPath + "Scripts"
+print(scriptsPath)
+sys.path.append(scriptsPath)
+
+import TestSetOptimizationParameters
+
+TestSetOptimizationParameters.SetOptimizationParameters()
 
 #sys.path.append(r"C:\Users\satoru\Source\Repos\RayStationScripts\OptimizatoinSettings\bin\Debug")
 #clr.AddReference("OptimizatoinSettings")

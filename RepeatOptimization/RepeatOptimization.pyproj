@@ -2,17 +2,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>ee780617-0f21-433d-a5f3-fa4f74861114</ProjectGuid>
+    <ProjectGuid>d595446c-6300-4d79-b121-65379323fa3e</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>RayStationScripts.py</StartupFile>
+    <StartupFile>RepeatOptimization.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <InterpreterId>IronPython|2.7-32</InterpreterId>
     <LaunchProvider>IronPython (.NET) launcher</LaunchProvider>
     <OutputPath>.</OutputPath>
-    <Name>RayStationScripts</Name>
-    <RootNamespace>RayStationScripts</RootNamespace>
+    <Name>RepeatOptimization</Name>
+    <RootNamespace>RepeatOptimization</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,7 +23,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="RayStationScripts.py" />
+    <None Include="RepeatOptimization.py" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="IronPython|2.7-32" />
