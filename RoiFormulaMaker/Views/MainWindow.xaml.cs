@@ -28,5 +28,19 @@ namespace RoiFormulaMaker.Views
 
             this.DataContext = viewModel;
         }
+
+        public MainWindow(List<string> structureNames, List<dynamic> structureDesigns, string defaultDirectoryPath)
+        {
+            InitializeComponent();
+
+            var viewModel = new ViewModels.MainWindowViewModel
+            {
+                StructureNames = new ObservableCollection<string>(structureNames),
+                StructureDesigns = structureDesigns,
+                DefaultDirectoryPath = defaultDirectoryPath
+            };
+
+            this.DataContext = viewModel;
+        }
     }
 }

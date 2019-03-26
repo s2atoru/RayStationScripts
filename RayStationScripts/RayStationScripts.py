@@ -3,10 +3,12 @@ clr.AddReference("PresentationFramework")
 clr.AddReference("PresentationCore")
 
 import sys, os
+import json
 
 from System.Collections.Generic import List
 
 RayStationScriptsPath = os.environ["USERPROFILE"] + r"\DeskTop\RayStationScripts" + "\\"
+
 dllsPath = RayStationScriptsPath + "Dlls"
 print(dllsPath)
 sys.path.append(dllsPath)
@@ -15,11 +17,43 @@ scriptsPath = RayStationScriptsPath + "Scripts"
 print(scriptsPath)
 sys.path.append(scriptsPath)
 
-from Helpers import MarginDict
+print ','.join(sys.path)
 
-marginDict = MarginDict([4]*8)
+roiFormulasPath = RayStationScriptsPath + "RoiFormulas"
 
-print marginDict
+clr.AddReference("RoiFormulaMaker")
+from RoiFormulaMaker.Views import MainWindow
+
+structureNames = List[str](['PTV', 'Rectum', 'Bladder', 'FemoralHeads'])
+
+structureDesigns = List[object]()
+
+mainWindow = MainWindow(structureNames, structureDesigns, roiFormulasPath)
+mainWindow.ShowDialog();
+
+jsonList = []
+for s in structureDesigns:
+    print(s,s.ToJson())
+    #To dictionary
+    jsonList.append(json.loads(s.ToJson()))
+
+from StringIO import StringIO
+io = StringIO()
+#JSON list to JSON text
+json.dump(jsonList, io)
+print io.getvalue()
+
+#ringRoiParameters = RingRoiParameters();
+#marginAddedRoiParameters = MarginAddedRoiParameters();
+
+#print marginAddedRoiParameters.ToJson();
+
+
+#from Helpers import MarginDict
+
+#marginDict = MarginDict([4]*8)
+
+#print marginDict
 
 #sys.path.append(r"C:\Users\satoru\Source\Repos\RayStationScripts\OptimizatoinSettings\bin\Debug")
 #clr.AddReference("OptimizatoinSettings")
@@ -44,3 +78,4 @@ print marginDict
 #print("{0}, {1}, {2}, {3}, {4}".format(settingParameters.MaxNumberOfIterations, settingParameters.IterationsInPreparationsPhase, settingParameters.ComputeFinalDose, settingParameters.IsValid, settingParameters.CanSetParameters))
 
 print('Hello world')
+pass

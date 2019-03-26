@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using RoiFormulaMaker.Models;
 using RoiFormulaMaker.Notifications;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace RoiFormulaMaker.ViewModels
 {
@@ -23,6 +24,27 @@ namespace RoiFormulaMaker.ViewModels
         {
             get { return message; }
             set { SetProperty(ref message, value); }
+        }
+
+        private string filePath;
+        public string FilePath
+        {
+            get { return filePath; }
+            set { SetProperty(ref filePath, value); }
+        }
+
+        private string description;
+        public string Description
+        {
+            get { return description; }
+            set { SetProperty(ref description, value); }
+        }
+
+        private string defaultDirectoryPath;
+        public string DefaultDirectoryPath
+        {
+            get { return defaultDirectoryPath; }
+            set { SetProperty(ref defaultDirectoryPath, value); }
         }
 
         public ObservableCollection<string> StructureNames { get; set; } = new ObservableCollection<string> { "PTV", "Rectum", "Bladder" };
@@ -44,6 +66,9 @@ namespace RoiFormulaMaker.ViewModels
             get { return structureDescriptions; }
             set { SetProperty(ref structureDescriptions, value); }
         }
+
+        public DelegateCommand ChooseFileCommand { get; private set; }
+
         public MainWindowViewModel()
         {
 
@@ -55,6 +80,8 @@ namespace RoiFormulaMaker.ViewModels
 
             MakeMarginAddedRoiRequest = new InteractionRequest<MakeMarginAddedRoiNotification>();
             MakeMarginAddedRoiCommand = new DelegateCommand(RaiseMakeMarginAddedRoiInteraction);
+
+            ChooseFileCommand = new DelegateCommand(ChooseFile);
         }
 
         private void RaiseMakeRingRoiInteraction()
@@ -182,5 +209,36 @@ namespace RoiFormulaMaker.ViewModels
                     Message = "User canceled or didn't select structures";
             });
         }
+
+        private void ChooseFile()
+        {
+            //var dialog = new OpenFileDialog();
+            //dialog.Title = "Choose file";
+            ////dialog.Filter = "All files(*.*)|*.*";
+            //if (dialog.ShowDialog() == true)
+            //{
+            //    FilePath = dialog.FileName;
+            //}
+            //else
+            //{
+            //    Message = "\"Choose file\" is canceled";
+            //}
+
+            var dialog = new CommonOpenFileDialog("Choose File");
+
+            dialog.InitialDirectory = DefaultDirectoryPath;
+
+            dialog.IsFolderPicker = false;
+
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                FilePath = dialog.FileName;
+            }
+            else
+            {
+                Message = "\"Choose File\" is canceled";
+            }
+        }
+
     }
 }

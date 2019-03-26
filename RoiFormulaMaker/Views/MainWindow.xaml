@@ -6,14 +6,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:local="clr-namespace:RoiFormulaMaker.Views"
-        xmlns:vm="clr-namespace:RoiFormulaMaker.ViewModels"    
+        xmlns:vm="clr-namespace:RoiFormulaMaker.ViewModels"
+        xmlns:ac="clr-namespace:RoiFormulaMaker.Actions"
         xmlns:views="clr-namespace:RoiFormulaMaker.Views" x:Class="RoiFormulaMaker.Views.MainWindow"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:MainWindowViewModel}"
-        Title="MainWindow" Height="450" Width="800" SizeToContent="WidthAndHeight" FontSize="24">
+        Title="MainWindow" Height="600" Width="800" SizeToContent="WidthAndHeight" FontSize="24">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Margin" Value="6"/>
+            <Setter Property="Padding" Value="3"/>
         </Style>
         <Style TargetType="TextBlock">
             <Setter Property="Margin" Value="6"/>
@@ -54,9 +56,42 @@
             <Button Content="Add Ring ROI" Command="{Binding MakeRingRoiCommand}"/>
             <Button Content="Add ROI Subtracted ROI" Command="{Binding MakeRoiSubtractedRoiCommand}"/>
             <Button Content="Add Margin Added ROI" Command="{Binding MakeMarginAddedRoiCommand}"/>
-            <TextBlock  TextWrapping="Wrap" Text="{Binding Message}"/>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Message:"/>
+                <TextBlock  TextWrapping="Wrap" Text="{Binding Message}" Margin="5,6,6.6,6" Foreground="Red"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
+                <Button Command="{Binding ChooseFileCommand}" Content="Choose File" Width="140"/>
+                <Label Content="Chosen file:" />
+                <TextBlock Text="{Binding FilePath}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding ChooseFileCommand}" Content="Save to File" Width="140"/>
+                <Label Content="Description: "/>
+                <TextBox Text="{Binding Description}" MinWidth="480">
+                </TextBox>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <Button Content="OK" Width="140">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <prism:InvokeCommandAction Command="{Binding OkCommand}"/>
+                            <ac:CloseWindowAction/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button Content="Cancel" Width="140">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <!--<prism:InvokeCommandAction Command="{Binding CancelCommand}"/>-->
+                            <ac:CloseWindowAction/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </StackPanel>
+            <Label Content="Structure Descriptions:"/>
             <TextBlock Text="{Binding StructureDescriptions}"></TextBlock>
         </StackPanel>
-
     </Grid>
 </Window>
