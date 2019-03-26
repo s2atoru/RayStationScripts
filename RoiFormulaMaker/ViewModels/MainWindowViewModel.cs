@@ -30,8 +30,8 @@ namespace RoiFormulaMaker.ViewModels
         public InteractionRequest<MakeRingRoiNotification> MakeRingRoiRequest { get; set; }
         public DelegateCommand MakeRingRoiCommand { get; set; }
 
-        public InteractionRequest<MakeTargetSubtractedRoiNotification> MakeTargetSubtractedRoiRequest { get; set; }
-        public DelegateCommand MakeTargetSubtractedRoiCommand { get; set; }
+        public InteractionRequest<MakeRoiSubtractedRoiNotification> MakeRoiSubtractedRoiRequest { get; set; }
+        public DelegateCommand MakeRoiSubtractedRoiCommand { get; set; }
 
         public InteractionRequest<MakeMarginAddedRoiNotification> MakeMarginAddedRoiRequest { get; set; }
         public DelegateCommand MakeMarginAddedRoiCommand { get; set; }
@@ -50,8 +50,8 @@ namespace RoiFormulaMaker.ViewModels
             MakeRingRoiRequest = new InteractionRequest<MakeRingRoiNotification>();
             MakeRingRoiCommand = new DelegateCommand(RaiseMakeRingRoiInteraction);
 
-            MakeTargetSubtractedRoiRequest = new InteractionRequest<MakeTargetSubtractedRoiNotification>();
-            MakeTargetSubtractedRoiCommand = new DelegateCommand(RaiseMakeTargetSubtractedRoiInteraction);
+            MakeRoiSubtractedRoiRequest = new InteractionRequest<MakeRoiSubtractedRoiNotification>();
+            MakeRoiSubtractedRoiCommand = new DelegateCommand(RaiseMakeRoiSubtractedRoiInteraction);
 
             MakeMarginAddedRoiRequest = new InteractionRequest<MakeMarginAddedRoiNotification>();
             MakeMarginAddedRoiCommand = new DelegateCommand(RaiseMakeMarginAddedRoiInteraction);
@@ -100,34 +100,34 @@ namespace RoiFormulaMaker.ViewModels
             });
         }
 
-        private void RaiseMakeTargetSubtractedRoiInteraction()
+        private void RaiseMakeRoiSubtractedRoiInteraction()
         {
-            MakeTargetSubtractedRoiRequest.Raise(new MakeTargetSubtractedRoiNotification
+            MakeRoiSubtractedRoiRequest.Raise(new MakeRoiSubtractedRoiNotification
             {
-                Title = "Make Target Subtracted ROI",
+                Title = "Make ROI Subtracted ROI",
                 Margin = 0,
                 StructureNames = this.StructureNames
             },
             r =>
             {
-                if (r.Confirmed && r.BaseStructureName != null && r.SubtractedTargetName != null)
+                if (r.Confirmed && r.BaseStructureName != null && r.SubtractedRoiName != null)
                 {
-                    Message = $"User selected: Base => { r.BaseStructureName}, Subtracted Target => {r.SubtractedTargetName}";
-                    var targetSubtractedRoiParameters = new TargetSubtractedRoiParameters
+                    Message = $"User selected: Base => { r.BaseStructureName}, Subtracted ROI => {r.SubtractedRoiName}";
+                    var roiSubtractedRoiParameters = new RoiSubtractedRoiParameters
                     {
                         StructureName = r.StructureName,
                         BaseStructureName = r.BaseStructureName,
-                        SubtractedTargetName = r.SubtractedTargetName,
+                        SubtractetRoiName = r.SubtractedRoiName,
                         Margin = r.Margin
                     };
-                    if (StructureDesigns.Contains(targetSubtractedRoiParameters))
+                    if (StructureDesigns.Contains(roiSubtractedRoiParameters))
                     {
-                        Message = "The same target subtracted ROI is already in the list";
+                        Message = "The same ROI subtracted ROI is already in the list";
                         return;
                         ;
                     }
-                    StructureDesigns.Add(targetSubtractedRoiParameters);
-                    var structureDescription = targetSubtractedRoiParameters.ToString();
+                    StructureDesigns.Add(roiSubtractedRoiParameters);
+                    var structureDescription = roiSubtractedRoiParameters.ToString();
                     if (string.IsNullOrEmpty(StructureDescriptions))
                     {
                         StructureDescriptions = structureDescription;

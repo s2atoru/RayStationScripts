@@ -3,11 +3,11 @@
 namespace RoiFormulaMaker.Views
 {
     /// <summary>
-    /// Interaction logic for MakeTargetSubtractedRoi.xaml
+    /// Interaction logic for MakeRoiSubtractedRoi.xaml
     /// </summary>
-    public partial class MakeTargetSubtractedRoiView : UserControl
+    public partial class MakeRoiSubtractedRoiView : UserControl
     {
-        public MakeTargetSubtractedRoiView()
+        public MakeRoiSubtractedRoiView()
         {
             InitializeComponent();
         }

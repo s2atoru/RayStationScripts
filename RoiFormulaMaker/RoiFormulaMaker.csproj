@@ -43,6 +43,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -66,21 +67,21 @@
     <Compile Include="Models\MarginAddedRoiParameters.cs" />
     <Compile Include="Models\RingRoiParameters.cs" />
     <Compile Include="Models\StructureDesigns.cs" />
-    <Compile Include="Models\TargetSubtractedRoiParameters.cs" />
+    <Compile Include="Models\RoiSubtractedRoiParameters.cs" />
     <Compile Include="Notifications\MakeRingRoiNotification.cs" />
     <Compile Include="Notifications\MakeMarginAddedRoiNotification.cs" />
-    <Compile Include="Notifications\MakeTargetSubtractedRoiNotification.cs" />
+    <Compile Include="Notifications\MakeRoiSubtractedRoiNotification.cs" />
     <Compile Include="ViewModels\MakeRingRoiViewModel.cs" />
     <Compile Include="ViewModels\MakeMarginAddedRoiViewModel.cs" />
-    <Compile Include="ViewModels\MakeTargetSubtractedRoiViewModel.cs" />
+    <Compile Include="ViewModels\MakeRoiSubtractedRoiViewModel.cs" />
     <Compile Include="Views\MakeRingRoiView.xaml.cs">
       <DependentUpon>MakeRingRoiView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MakeMarginAddedRoiView.xaml.cs">
       <DependentUpon>MakeMarginAddedRoiView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MakeTargetSubtractedRoiView.xaml.cs">
-      <DependentUpon>MakeTargetSubtractedRoiView.xaml</DependentUpon>
+    <Compile Include="Views\MakeRoiSubtractedRoiView.xaml.cs">
+      <DependentUpon>MakeRoiSubtractedRoiView.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -103,7 +104,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\MakeTargetSubtractedRoiView.xaml">
+    <Page Include="Views\MakeRoiSubtractedRoiView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

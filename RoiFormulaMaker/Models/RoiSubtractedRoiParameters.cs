@@ -1,16 +1,16 @@
 ﻿namespace RoiFormulaMaker.Models
 {
-    class TargetSubtractedRoiParameters
+    class RoiSubtractedRoiParameters
     {
-        public string FormulaType { get; } = "TargetSubtractedRoi";
+        public string FormulaType { get; } = "RoiSubtractedRoi";
         public string StructureName { get; set; }
         public string BaseStructureName { get; set; }
-        public string SubtractedTargetName { get; set; }
+        public string SubtractetRoiName { get; set; }
         public int Margin { get; set; }
 
         public override string ToString()
         {
-            return $"Target Subtracted ROI: {StructureName}, Base Structure : {BaseStructureName}, Subtracted Target = {SubtractedTargetName}, Margin = {Margin} mm";
+            return $"ROI Subtracted ROI: {StructureName}, Base Structure : {BaseStructureName}, Subtracted ROI = {SubtractetRoiName}, Margin = {Margin} mm";
         }
 
         //Return true if obj is equivalent to this
@@ -21,20 +21,20 @@
             {
                 return false;
             }
-            //Compare BaseStructureName, SubtractedTargetName, and Margin
-            TargetSubtractedRoiParameters c = (TargetSubtractedRoiParameters)obj;
-            return (this.BaseStructureName == c.BaseStructureName) && (this.SubtractedTargetName == c.SubtractedTargetName) && (this.Margin == c.Margin);
+            //Compare BaseStructureName, SubtractetRoiName, and Margin
+            RoiSubtractedRoiParameters c = (RoiSubtractedRoiParameters)obj;
+            return (this.BaseStructureName == c.BaseStructureName) && (this.SubtractetRoiName == c.SubtractetRoiName) && (this.Margin == c.Margin);
         }
 
         //Return the same value if Equals return true
         public override int GetHashCode()
         {
             //XOR
-            return this.BaseStructureName.GetHashCode() ^ this.SubtractedTargetName.GetHashCode() ^ this.Margin;
+            return this.BaseStructureName.GetHashCode() ^ this.SubtractetRoiName.GetHashCode() ^ this.Margin;
         }
 
         //Overload of equality operators, == and !=
-        public static bool operator ==(TargetSubtractedRoiParameters c1, TargetSubtractedRoiParameters c2)
+        public static bool operator ==(RoiSubtractedRoiParameters c1, RoiSubtractedRoiParameters c2)
         {
             //Check if null
             if ((object)c1 == null)
@@ -49,7 +49,7 @@
             return c1.Equals(c2);
         }
 
-        public static bool operator !=(TargetSubtractedRoiParameters c1, TargetSubtractedRoiParameters c2)
+        public static bool operator !=(RoiSubtractedRoiParameters c1, RoiSubtractedRoiParameters c2)
         {
             //Return the opposite of ==
             return !(c1 == c2);

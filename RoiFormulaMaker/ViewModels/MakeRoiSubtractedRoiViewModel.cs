@@ -6,19 +6,18 @@ using RoiFormulaMaker.Notifications;
 
 namespace RoiFormulaMaker.ViewModels
 {
-    class MakeTargetSubtractedRoiViewModel : BindableBase, IInteractionRequestAware
+    class MakeRoiSubtractedRoiViewModel : BindableBase, IInteractionRequestAware
     {
         public string SelectedStructureName { get; set; }
-        public string SelectedSubtractedTarget { get; set; }
+        public string SelectedSubtractedRoi { get; set; }
 
-
-        public DelegateCommand MakeTargetSubtractedRoiCommand { get; private set; }
+        public DelegateCommand MakeRoiSubtractedRoiCommand { get; private set; }
 
         public DelegateCommand CancelCommand { get; private set; }
 
-        public MakeTargetSubtractedRoiViewModel()
+        public MakeRoiSubtractedRoiViewModel()
         {
-            MakeTargetSubtractedRoiCommand = new DelegateCommand(AcceptMakingTargetSubtractedRoi);
+            MakeRoiSubtractedRoiCommand = new DelegateCommand(AcceptMakingRoiSubtractedRoi);
             CancelCommand = new DelegateCommand(CancelInteraction);
         }
 
@@ -27,15 +26,15 @@ namespace RoiFormulaMaker.ViewModels
             notification.StructureName = null;
             notification.Margin = 0;
             notification.BaseStructureName = null;
-            notification.SubtractedTargetName = null;
+            notification.SubtractedRoiName = null;
             notification.Confirmed = false;
             FinishInteraction?.Invoke();
         }
 
-        private void AcceptMakingTargetSubtractedRoi()
+        private void AcceptMakingRoiSubtractedRoi()
         {
             notification.BaseStructureName = SelectedStructureName;
-            notification.SubtractedTargetName = SelectedSubtractedTarget;
+            notification.SubtractedRoiName = SelectedSubtractedRoi;
             if (string.IsNullOrEmpty(notification.StructureName))
             {
                 if (notification.Margin == 0)
@@ -54,12 +53,12 @@ namespace RoiFormulaMaker.ViewModels
 
         public Action FinishInteraction { get; set; }
 
-        private MakeTargetSubtractedRoiNotification notification;
+        private MakeRoiSubtractedRoiNotification notification;
 
         public INotification Notification
         {
             get { return notification; }
-            set { SetProperty(ref notification, (MakeTargetSubtractedRoiNotification)value); }
+            set { SetProperty(ref notification, (MakeRoiSubtractedRoiNotification)value); }
         }
     }
 }

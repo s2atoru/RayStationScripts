@@ -31,10 +31,10 @@
             </prism:PopupWindowAction>
         </prism:InteractionRequestTrigger>
     
-        <prism:InteractionRequestTrigger SourceObject="{Binding MakeTargetSubtractedRoiRequest}">
+        <prism:InteractionRequestTrigger SourceObject="{Binding MakeRoiSubtractedRoiRequest}">
             <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True">
                 <prism:PopupWindowAction.WindowContent>
-                    <views:MakeTargetSubtractedRoiView />
+                    <views:MakeRoiSubtractedRoiView />
                 </prism:PopupWindowAction.WindowContent>
             </prism:PopupWindowAction>
         </prism:InteractionRequestTrigger>
@@ -52,7 +52,7 @@
 
             <!--<views:MakeRing DataContext="{Binding MakeRingViewModel}"/>-->
             <Button Content="Add Ring ROI" Command="{Binding MakeRingRoiCommand}"/>
-            <Button Content="Add Target Subtracted ROI" Command="{Binding MakeTargetSubtractedRoiCommand}"/>
+            <Button Content="Add ROI Subtracted ROI" Command="{Binding MakeRoiSubtractedRoiCommand}"/>
             <Button Content="Add Margin Added ROI" Command="{Binding MakeMarginAddedRoiCommand}"/>
             <TextBlock  TextWrapping="Wrap" Text="{Binding Message}"/>
             <TextBlock Text="{Binding StructureDescriptions}"></TextBlock>
