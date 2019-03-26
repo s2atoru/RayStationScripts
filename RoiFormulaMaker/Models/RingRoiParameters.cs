@@ -1,16 +1,36 @@
-﻿namespace RoiFormulaMaker.Models
+﻿using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
+using System.Text;
+
+namespace RoiFormulaMaker.Models
 {
+    [DataContract]
     public class RingRoiParameters
     {
-        public string FormulaType { get; } = "RingRoi";
+        [DataMember()]
+        public string FormulaType { get; set; } = "RingRoi";
+        [DataMember()]
         public string StructureName { get; set; }
+        [DataMember()]
         public string BaseStructureName { get; set; }
+        [DataMember()]
         public int InnerMargin { get; set; }
+        [DataMember()]
         public int OuterMargin { get; set; }
 
         public override string ToString()
         {
             return $"Ring ROI: {StructureName}, Base Structure : {BaseStructureName}, Outer Margin = {OuterMargin} mm, Inner Margin = {InnerMargin} mm";
+        }
+
+        public string ToJson()
+        {
+            var serializer = new DataContractJsonSerializer(this.GetType());
+            var ms = new MemoryStream();
+            serializer.WriteObject(ms, this);
+            string jsonString = Encoding.UTF8.GetString(ms.ToArray());
+            return jsonString;
         }
 
         //Return true if obj is equivalent to this

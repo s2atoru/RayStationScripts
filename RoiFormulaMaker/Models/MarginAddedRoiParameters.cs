@@ -1,15 +1,34 @@
-﻿namespace RoiFormulaMaker.Models
+﻿using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
+using System.Text;
+
+namespace RoiFormulaMaker.Models
 {
+    [DataContract]
     public class MarginAddedRoiParameters
     {
-        public string FormulaType { get; } = "MarginAddedRoi";
+        [DataMember()]
+        public string FormulaType { get; set; } = "MarginAddedRoi";
+        [DataMember()]
         public string StructureName { get; set; }
+        [DataMember()]
         public string BaseStructureName { get; set; }
+        [DataMember()]
         public int Margin { get; set; }
 
         public override string ToString()
         {
             return $"Margin Added ROI: {StructureName}, Base Structure : {BaseStructureName}, Margin = {Margin} mm";
+        }
+
+        public string ToJson()
+        {
+            var serializer = new DataContractJsonSerializer(this.GetType());
+            var ms = new MemoryStream();
+            serializer.WriteObject(ms, this);
+            string jsonString = Encoding.UTF8.GetString(ms.ToArray());
+            return jsonString;
         }
 
         //Return true if obj is equivalent to this

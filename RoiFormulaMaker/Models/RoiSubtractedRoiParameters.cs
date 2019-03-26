@@ -1,16 +1,36 @@
-﻿namespace RoiFormulaMaker.Models
+﻿using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
+using System.Text;
+
+namespace RoiFormulaMaker.Models
 {
-    class RoiSubtractedRoiParameters
+    [DataContract]
+    public class RoiSubtractedRoiParameters
     {
-        public string FormulaType { get; } = "RoiSubtractedRoi";
+        [DataMember()]
+        public string FormulaType { get; set; } = "RoiSubtractedRoi";
+        [DataMember()]
         public string StructureName { get; set; }
+        [DataMember()]
         public string BaseStructureName { get; set; }
+        [DataMember()]
         public string SubtractetRoiName { get; set; }
+        [DataMember()]
         public int Margin { get; set; }
 
         public override string ToString()
         {
             return $"ROI Subtracted ROI: {StructureName}, Base Structure : {BaseStructureName}, Subtracted ROI = {SubtractetRoiName}, Margin = {Margin} mm";
+        }
+
+        public string ToJson()
+        {
+            var serializer = new DataContractJsonSerializer(this.GetType());
+            var ms = new MemoryStream();
+            serializer.WriteObject(ms, this);
+            string jsonString = Encoding.UTF8.GetString(ms.ToArray());
+            return jsonString;
         }
 
         //Return true if obj is equivalent to this
