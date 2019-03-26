@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using RoiFormulaMaker.Models;
 using RoiFormulaMaker.Notifications;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using Microsoft.Win32;
 
 namespace RoiFormulaMaker.ViewModels
 {
@@ -31,6 +32,13 @@ namespace RoiFormulaMaker.ViewModels
         {
             get { return filePath; }
             set { SetProperty(ref filePath, value); }
+        }
+
+        private string savedFilePath;
+        public string SavedFilePath
+        {
+            get { return savedFilePath; }
+            set { SetProperty(ref savedFilePath, value); }
         }
 
         private string description;
@@ -68,6 +76,7 @@ namespace RoiFormulaMaker.ViewModels
         }
 
         public DelegateCommand ChooseFileCommand { get; private set; }
+        public DelegateCommand SaveFileCommand { get; private set; }
 
         public MainWindowViewModel()
         {
@@ -82,6 +91,7 @@ namespace RoiFormulaMaker.ViewModels
             MakeMarginAddedRoiCommand = new DelegateCommand(RaiseMakeMarginAddedRoiInteraction);
 
             ChooseFileCommand = new DelegateCommand(ChooseFile);
+            SaveFileCommand = new DelegateCommand(SaveFile);
         }
 
         private void RaiseMakeRingRoiInteraction()
@@ -240,5 +250,22 @@ namespace RoiFormulaMaker.ViewModels
             }
         }
 
+        private void SaveFile()
+        {
+            var dialog = new SaveFileDialog();
+            dialog.Title = "Save to File";
+
+            dialog.InitialDirectory = DefaultDirectoryPath;
+
+            //dialog.Filter = "text file|*.txt";
+            if (dialog.ShowDialog() == true)
+            {
+                SavedFilePath = dialog.FileName;
+            }
+            else
+            {
+                Message = "\"Save to File\" is canceled";
+            }
+        }
     }
 }
