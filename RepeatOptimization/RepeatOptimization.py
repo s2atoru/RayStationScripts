@@ -1,4 +1,4 @@
-#from connect import *
+from connect import *
 
 import clr
 import sys, math, wpf, os
@@ -46,23 +46,34 @@ canExecute = repetitionParameters.CanExecute
 
 print numberOfRepetitionTimes, scaleDoseAfterEachIteration, scaleDoseAfterLastIteration, resetBeforeStartingOptimization, canExecute
 
+from ScaleDose import ScaleDoseBeamSets
+
+plan = get_current("Plan")
+beamSet = get_current("BeamSet")
+
+#ScaleDoseBeamSets(plan, beamSet)
+#canExecute = False
+
 if (canExecute):
     if(resetBeforeStartingOptimization):
         MessageBox.Show("Reset Optimization")
         #Execute Reset Optimization
+        plan.PlanOptimizations[0].ResetOptimization()
         
     for i in xrange(numberOfRepetitionTimes):
 
         print "Start optimization {0}".format(i+1)
         # Execute Optimization
+        plan.PlanOptimizations[0].RunOptimization()
 
         if(i+1 == numberOfRepetitionTimes and scaleDoseAfterLastIteration):
             print "Scale dose after last iteration {0}".format(i+1)
             #Execute Scale dose
+            ScaleDoseBeamSets(plan, beamSet)
 
         if(i+1 < numberOfRepetitionTimes and scaleDoseAfterEachIteration):
             print "Scale dose after iteration {0}".format(i+1)
             #Execute Scale dose
-
+            ScaleDoseBeamSets(plan, beamSet)
 
 pass
