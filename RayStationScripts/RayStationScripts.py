@@ -31,6 +31,8 @@ structureDesigns = List[object]()
 mainWindow = MainWindow(structureNames, structureDesigns, roiFormulasPath)
 mainWindow.ShowDialog();
 
+#Python JSON encoder and decoder
+#https://docs.python.org/2.7/library/json.html
 jsonList = []
 for s in structureDesigns:
     print(s,s.ToJson())
