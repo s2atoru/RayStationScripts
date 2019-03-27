@@ -65,7 +65,7 @@ def HaveAllRoisContours(roiNames, rois):
 
     return False
 
-def MakeRoisSubtractedRoi(case, examination, resultRoiName, sourceRoiNames, subtractedRoiNames, outerMargins = [0] * 6, innerMargins=[0] * 6, resultMargins=[0] * 6, isDerived=True, color="Yellow", roiType='Control'):
+def MakeRoisSubtractedRoi(case, examination, resultRoiName, sourceRoiNames, subtractedRoiNames, outerMargins = [0] * 6, innerMargins=[0] * 6, resultMargins=[0] * 6, isDerived=True, color='Yellow', roiType='Control'):
     
     structureSet = GetStructureSet(case, examination)
 
@@ -109,7 +109,7 @@ def MakeRoisSubtractedRoi(case, examination, resultRoiName, sourceRoiNames, subt
 
     return False
 
-def MakeRingRoi(case, examination, structureName, baseStructureName, outerMargin, innerMargin, isDerived=True, color="Yellow", roiType='Control'):
+def MakeRingRoi(case, examination, structureName, baseStructureName, outerMargin, innerMargin, isDerived=True, color='Yellow', roiType='Control'):
     
     with CompositeAction('Ring ROI Algebra ({0})'.format(structureName)):
     
@@ -124,22 +124,22 @@ def MakeRingRoi(case, examination, structureName, baseStructureName, outerMargin
         MessageBox.Show(message)
         return False
 
-def MakeTargetSubtractedRoi(case, examination, structureName, baseStructureName, subtractedTargetName, margin, isDerived=True, color="Yellow", roiType='Control'):
+def MakeRoiSubtractedRoi(case, examination, structureName, baseStructureName, subtractedRoiName, margin, isDerived=True, color='Yellow', roiType='Control'):
     
-    with CompositeAction('Target subtracted ROI Algebra ({0})'.format(structureName)):
+    with CompositeAction('ROI subtracted ROI Algebra ({0})'.format(structureName)):
 
-        hasGeometry = MakeRoisSubtractedRoi(case, examination, structureName, [baseStructureName], [subtractedTargetName], [0] * 6, innerMargins=[margin] * 6, resultMargins=[0] * 6, isDerived=isDerived, color=color, roiType=roiType)
+        hasGeometry = MakeRoisSubtractedRoi(case, examination, structureName, [baseStructureName], [subtractedRoiName], [0] * 6, innerMargins=[margin] * 6, resultMargins=[0] * 6, isDerived=isDerived, color=color, roiType=roiType)
     
       # CompositeAction ends 
 
     if(hasGeometry):
         return True
     else:
-        message = 'MakeTargetSubtracted for {0}: not created geometry'.format(structureName)
+        message = 'MakeRoiSubtracted for {0}: not created geometry'.format(structureName)
         MessageBox.Show(message)
         return False
 
-def MakeMarginAddedRoi(case, examination, structureName, baseStructureName, margin, isDerived=True, color="Yellow", roiType='Control'):
+def MakeMarginAddedRoi(case, examination, structureName, baseStructureName, margin, isDerived=True, color='Yellow', roiType='Control'):
     
     resultRoiName = structureName
     sourceRoiName = baseStructureName
@@ -216,11 +216,9 @@ if __name__ == '__main__':
 
     structureName = 'zTestRectum-PTV1_01_UD'
     baseStructureName = 'Rectum'
-    subtractedTargetName = 'PTV1'
-    MakeTargetSubtractedRoi(case, examination, structureName, baseStructureName, subtractedTargetName, 0.1, isDerived=False)
+    subtractedRoiName = 'PTV1'
+    MakeRoiSubtractedRoi(case, examination, structureName, baseStructureName, subtractedRoiName, 0.1, isDerived=False)
 
     structureName = 'zTestBladder_03_UD'
     baseStructureName = 'Bladder'
     MakeMarginAddedRoi(case, examination, structureName, baseStructureName, 0.3, isDerived=False)
-
-

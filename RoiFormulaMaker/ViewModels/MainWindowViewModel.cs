@@ -154,7 +154,7 @@ namespace RoiFormulaMaker.ViewModels
                     {
                         StructureName = r.StructureName,
                         BaseStructureName = r.BaseStructureName,
-                        SubtractetRoiName = r.SubtractedRoiName,
+                        SubtractedRoiName = r.SubtractedRoiName,
                         Margin = r.Margin
                     };
                     if (StructureDesigns.Contains(roiSubtractedRoiParameters))

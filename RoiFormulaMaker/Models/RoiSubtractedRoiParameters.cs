@@ -15,13 +15,13 @@ namespace RoiFormulaMaker.Models
         [DataMember()]
         public string BaseStructureName { get; set; }
         [DataMember()]
-        public string SubtractetRoiName { get; set; }
+        public string SubtractedRoiName { get; set; }
         [DataMember()]
         public int Margin { get; set; }
 
         public override string ToString()
         {
-            return $"ROI Subtracted ROI: {StructureName}, Base Structure : {BaseStructureName}, Subtracted ROI = {SubtractetRoiName}, Margin = {Margin} mm";
+            return $"ROI Subtracted ROI: {StructureName}, Base Structure : {BaseStructureName}, Subtracted ROI = {SubtractedRoiName}, Margin = {Margin} mm";
         }
 
         public string ToJson()
@@ -43,14 +43,14 @@ namespace RoiFormulaMaker.Models
             }
             //Compare BaseStructureName, SubtractetRoiName, and Margin
             RoiSubtractedRoiParameters c = (RoiSubtractedRoiParameters)obj;
-            return (this.BaseStructureName == c.BaseStructureName) && (this.SubtractetRoiName == c.SubtractetRoiName) && (this.Margin == c.Margin);
+            return (this.BaseStructureName == c.BaseStructureName) && (this.SubtractedRoiName == c.SubtractedRoiName) && (this.Margin == c.Margin);
         }
 
         //Return the same value if Equals return true
         public override int GetHashCode()
         {
             //XOR
-            return this.BaseStructureName.GetHashCode() ^ this.SubtractetRoiName.GetHashCode() ^ this.Margin;
+            return this.BaseStructureName.GetHashCode() ^ this.SubtractedRoiName.GetHashCode() ^ this.Margin;
         }
 
         //Overload of equality operators, == and !=
