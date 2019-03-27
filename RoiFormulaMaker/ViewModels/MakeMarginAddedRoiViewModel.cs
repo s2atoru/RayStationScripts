@@ -34,7 +34,7 @@ namespace RoiFormulaMaker.ViewModels
             notification.BaseStructureName = SelectedStructureName;
             if (string.IsNullOrEmpty(notification.StructureName))
             {
-                notification.StructureName = $"{notification.BaseStructureName}_{notification.Margin}";
+                notification.StructureName = $"z{notification.BaseStructureName}_{notification.Margin}";
             }
 
             notification.Confirmed = true;

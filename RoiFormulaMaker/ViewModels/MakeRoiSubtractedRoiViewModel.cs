@@ -39,11 +39,11 @@ namespace RoiFormulaMaker.ViewModels
             {
                 if (notification.Margin == 0)
                 {
-                    notification.StructureName = $"NS_OPT_{notification.BaseStructureName}";
+                    notification.StructureName = $"z{notification.BaseStructureName}-{notification.SubtractedRoiName}";
                 }
                 else
                 {
-                    notification.StructureName = $"NS_{notification.Margin}_OPT_{notification.BaseStructureName}";
+                    notification.StructureName = $"z{notification.BaseStructureName}-{notification.SubtractedRoiName}_{notification.Margin}";
                 }
             }
 
