@@ -9,7 +9,7 @@
              xmlns:vm="clr-namespace:RoiFormulaMaker.ViewModels"    
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance vm:MakeRingRoiViewModel}"
-             d:DesignHeight="450" d:DesignWidth="800" FontSize="24">
+             d:DesignHeight="450" d:DesignWidth="1000" FontSize="24">
     <UserControl.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="Margin" Value="6"/>
@@ -35,6 +35,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <TextBlock  TextWrapping="Wrap" Text="Base Structure"/>
         <ComboBox ItemsSource="{Binding Notification.StructureNames}" Grid.Row="1" SelectedItem="{Binding SelectedStructureName, Mode=TwoWay}"/>
@@ -44,6 +45,8 @@
         <TextBox Text="{Binding Notification.InnerMargin}" Grid.Row="1" Grid.Column="2"/>
         <TextBlock  TextWrapping="Wrap" Text="Structure Name" Grid.Column="3"/>
         <TextBox Text="{Binding Notification.StructureName}" Grid.Row="1" Grid.Column="3" MinWidth="196"/>
+        <TextBlock  TextWrapping="Wrap" Text="Structure Type" Grid.Column="4"/>
+        <ComboBox ItemsSource="{Binding Notification.StructureTypes}" Grid.Row="1" Grid.Column="4" SelectedItem="{Binding SelectedStructureType, Mode=TwoWay}"/>
         <Button Grid.Row="2" Content="OK" Command="{Binding MakeRingRoiCommand}"/>
         <Button Grid.Row="2" Content="Cancel" Grid.Column="1" Command="{Binding CancelCommand}"/>
     </Grid>

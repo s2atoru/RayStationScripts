@@ -10,5 +10,8 @@ namespace RoiFormulaMaker.Notifications
         public int InnerMargin { get; set; }
         public int OuterMargin { get; set; }
         public IList<string> StructureNames { get; set; }
+
+        public string StructureType { get; set; }
+        public IList<string> StructureTypes { get; set; }
     }
 }

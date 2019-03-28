@@ -9,5 +9,8 @@ namespace RoiFormulaMaker.Notifications
         public string BaseStructureName { get; set; }
         public int Margin { get; set; }
         public IList<string> StructureNames { get; set; }
+
+        public string StructureType { get; set; }
+        public IList<string> StructureTypes { get; set; }
     }
 }

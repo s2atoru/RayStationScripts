@@ -13,13 +13,15 @@ namespace RoiFormulaMaker.Models
         [DataMember()]
         public string StructureName { get; set; }
         [DataMember()]
+        public string StructureType { get; set; }
+        [DataMember()]
         public string BaseStructureName { get; set; }
         [DataMember()]
         public int Margin { get; set; }
 
         public override string ToString()
         {
-            return $"Margin Added ROI: {StructureName}, Base Structure : {BaseStructureName}, Margin = {Margin} mm";
+            return $"Margin Added ROI: {StructureName} ({StructureType}), Base Structure : {BaseStructureName}, Margin = {Margin} mm";
         }
 
         public string ToJson()

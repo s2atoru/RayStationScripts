@@ -13,6 +13,8 @@ namespace RoiFormulaMaker.Models
         [DataMember()]
         public string StructureName { get; set; }
         [DataMember()]
+        public string StructureType { get; set; }
+        [DataMember()]
         public string BaseStructureName { get; set; }
         [DataMember()]
         public string SubtractedRoiName { get; set; }
@@ -21,7 +23,7 @@ namespace RoiFormulaMaker.Models
 
         public override string ToString()
         {
-            return $"ROI Subtracted ROI: {StructureName}, Base Structure : {BaseStructureName}, Subtracted ROI = {SubtractedRoiName}, Margin = {Margin} mm";
+            return $"ROI Subtracted ROI: {StructureName} ({StructureType}), Base Structure : {BaseStructureName}, Subtracted ROI = {SubtractedRoiName}, Margin = {Margin} mm";
         }
 
         public string ToJson()

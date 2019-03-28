@@ -11,6 +11,8 @@ namespace RoiFormulaMaker.ViewModels
         public string SelectedStructureName { get; set; }
         public string SelectedSubtractedRoi { get; set; }
 
+        public string SelectedStructureType { get; set; } = "Control";
+
         public DelegateCommand MakeRoiSubtractedRoiCommand { get; private set; }
 
         public DelegateCommand CancelCommand { get; private set; }
@@ -24,6 +26,7 @@ namespace RoiFormulaMaker.ViewModels
         private void CancelInteraction()
         {
             notification.StructureName = null;
+            notification.StructureType = null;
             notification.Margin = 0;
             notification.BaseStructureName = null;
             notification.SubtractedRoiName = null;
@@ -35,6 +38,7 @@ namespace RoiFormulaMaker.ViewModels
         {
             notification.BaseStructureName = SelectedStructureName;
             notification.SubtractedRoiName = SelectedSubtractedRoi;
+            notification.StructureType = SelectedStructureType;
             if (string.IsNullOrEmpty(notification.StructureName))
             {
                 if (notification.Margin == 0)

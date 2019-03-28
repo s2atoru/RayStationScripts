@@ -1,12 +1,12 @@
-﻿using Prism.Commands;
+﻿using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using RoiFormulaMaker.Models;
 using RoiFormulaMaker.Notifications;
-using Microsoft.WindowsAPICodePack.Dialogs;
-using Microsoft.Win32;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace RoiFormulaMaker.ViewModels
 {
@@ -57,6 +57,37 @@ namespace RoiFormulaMaker.ViewModels
 
         public ObservableCollection<string> StructureNames { get; set; } = new ObservableCollection<string> { "PTV", "Rectum", "Bladder" };
 
+        public ObservableCollection<string> StructureTypes { get; set; } = new ObservableCollection<string>
+        {
+            "Control",                  //ROI to be used in control of dose optimization and calculation.
+            "Ptv",                     //Planning target volume (as defined in ICRU50).
+            "Ctv",                     //Clinical target volume (as defined in ICRU50).
+            "Gtv",                     //Gross tumor volume (as defined in ICRU50).
+            "Organ",                    //Patient organ.
+            "Avoidance",                //Region in which dose is to be minimized.
+            "External",                //External patient contour.
+            "Support",                  //External patient support device.
+            "TreatedVolume",            //Treated volume (as defined in ICRU50).
+            "IrradiatedVolume",         //Irradiated Volume (as defined in ICRU50).
+            "Bolus",                    //Patient bolus to be used for external beam therapy.
+            "Marker",                   //Patient marker or marker on a localizer.
+            "Registration",             //Registration ROI
+            "Isocenter",                //Treatment isocenter to be used for external beam therapy.
+            "ContrastAgent",            //Volume into which a contrast agent has been injected.
+            "Cavity",                   //Patient anatomical cavity.
+            "BrachyChannel",            //Branchy therapy channel
+            "BrachyAccessory",          //Brachy therapy accessory device.
+            "BrachySourceApplicator",   //Brachy therapy source applicator.
+            "BrachyChannelShield",      //Brachy therapy channel shield.
+            "Fixation",                 //External patient fixation or immobilisation device.
+            "DoseRegion",               //ROI to be used as a dose reference.
+            "FieldOfView",              //ROI to be used for representing the Field-of-view in, e.g., a cone beam CT image.
+            "AcquisitionIsocenter",     //Acquisition isocenter, the position during acquisition.
+            "InitialLaserIsocenter",    //Initial laser isocenter, the position before acquisition.
+            "InitialMatchIsocenter",     //Initial match isocenter, the position after acquisition.
+            "Undefined"
+        };
+
         public InteractionRequest<MakeRingRoiNotification> MakeRingRoiRequest { get; set; }
         public DelegateCommand MakeRingRoiCommand { get; set; }
 
@@ -101,7 +132,8 @@ namespace RoiFormulaMaker.ViewModels
                 Title = "Make Ring ROI",
                 OuterMargin = 15,
                 InnerMargin = 0,
-                StructureNames = this.StructureNames
+                StructureNames = this.StructureNames,
+                StructureTypes = this.StructureTypes
             },
             r =>
             {
@@ -111,6 +143,7 @@ namespace RoiFormulaMaker.ViewModels
                     var ringRoiParameters = new RingRoiParameters
                     {
                         StructureName = r.StructureName,
+                        StructureType = r.StructureType,
                         BaseStructureName = r.BaseStructureName,
                         OuterMargin = r.OuterMargin,
                         InnerMargin = r.InnerMargin
@@ -143,7 +176,8 @@ namespace RoiFormulaMaker.ViewModels
             {
                 Title = "Make ROI Subtracted ROI",
                 Margin = 0,
-                StructureNames = this.StructureNames
+                StructureNames = this.StructureNames,
+                StructureTypes = this.StructureTypes
             },
             r =>
             {
@@ -153,6 +187,7 @@ namespace RoiFormulaMaker.ViewModels
                     var roiSubtractedRoiParameters = new RoiSubtractedRoiParameters
                     {
                         StructureName = r.StructureName,
+                        StructureType = r.StructureType,
                         BaseStructureName = r.BaseStructureName,
                         SubtractedRoiName = r.SubtractedRoiName,
                         Margin = r.Margin
@@ -185,7 +220,8 @@ namespace RoiFormulaMaker.ViewModels
             {
                 Title = "Make Margin Added ROI",
                 Margin = 0,
-                StructureNames = this.StructureNames
+                StructureNames = this.StructureNames,
+                StructureTypes = this.StructureTypes
             },
             r =>
             {
@@ -195,6 +231,7 @@ namespace RoiFormulaMaker.ViewModels
                     var MarginAddedRoiParameters = new MarginAddedRoiParameters
                     {
                         StructureName = r.StructureName,
+                        StructureType = r.StructureType,
                         BaseStructureName = r.BaseStructureName,
                         Margin = r.Margin
                     };

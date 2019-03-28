@@ -13,6 +13,8 @@ namespace RoiFormulaMaker.Models
         [DataMember()]
         public string StructureName { get; set; }
         [DataMember()]
+        public string StructureType { get; set; }
+        [DataMember()]
         public string BaseStructureName { get; set; }
         [DataMember()]
         public int InnerMargin { get; set; }
@@ -21,7 +23,7 @@ namespace RoiFormulaMaker.Models
 
         public override string ToString()
         {
-            return $"Ring ROI: {StructureName}, Base Structure : {BaseStructureName}, Outer Margin = {OuterMargin} mm, Inner Margin = {InnerMargin} mm";
+            return $"Ring ROI: {StructureName} ({StructureType}), Base Structure : {BaseStructureName}, Outer Margin = {OuterMargin} mm, Inner Margin = {InnerMargin} mm";
         }
 
         public string ToJson()
