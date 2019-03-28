@@ -29,7 +29,7 @@ def GetRois(structureSet):
 
     return rois
 
-def GetRoi(roiName, rois, color, roiType, TissueName=None, RbeCellTypeName=None, RoiMaterial=None):
+def GetRoi(roiName, rois, case, color, roiType, TissueName=None, RbeCellTypeName=None, RoiMaterial=None):
     if(roiName in rois):
         roi = case.PatientModel.RegionsOfInterest[roiName]
         if( not (roi.DerivedRoiExpression is None)):
@@ -73,7 +73,7 @@ def MakeRoisSubtractedRoi(case, examination, resultRoiName, sourceRoiNames, subt
         isDerived = False
 
     rois = GetRois(structureSet)
-    roi = GetRoi(resultRoiName, rois, color, roiType)
+    roi = GetRoi(resultRoiName, rois, case, color, roiType)
 
     #if(resultRoiName in rois):
     #    roi = case.PatientModel.RegionsOfInterest[resultRoiName]
@@ -149,7 +149,7 @@ def MakeMarginAddedRoi(case, examination, structureName, baseStructureName, marg
     structureSet = GetStructureSet(case, examination)
     
     rois = GetRois(structureSet)
-    roi = GetRoi(resultRoiName, rois, color, roiType)
+    roi = GetRoi(resultRoiName, rois, case, color, roiType)
 
     marginSettingsResult = MarginDict([margin]*6)
 
@@ -183,7 +183,7 @@ if __name__ == '__main__':
 
     case = get_current("Case")
     examination = get_current("Examination")
-    plan = get_current("Plan")
+    #plan = get_current("Plan")
 
      
     case = get_current("Case")
@@ -222,3 +222,4 @@ if __name__ == '__main__':
     structureName = 'zTestBladder_03_UD'
     baseStructureName = 'Bladder'
     MakeMarginAddedRoi(case, examination, structureName, baseStructureName, 0.3, isDerived=False)
+

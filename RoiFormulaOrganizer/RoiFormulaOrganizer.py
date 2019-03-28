@@ -1,4 +1,4 @@
-#from connect import *
+from connect import *
 
 import clr
 import wpf
@@ -11,9 +11,6 @@ from System.Windows import MessageBox
 import sys, os
 import json
 
-clr.AddReference("RoiFormulaMaker")
-from RoiFormulaMaker.Views import MainWindow
-
 RayStationScriptsPath = os.environ["USERPROFILE"] + r"\DeskTop\RayStationScripts" + "\\"
 
 dllsPath = RayStationScriptsPath + "Dlls"
@@ -24,15 +21,21 @@ scriptsPath = RayStationScriptsPath + "Scripts"
 print(scriptsPath)
 sys.path.append(scriptsPath)
 
+clr.AddReference("RoiFormulaMaker")
+from RoiFormulaMaker.Views import MainWindow
 roiFormulasPath = RayStationScriptsPath + "RoiFormulas"
 
-#case = get_current("Case")
-#examination = get_current("Examination")
-#structureSet = GetStructureSet(case, examination)
-#rois = GetRois(structureSet)
-#structureNames = List[str](rois.keys())
+from Helpers import GetStructureSet, GetRois
+from Helpers import MakeMarginAddedRoi, MakeRingRoi, MakeRoiSubtractedRoi
 
-structureNames = List[str](['PTV', 'Rectum', 'Bladder', 'FemoralHeads'])
+case = get_current("Case")
+examination = get_current("Examination")
+structureSet = GetStructureSet(case, examination)
+rois = GetRois(structureSet)
+structureNames = List[str](rois.keys())
+
+#structureNames = List[str](['PTV', 'Rectum', 'Bladder', 'FemoralHeads'])
+
 structureDesigns = List[object]()
 
 mainWindow = MainWindow(structureNames, structureDesigns, roiFormulasPath)
@@ -62,7 +65,7 @@ for rf in roiFormulas:
         marginInCm = margin/10.
 
         print formulaType , structureName, baseStructureName, marginInCm
-        #MakeMarginAddedRoi(case, examination, structureName, baseStructureName, marginInCm, isDerived=True, color='Yellow', roiType='Control')
+        MakeMarginAddedRoi(case, examination, structureName, baseStructureName, marginInCm, isDerived=True, color='Yellow', roiType='Control')
     
     elif(formulaType  == 'RingRoi'):
         structureName = rf['StructureName']
@@ -74,7 +77,7 @@ for rf in roiFormulas:
         outerMarginInCm = outerMargin/10.
 
         print formulaType , structureName, baseStructureName, outerMarginInCm, innerMarginInCm
-        #MakeRingRoi(case, examination, structureName, baseStructureName, outerMarginInCm, innerMarginInCm, isDerived=True, color='Yellow', roiType='Control')
+        MakeRingRoi(case, examination, structureName, baseStructureName, outerMarginInCm, innerMarginInCm, isDerived=True, color='Yellow', roiType='Control')
 
     elif(formulaType  == 'RoiSubtractedRoi'):
         structureName = rf['StructureName']
@@ -85,5 +88,5 @@ for rf in roiFormulas:
         marginInCm = margin/10.  
 
         print formulaType , structureName, baseStructureName, subtractedRoiName, marginInCm
-        #MakeRoiSubtractedRoi(case, examination, structureName, baseStructureName, subtractedRoiName, marginInCm, isDerived=True, color='Yellow', roiType='Control')
+        MakeRoiSubtractedRoi(case, examination, structureName, baseStructureName, subtractedRoiName, marginInCm, isDerived=True, color='Yellow', roiType='Control')
 pass
