@@ -24,7 +24,7 @@ namespace RoiFormulaMaker.Models
 
         public override string ToString()
         {
-            return $"Margin Added ROI: {StructureName} ({StructureType}), Base Structure : {BaseStructureName}, Margin = {Margin} mm";
+            return $"Margin Added ROI: {StructureName} ({StructureType}), Base Structure: {BaseStructureName}, Margin = {Margin} mm";
         }
 
         public string ToJson()

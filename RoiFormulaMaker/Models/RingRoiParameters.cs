@@ -26,7 +26,7 @@ namespace RoiFormulaMaker.Models
 
         public override string ToString()
         {
-            return $"Ring ROI: {StructureName} ({StructureType}), Base Structure : {BaseStructureName}, Outer Margin = {OuterMargin} mm, Inner Margin = {InnerMargin} mm";
+            return $"Ring ROI: {StructureName} ({StructureType}), Base Structure: {BaseStructureName}, Outer Margin = {OuterMargin} mm, Inner Margin = {InnerMargin} mm";
         }
 
         public string ToJson()
