@@ -21,6 +21,9 @@ namespace RoiFormulaMaker.Models
         [DataMember()]
         public int OuterMargin { get; set; }
 
+        [DataMember()]
+        public string Description { get; set; } = string.Empty;
+
         public override string ToString()
         {
             return $"Ring ROI: {StructureName} ({StructureType}), Base Structure : {BaseStructureName}, Outer Margin = {OuterMargin} mm, Inner Margin = {InnerMargin} mm";

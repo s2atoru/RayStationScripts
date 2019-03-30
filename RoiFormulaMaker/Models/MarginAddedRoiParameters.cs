@@ -19,6 +19,9 @@ namespace RoiFormulaMaker.Models
         [DataMember()]
         public int Margin { get; set; }
 
+        [DataMember()]
+        public string Description { get; set; } = string.Empty;
+
         public override string ToString()
         {
             return $"Margin Added ROI: {StructureName} ({StructureType}), Base Structure : {BaseStructureName}, Margin = {Margin} mm";
