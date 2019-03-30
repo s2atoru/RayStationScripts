@@ -7,6 +7,7 @@ using RoiFormulaMaker.Models;
 using RoiFormulaMaker.Notifications;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace RoiFormulaMaker.ViewModels
 {
@@ -54,6 +55,8 @@ namespace RoiFormulaMaker.ViewModels
             get { return defaultDirectoryPath; }
             set { SetProperty(ref defaultDirectoryPath, value); }
         }
+
+        public static readonly string DefaultFileName = "_last_roi_formulas.json";
 
         private Dictionary<string, Dictionary<string, object>> structureDetails = new Dictionary<string, Dictionary<string, object>>();
         public Dictionary<string, Dictionary<string, object>> StructureDetails
@@ -127,7 +130,7 @@ namespace RoiFormulaMaker.ViewModels
         {
             get { return structureFormulas; }
             set
-            { 
+            {
                 structureFormulas = value;
                 UpdateStructureDescriptions();
             }
@@ -175,7 +178,7 @@ namespace RoiFormulaMaker.ViewModels
             MakeMarginAddedRoiRequest = new InteractionRequest<MakeMarginAddedRoiNotification>();
             MakeMarginAddedRoiCommand = new DelegateCommand(RaiseMakeMarginAddedRoiInteraction);
 
-            OkCommand = new DelegateCommand(() => { RoiFormulas.CanExecute = true; });
+            OkCommand = new DelegateCommand(() => { RoiFormulas.CanExecute = true; RoiFormulas.WriteToFile(Path.Combine(DefaultDirectoryPath, DefaultFileName)); });
             CancelCommand = new DelegateCommand(() => { RoiFormulas.CanExecute = false; });
 
             ChooseFileCommand = new DelegateCommand(ChooseFile);
