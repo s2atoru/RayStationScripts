@@ -187,6 +187,26 @@ def MakeMarginAddedRoi(case, examination, structureName, baseStructureName, marg
 
     return False
 
+def ClinicalGoalDict(clinicalGoal):
+    clinicalGoalDict = {};
+    clinicalGoalDict['RoiName'] = clinicalGoal.RoiName
+    clinicalGoalDict['GoalCriteria'] = clinicalGoal.GoalCriteria
+    clinicalGoalDict['GoalType'] = clinicalGoal.GoalType
+    clinicalGoalDict['AcceptanceLevel'] = clinicalGoal.AcceptanceLevel
+    clinicalGoalDict['ParameterValue'] = clinicalGoal.ParameterValue
+    clinicalGoalDict['IsComparativeGoal'] = clinicalGoal.IsComparativeGoal
+    clinicalGoalDict['Priority'] = clinicalGoal.Priority
+    return clinicalGoalDict
+
+def AddClinicalGoal(plan, clinicalGoal):
+    plan.TreatmentCourse.EvaluationSetup.AddClinicalGoal(RoiName=clinicalGoal.RoiName,
+                                                         GoalCriteria=clinicalGoal.GoalCriteria,
+                                                         GoalType=clinicalGoal.GoalType, 
+                                                         AcceptanceLevel=clinicalGoal.AcceptanceLevel,
+                                                         ParameterValue=linicalGoal.ParameterValue,
+                                                         IsComparativeGoal=clinicalGoal.IsComparativeGoal,
+                                                         Priority=clinicalGoal.Priority)
+
 if __name__ == '__main__':
 
     MessageBox.Show('Hello world')
