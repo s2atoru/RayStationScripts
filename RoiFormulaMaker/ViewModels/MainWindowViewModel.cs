@@ -111,6 +111,8 @@ namespace RoiFormulaMaker.ViewModels
             "Undefined"
         };
 
+        public RoiFormulas RoiFormulas { get; set; }
+
         public InteractionRequest<MakeRingRoiNotification> MakeRingRoiRequest { get; set; }
         public DelegateCommand MakeRingRoiCommand { get; set; }
 
@@ -120,7 +122,33 @@ namespace RoiFormulaMaker.ViewModels
         public InteractionRequest<MakeMarginAddedRoiNotification> MakeMarginAddedRoiRequest { get; set; }
         public DelegateCommand MakeMarginAddedRoiCommand { get; set; }
 
-        public List<dynamic> StructureDesigns { get; set; } = new List<dynamic>();
+        public List<dynamic> structureFormulas = new List<dynamic>();
+        public List<dynamic> StructureFormulas
+        {
+            get { return structureFormulas; }
+            set
+            { 
+                structureFormulas = value;
+                UpdateStructureDescriptions();
+            }
+        }
+
+        private void UpdateStructureDescriptions()
+        {
+            StructureDescriptions = string.Empty;
+            foreach (var sf in StructureFormulas)
+            {
+                var structureDescription = sf.ToString();
+                if (string.IsNullOrEmpty(StructureDescriptions))
+                {
+                    StructureDescriptions = structureDescription;
+                }
+                else
+                {
+                    StructureDescriptions += "\n" + structureDescription;
+                }
+            }
+        }
 
         private string structureDescriptions;
         public string StructureDescriptions
@@ -128,6 +156,9 @@ namespace RoiFormulaMaker.ViewModels
             get { return structureDescriptions; }
             set { SetProperty(ref structureDescriptions, value); }
         }
+
+        public DelegateCommand OkCommand { get; private set; }
+        public DelegateCommand CancelCommand { get; private set; }
 
         public DelegateCommand ChooseFileCommand { get; private set; }
         public DelegateCommand SaveFileCommand { get; private set; }
@@ -143,6 +174,9 @@ namespace RoiFormulaMaker.ViewModels
 
             MakeMarginAddedRoiRequest = new InteractionRequest<MakeMarginAddedRoiNotification>();
             MakeMarginAddedRoiCommand = new DelegateCommand(RaiseMakeMarginAddedRoiInteraction);
+
+            OkCommand = new DelegateCommand(() => { RoiFormulas.CanExecute = true; });
+            CancelCommand = new DelegateCommand(() => { RoiFormulas.CanExecute = false; });
 
             ChooseFileCommand = new DelegateCommand(ChooseFile);
             SaveFileCommand = new DelegateCommand(SaveFile);
@@ -185,7 +219,7 @@ namespace RoiFormulaMaker.ViewModels
                         OuterMargin = r.OuterMargin,
                         InnerMargin = r.InnerMargin
                     };
-                    if (StructureDesigns.Contains(ringRoiParameters))
+                    if (StructureFormulas.Contains(ringRoiParameters))
                     {
                         Message = "The same ring is already in the list";
                         return;
@@ -194,7 +228,7 @@ namespace RoiFormulaMaker.ViewModels
 
                     UpdateStructureNames(r.StructureName);
 
-                    StructureDesigns.Add(ringRoiParameters);
+                    StructureFormulas.Add(ringRoiParameters);
                     var structureDescription = ringRoiParameters.ToString();
                     if (string.IsNullOrEmpty(StructureDescriptions))
                     {
@@ -233,7 +267,7 @@ namespace RoiFormulaMaker.ViewModels
                         SubtractedRoiName = r.SubtractedRoiName,
                         Margin = r.Margin
                     };
-                    if (StructureDesigns.Contains(roiSubtractedRoiParameters))
+                    if (StructureFormulas.Contains(roiSubtractedRoiParameters))
                     {
                         Message = "The same ROI subtracted ROI is already in the list";
                         return;
@@ -242,7 +276,7 @@ namespace RoiFormulaMaker.ViewModels
 
                     UpdateStructureNames(r.StructureName);
 
-                    StructureDesigns.Add(roiSubtractedRoiParameters);
+                    StructureFormulas.Add(roiSubtractedRoiParameters);
                     var structureDescription = roiSubtractedRoiParameters.ToString();
                     if (string.IsNullOrEmpty(StructureDescriptions))
                     {
@@ -280,7 +314,7 @@ namespace RoiFormulaMaker.ViewModels
                         BaseStructureName = r.BaseStructureName,
                         Margin = r.Margin
                     };
-                    if (StructureDesigns.Contains(marginAddedRoiParameters))
+                    if (StructureFormulas.Contains(marginAddedRoiParameters))
                     {
                         Message = "The margin added ROI is already in the list";
                         return;
@@ -289,7 +323,7 @@ namespace RoiFormulaMaker.ViewModels
 
                     UpdateStructureNames(r.StructureName);
 
-                    StructureDesigns.Add(marginAddedRoiParameters);
+                    StructureFormulas.Add(marginAddedRoiParameters);
                     var structureDescription = marginAddedRoiParameters.ToString();
                     if (string.IsNullOrEmpty(StructureDescriptions))
                     {
@@ -328,6 +362,12 @@ namespace RoiFormulaMaker.ViewModels
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 FilePath = dialog.FileName;
+
+                var roiFormulas = new Models.RoiFormulas() { Formulas = StructureFormulas };
+                roiFormulas.ReadFromFile(FilePath);
+
+                Description = roiFormulas.Description;
+                UpdateStructureDescriptions();
             }
             else
             {
@@ -346,6 +386,8 @@ namespace RoiFormulaMaker.ViewModels
             if (dialog.ShowDialog() == true)
             {
                 SavedFilePath = dialog.FileName;
+                var roiFormulas = new Models.RoiFormulas { Description = Description, Formulas = StructureFormulas };
+                roiFormulas.WriteToFile(SavedFilePath);
             }
             else
             {

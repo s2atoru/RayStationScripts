@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using RoiFormulaMaker.Models;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -16,51 +17,42 @@ namespace RoiFormulaMaker.Views
             this.DataContext = new ViewModels.MainWindowViewModel();
         }
 
-        public MainWindow(List<string> structureNames, List<dynamic> structureDesigns)
+        public MainWindow(List<string> structureNames, List<dynamic> structureFormulas)
         {
             InitializeComponent();
 
             var viewModel = new ViewModels.MainWindowViewModel
             {
                 StructureNames = new ObservableCollection<string>(structureNames),
-                StructureDesigns = structureDesigns
+                StructureFormulas = structureFormulas
             };
 
             this.DataContext = viewModel;
         }
 
-        public MainWindow(List<string> structureNames, List<dynamic> structureDesigns, string defaultDirectoryPath)
+        public MainWindow(List<string> structureNames, List<dynamic> structureFormulas, string defaultDirectoryPath)
         {
             InitializeComponent();
 
             var viewModel = new ViewModels.MainWindowViewModel
             {
                 StructureNames = new ObservableCollection<string>(structureNames),
-                StructureDesigns = structureDesigns,
+                StructureFormulas = structureFormulas,
                 DefaultDirectoryPath = defaultDirectoryPath
             };
 
             this.DataContext = viewModel;
         }
 
-        public MainWindow(Dictionary<string, Dictionary<string, object>> structureDetails, List<dynamic> structureDesigns, string defaultDirectoryPath)
+        public MainWindow(Dictionary<string, Dictionary<string, object>> structureDetails, RoiFormulas roiFormulas, string defaultDirectoryPath)
         {
             InitializeComponent();
 
-            var contouredStructureNames = new List<string>();
-
-            foreach (var item in structureDetails)
-            {
-                if ((bool)item.Value["HasContours"])
-                {
-                    contouredStructureNames.Add(item.Key);
-                }
-            }
-
             var viewModel = new ViewModels.MainWindowViewModel
             {
+                RoiFormulas = roiFormulas,
                 StructureDetails = structureDetails,
-                StructureDesigns = structureDesigns,
+                StructureFormulas = roiFormulas.Formulas,
                 DefaultDirectoryPath = defaultDirectoryPath
             };
 
