@@ -13,6 +13,8 @@ namespace RoiFormulaMaker.ViewModels
 
         public string SelectedStructureType { get; set; } = "Control";
 
+        public string SelectedBaseStructureName { get; set; }
+
         public DelegateCommand MakeRingRoiCommand { get; private set; }
 
         public DelegateCommand CancelCommand { get; private set; }
@@ -27,6 +29,7 @@ namespace RoiFormulaMaker.ViewModels
         {
             notification.StructureName = null;
             notification.StructureType = null;
+            notification.BaseStructureName = null;
             notification.OuterMargin = 0;
             notification.InnerMargin = 0;
             notification.Confirmed = false;
@@ -35,8 +38,11 @@ namespace RoiFormulaMaker.ViewModels
 
         private void AcceptMakingRingRoi()
         {
-            notification.BaseStructureName = SelectedStructureName;
+            notification.BaseStructureName = SelectedBaseStructureName;
+
+            notification.StructureName = SelectedStructureName;
             notification.StructureType = SelectedStructureType;
+
             if (string.IsNullOrEmpty(notification.StructureName))
             {
                 if (notification.InnerMargin == 0)

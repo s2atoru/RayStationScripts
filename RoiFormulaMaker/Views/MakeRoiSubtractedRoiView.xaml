@@ -9,7 +9,7 @@
              xmlns:vm="clr-namespace:RoiFormulaMaker.ViewModels"    
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance vm:MakeRoiSubtractedRoiViewModel}"
-             d:DesignHeight="450" d:DesignWidth="900" FontSize="24">
+             d:DesignHeight="450" d:DesignWidth="1000" FontSize="24">
     <UserControl.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="Margin" Value="6"/>
@@ -38,13 +38,13 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <TextBlock  TextWrapping="Wrap" Text="Base Structure"/>
-        <ComboBox ItemsSource="{Binding Notification.StructureNames}" Grid.Row="1" SelectedItem="{Binding SelectedStructureName}"/>
+        <ComboBox ItemsSource="{Binding Notification.ContouredStructureNames}" Grid.Row="1" SelectedItem="{Binding SelectedBaseStructureName}"/>
         <TextBlock  TextWrapping="Wrap" Text="Subtracted ROI" Grid.Column="1"/>
-        <ComboBox ItemsSource="{Binding Notification.StructureNames}" Grid.Row="1" Grid.Column="1" SelectedItem="{Binding SelectedSubtractedRoi}"/>
+        <ComboBox ItemsSource="{Binding Notification.ContouredStructureNames}" Grid.Row="1" Grid.Column="1" SelectedItem="{Binding SelectedSubtractedRoiName}"/>
         <TextBlock  TextWrapping="Wrap" Text="Margin [mm]" Grid.Column="2"/>
         <TextBox Text="{Binding Notification.Margin}" Grid.Row="1" Grid.Column="2"/>
         <TextBlock  TextWrapping="Wrap" Text="Structure Name" Grid.Column="3"/>
-        <TextBox Text="{Binding Notification.StructureName}" Grid.Row="1" Grid.Column="3" MinWidth="196"/>
+        <ComboBox ItemsSource="{Binding Notification.StructureNames}" Grid.Row="1" Grid.Column="3" Text="{Binding SelectedStructureName, Mode=TwoWay}" IsEditable="True"/>
         <TextBlock  TextWrapping="Wrap" Text="Structure Type" Grid.Column="4"/>
         <ComboBox ItemsSource="{Binding Notification.StructureTypes}" Grid.Row="1" Grid.Column="4" SelectedItem="{Binding SelectedStructureType, Mode=TwoWay}"/>
         <Button Grid.Row="2" Content="OK" Command="{Binding MakeRoiSubtractedRoiCommand}"/>

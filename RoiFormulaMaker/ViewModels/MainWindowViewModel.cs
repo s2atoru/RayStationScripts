@@ -55,7 +55,30 @@ namespace RoiFormulaMaker.ViewModels
             set { SetProperty(ref defaultDirectoryPath, value); }
         }
 
+        private Dictionary<string, Dictionary<string, object>> structureDetails = new Dictionary<string, Dictionary<string, object>>();
+        public Dictionary<string, Dictionary<string, object>> StructureDetails
+        {
+            get { return structureDetails; }
+            set
+            {
+                structureDetails = value;
+                StructureNames = new ObservableCollection<string>(structureDetails.Keys);
+
+                var contouredStructureNames = new List<string>();
+                foreach (var s in structureDetails)
+                {
+                    if ((bool)s.Value["HasContours"])
+                    {
+                        contouredStructureNames.Add(s.Key);
+                    }
+                }
+
+                ContouredStructureNames = new ObservableCollection<string>(contouredStructureNames);
+            }
+        }
+
         public ObservableCollection<string> StructureNames { get; set; } = new ObservableCollection<string> { "PTV", "Rectum", "Bladder" };
+        public ObservableCollection<string> ContouredStructureNames { get; set; } = new ObservableCollection<string> { "PTV", "Rectum" };
 
         public ObservableCollection<string> StructureTypes { get; set; } = new ObservableCollection<string>
         {
@@ -125,6 +148,19 @@ namespace RoiFormulaMaker.ViewModels
             SaveFileCommand = new DelegateCommand(SaveFile);
         }
 
+        private void UpdateStructureNames(string structureName)
+        {
+            if (!StructureNames.Contains(structureName))
+            {
+                StructureNames.Add(structureName);
+            }
+
+            if (!ContouredStructureNames.Contains(structureName))
+            {
+                ContouredStructureNames.Add(structureName);
+            }
+        }
+
         private void RaiseMakeRingRoiInteraction()
         {
             MakeRingRoiRequest.Raise(new MakeRingRoiNotification
@@ -133,6 +169,7 @@ namespace RoiFormulaMaker.ViewModels
                 OuterMargin = 15,
                 InnerMargin = 0,
                 StructureNames = this.StructureNames,
+                ContouredStructureNames = this.ContouredStructureNames,
                 StructureTypes = this.StructureTypes
             },
             r =>
@@ -154,6 +191,9 @@ namespace RoiFormulaMaker.ViewModels
                         return;
                         ;
                     }
+
+                    UpdateStructureNames(r.StructureName);
+
                     StructureDesigns.Add(ringRoiParameters);
                     var structureDescription = ringRoiParameters.ToString();
                     if (string.IsNullOrEmpty(StructureDescriptions))
@@ -177,6 +217,7 @@ namespace RoiFormulaMaker.ViewModels
                 Title = "Make ROI Subtracted ROI",
                 Margin = 0,
                 StructureNames = this.StructureNames,
+                ContouredStructureNames = this.ContouredStructureNames,
                 StructureTypes = this.StructureTypes
             },
             r =>
@@ -198,6 +239,9 @@ namespace RoiFormulaMaker.ViewModels
                         return;
                         ;
                     }
+
+                    UpdateStructureNames(r.StructureName);
+
                     StructureDesigns.Add(roiSubtractedRoiParameters);
                     var structureDescription = roiSubtractedRoiParameters.ToString();
                     if (string.IsNullOrEmpty(StructureDescriptions))
@@ -221,6 +265,7 @@ namespace RoiFormulaMaker.ViewModels
                 Title = "Make Margin Added ROI",
                 Margin = 0,
                 StructureNames = this.StructureNames,
+                ContouredStructureNames = this.ContouredStructureNames,
                 StructureTypes = this.StructureTypes
             },
             r =>
@@ -228,21 +273,24 @@ namespace RoiFormulaMaker.ViewModels
                 if (r.Confirmed && r.BaseStructureName != null)
                 {
                     Message = $"User selected: Base => { r.BaseStructureName}";
-                    var MarginAddedRoiParameters = new MarginAddedRoiParameters
+                    var marginAddedRoiParameters = new MarginAddedRoiParameters
                     {
                         StructureName = r.StructureName,
                         StructureType = r.StructureType,
                         BaseStructureName = r.BaseStructureName,
                         Margin = r.Margin
                     };
-                    if (StructureDesigns.Contains(MarginAddedRoiParameters))
+                    if (StructureDesigns.Contains(marginAddedRoiParameters))
                     {
                         Message = "The margin added ROI is already in the list";
                         return;
                         ;
                     }
-                    StructureDesigns.Add(MarginAddedRoiParameters);
-                    var structureDescription = MarginAddedRoiParameters.ToString();
+
+                    UpdateStructureNames(r.StructureName);
+
+                    StructureDesigns.Add(marginAddedRoiParameters);
+                    var structureDescription = marginAddedRoiParameters.ToString();
                     if (string.IsNullOrEmpty(StructureDescriptions))
                     {
                         StructureDescriptions = structureDescription;

@@ -11,6 +11,8 @@ namespace RoiFormulaMaker.ViewModels
         public string SelectedStructureName { get; set; }
         public string SelectedStructureType { get; set; } = "Control";
 
+        public string SelectedBaseStructureName { get; set; }
+
         public DelegateCommand MakeMarginAddedRoiCommand { get; private set; }
 
         public DelegateCommand CancelCommand { get; private set; }
@@ -33,8 +35,11 @@ namespace RoiFormulaMaker.ViewModels
 
         private void AcceptMakingMarginAddedRoi()
         {
-            notification.BaseStructureName = SelectedStructureName;
+            notification.BaseStructureName = SelectedBaseStructureName;
+
+            notification.StructureName = SelectedStructureName;
             notification.StructureType = SelectedStructureType;
+            
             if (string.IsNullOrEmpty(notification.StructureName))
             {
                 notification.StructureName = $"z{notification.BaseStructureName}_{notification.Margin}";

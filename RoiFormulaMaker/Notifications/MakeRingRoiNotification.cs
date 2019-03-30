@@ -1,5 +1,6 @@
 ﻿using Prism.Interactivity.InteractionRequest;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace RoiFormulaMaker.Notifications
 {
@@ -9,7 +10,9 @@ namespace RoiFormulaMaker.Notifications
         public string BaseStructureName { get; set; }
         public int InnerMargin { get; set; }
         public int OuterMargin { get; set; }
-        public IList<string> StructureNames { get; set; }
+
+        public ObservableCollection<string> StructureNames { get; set; }
+        public ObservableCollection<string> ContouredStructureNames { get; set; }
 
         public string StructureType { get; set; }
         public IList<string> StructureTypes { get; set; }

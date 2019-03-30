@@ -37,11 +37,11 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <TextBlock  TextWrapping="Wrap" Text="Base Structure"/>
-        <ComboBox ItemsSource="{Binding Notification.StructureNames}" Grid.Row="1" SelectedItem="{Binding SelectedStructureName}"/>
+        <ComboBox ItemsSource="{Binding Notification.ContouredStructureNames}" Grid.Row="1" SelectedItem="{Binding SelectedBaseStructureName}"/>
         <TextBlock  TextWrapping="Wrap" Text="Margin [mm]" Grid.Column="1"/>
         <TextBox Text="{Binding Notification.Margin}" Grid.Row="1" Grid.Column="1"/>
         <TextBlock  TextWrapping="Wrap" Text="Structure Name" Grid.Column="2"/>
-        <TextBox Text="{Binding Notification.StructureName}" Grid.Row="1" Grid.Column="2" MinWidth="196"/>
+        <ComboBox ItemsSource="{Binding Notification.StructureNames}" Grid.Row="1" Grid.Column="2" Text="{Binding SelectedStructureName, Mode=TwoWay}" IsEditable="True"/>
         <TextBlock  TextWrapping="Wrap" Text="Structure Type" Grid.Column="3"/>
         <ComboBox ItemsSource="{Binding Notification.StructureTypes}" Grid.Row="1" Grid.Column="3" SelectedItem="{Binding SelectedStructureType, Mode=TwoWay}"/>
         <Button Grid.Row="2" Content="OK" Command="{Binding MakeMarginAddedRoiCommand}"/>

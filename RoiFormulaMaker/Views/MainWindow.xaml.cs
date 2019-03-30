@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Windows;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace RoiFormulaMaker.Views
 {
@@ -36,6 +36,30 @@ namespace RoiFormulaMaker.Views
             var viewModel = new ViewModels.MainWindowViewModel
             {
                 StructureNames = new ObservableCollection<string>(structureNames),
+                StructureDesigns = structureDesigns,
+                DefaultDirectoryPath = defaultDirectoryPath
+            };
+
+            this.DataContext = viewModel;
+        }
+
+        public MainWindow(Dictionary<string, Dictionary<string, object>> structureDetails, List<dynamic> structureDesigns, string defaultDirectoryPath)
+        {
+            InitializeComponent();
+
+            var contouredStructureNames = new List<string>();
+
+            foreach (var item in structureDetails)
+            {
+                if ((bool)item.Value["HasContours"])
+                {
+                    contouredStructureNames.Add(item.Key);
+                }
+            }
+
+            var viewModel = new ViewModels.MainWindowViewModel
+            {
+                StructureDetails = structureDetails,
                 StructureDesigns = structureDesigns,
                 DefaultDirectoryPath = defaultDirectoryPath
             };
