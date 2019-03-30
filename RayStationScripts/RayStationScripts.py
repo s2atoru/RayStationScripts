@@ -5,7 +5,7 @@ clr.AddReference("PresentationCore")
 import sys, os
 import json
 
-from System.Collections.Generic import List
+from System.Collections.Generic import List, Dictionary
 
 RayStationScriptsPath = os.environ["USERPROFILE"] + r"\DeskTop\RayStationScripts" + "\\"
 
@@ -19,22 +19,33 @@ sys.path.append(scriptsPath)
 
 print ','.join(sys.path)
 
-roiFormulasPath = RayStationScriptsPath + "RoiFormulas"
-
 clr.AddReference("RoiFormulaMaker")
 from RoiFormulaMaker.Views import MainWindow
+from RoiFormulaMaker.Models import RoiFormulas
+
+structureFormulas = RoiFormulas()
 
 structureNames = List[str](['PTV', 'Rectum', 'Bladder', 'FemoralHeads'])
 
-structureDesigns = List[object]()
+roiFormulasPath = RayStationScriptsPath + "RoiFormulas"
 
-mainWindow = MainWindow(structureNames, structureDesigns, roiFormulasPath)
+structureDetails_dict = {"PTV": {"HasContours":True, "Type":"Ptv"}, "Rectum":{"HasContours":True, "Type":"Organ"},
+                        "Bladder":{"HasContours":True, "Type":"Organ"}, "zRing":{"HasContours":False, "Type":"Control"}}
+
+structureDetails = Dictionary[str, Dictionary[str,object]]()
+
+for key, value in structureDetails_dict.items():
+    structureDetails.Add(key, Dictionary[str,object](value))
+
+print structureDetails
+
+mainWindow = MainWindow(structureDetails, structureFormulas, roiFormulasPath)
 mainWindow.ShowDialog();
 
 #Python JSON encoder and decoder
 #https://docs.python.org/2.7/library/json.html
 jsonList = []
-for s in structureDesigns:
+for s in structureFormulas.Formulas:
     print(s,s.ToJson())
     #To dictionary
     jsonList.append(json.loads(s.ToJson()))
@@ -44,6 +55,11 @@ io = StringIO()
 #JSON list to JSON text
 json.dump(jsonList, io)
 print io.getvalue()
+
+if structureFormulas.CanExecute == False:
+    print "Canceled"
+    sys.exit()
+
 
 #ringRoiParameters = RingRoiParameters();
 #marginAddedRoiParameters = MarginAddedRoiParameters();

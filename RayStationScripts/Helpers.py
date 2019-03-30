@@ -29,6 +29,16 @@ def GetRois(structureSet):
 
     return rois
 
+def GetRoiDetails(structureSet):
+    roiGeometries = structureSet.RoiGeometries
+
+    roiDetails = {}
+    for roiGeometry in roiGeometries:
+        #cast into python boolean for json
+        roiDetails[roiGeometry.OfRoi.Name] = {'HasContours':bool(roiGeometry.HasContours()), 'Type':roiGeometry.OfRoi.Type}
+
+    return roiDetails
+
 def GetRoi(roiName, rois, case, color, roiType, TissueName=None, RbeCellTypeName=None, RoiMaterial=None):
     if(roiName in rois):
         roi = case.PatientModel.RegionsOfInterest[roiName]
