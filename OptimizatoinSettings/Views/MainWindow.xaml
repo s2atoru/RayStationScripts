@@ -33,6 +33,7 @@
                     </i:Interaction.Triggers>
                 </Button>
             </StackPanel>
+            <Views:OptimizationFunctionView/>
         </StackPanel>
     </Grid>
 </Window>

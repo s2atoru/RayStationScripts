@@ -71,9 +71,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Actions\CloseWindowAction.cs" />
+    <Compile Include="Models\OptimizationFunction.cs" />
     <Compile Include="Models\SettingParameters.cs" />
     <Compile Include="ViewModels\BindableBaseWithErrorsContainer.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\OptimizationFunctionViewModel.cs" />
+    <Compile Include="Views\OptimizationFunctionView.xaml.cs">
+      <DependentUpon>OptimizationFunctionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SetParametersView.xaml.cs">
       <DependentUpon>SetParametersView.xaml</DependentUpon>
     </Compile>
@@ -90,6 +95,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\OptimizationFunctionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SetParametersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
