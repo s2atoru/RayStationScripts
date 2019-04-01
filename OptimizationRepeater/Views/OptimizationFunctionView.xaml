@@ -3,11 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:OptimizatoinSettings.Views"
-             xmlns:vm="clr-namespace:OptimizatoinSettings.ViewModels"
+             xmlns:local="clr-namespace:OptimizationRepeater.Views"
+             xmlns:vm="clr-namespace:OptimizationRepeater.ViewModels"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
-             x:Class="OptimizatoinSettings.Views.OptimizationFunctionView"
+             x:Class="OptimizationRepeater.Views.OptimizationFunctionView"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" FontSize="12" d:DataContext="{d:DesignInstance vm:OptimizationFunctionViewModel}">
     <UserControl.Resources>
@@ -18,7 +18,7 @@
     </UserControl.Resources>
     <Grid>
         <TextBlock Text="Optimization Functions" FontSize="24"/>
-        <DataGrid ItemsSource="{Binding OptimizationFunctions}" AutoGenerateColumns="False">
+        <DataGrid ItemsSource="{Binding OptimizationFunctions}" AutoGenerateColumns="False" CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Header="Function Type"
@@ -26,14 +26,21 @@
                     IsReadOnly="True">
                 </DataGridTextColumn>
                 <DataGridTextColumn
-                    Header="Weight"
-                    Binding="{Binding Weight, Mode=OneTime}"
-                    IsReadOnly="True">
+                    Header="Dose"
+                    Binding="{Binding PlanLabel, Mode=OneTime}" IsReadOnly="True">
                 </DataGridTextColumn>
-                <DataGridCheckBoxColumn
-                    Header="Boost"
-                    Binding="{Binding IsBoosted, Mode=TwoWay}">
-                </DataGridCheckBoxColumn>
+                <DataGridTextColumn
+                    Header="Weight"
+                    Binding="{Binding Weight, Mode=OneTime}">
+                </DataGridTextColumn>
+                <DataGridTemplateColumn IsReadOnly="True" Header="Boost">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsBoosted, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn
                     Header="Boosted Weight"
                     Binding="{Binding BoostedWeight, Mode=TwoWay}"
@@ -44,14 +51,14 @@
                     Binding="{Binding RoiName, Mode=OneTime}"
                     IsReadOnly="True">
                 </DataGridTextColumn>
-                <DataGridTemplateColumn IsReadOnly="True" Header="Available Structure">
+                <!--<DataGridTemplateColumn IsReadOnly="True" Header="Available Structure">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Path=DataContext.StructureNames, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Mode=OneWay}"
                                           SelectedValue="{Binding RoiNameTps, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                </DataGridTemplateColumn>-->
                 <DataGridTextColumn
                     Header="Description"
                     Binding="{Binding Description, Mode=OneTime}"

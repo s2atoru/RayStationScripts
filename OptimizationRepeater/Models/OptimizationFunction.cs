@@ -1,6 +1,6 @@
 ﻿using Prism.Mvvm;
 
-namespace OptimizatoinSettings.Models 
+namespace OptimizationRepeater.Models
 {
     public class OptimizationFunction : BindableBase
     {
@@ -19,6 +19,8 @@ namespace OptimizatoinSettings.Models
                 }
             }
         }
+
+        public string PlanLabel { get; set; }
 
         private string roiNameTps;
         public string RoiNameTps
@@ -76,7 +78,7 @@ namespace OptimizatoinSettings.Models
 
         private void UpdateDescription()
         {
-            Description = ToString();   
+            Description = ToString();
         }
 
         public override string ToString()
@@ -85,7 +87,7 @@ namespace OptimizatoinSettings.Models
             switch (FunctionType)
             {
                 case "MinDose":
-                    description = $"Min Dose: Dose level: {DoseLevel}";       
+                    description = $"Min Dose: Dose level: {DoseLevel}";
                     break;
                 case "MaxDose":
                     description = $"Max Dose: Dose level: {DoseLevel}";

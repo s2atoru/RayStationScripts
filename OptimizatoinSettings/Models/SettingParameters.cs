@@ -45,6 +45,6 @@ namespace OptimizatoinSettings.Models
         private bool CheckValidity()
         {
             return (MaxNumberOfIterations >= 1) && (IterationsInPreparationsPhase >= 0) && (MaxNumberOfIterations >= IterationsInPreparationsPhase);
-        } 
+        }
     }
 }

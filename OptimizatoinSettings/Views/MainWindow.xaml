@@ -16,7 +16,7 @@
         <StackPanel>
             <Views:SetParametersView DataContext="{Binding SetParametersViewModel}"/>
             <StackPanel Orientation="Horizontal" >
-            <Button Content="OK" Width="120" Margin="3">
+                <Button Content="OK" Width="120" Margin="3">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <prism:InvokeCommandAction Command="{Binding OkCommand}"/>
@@ -24,7 +24,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-            <Button Content="Cancel" Width="120" Margin="3">
+                <Button Content="Cancel" Width="120" Margin="3">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <prism:InvokeCommandAction Command="{Binding CancelCommand}"/>
@@ -33,7 +33,6 @@
                     </i:Interaction.Triggers>
                 </Button>
             </StackPanel>
-            <Views:OptimizationFunctionView/>
         </StackPanel>
     </Grid>
 </Window>

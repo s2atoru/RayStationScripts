@@ -3,11 +3,11 @@
 namespace OptimizationRepeater.Views
 {
     /// <summary>
-    /// Interaction logic for OptimizationRepeaterView.xaml
+    /// Interaction logic for OptimizationFunctionView.xaml
     /// </summary>
-    public partial class OptimizationRepeaterView : UserControl
+    public partial class OptimizationFunctionView : UserControl
     {
-        public OptimizationRepeaterView()
+        public OptimizationFunctionView()
         {
             InitializeComponent();
         }
