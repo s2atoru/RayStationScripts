@@ -13,7 +13,7 @@
     <Grid>
         <StackPanel>
             <view:OptimizationRepeaterView DataContext="{Binding OptimizationRepeaterViewModel}"/>
-            <view:OptimizationFunctionView/>
+            <view:OptimizationFunctionView DataContext="{Binding OptimizationFunctionViewModel}"/>
         </StackPanel>
     </Grid>
 </Window>

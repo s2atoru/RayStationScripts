@@ -5,8 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OptimizationRepeater.Views"
              xmlns:vm="clr-namespace:OptimizationRepeater.ViewModels"
-             xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True"
              x:Class="OptimizationRepeater.Views.OptimizationFunctionView"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" FontSize="12" d:DataContext="{d:DesignInstance vm:OptimizationFunctionViewModel}">
@@ -31,7 +29,7 @@
                 </DataGridTextColumn>
                 <DataGridTextColumn
                     Header="Weight"
-                    Binding="{Binding Weight, Mode=OneTime}">
+                    Binding="{Binding Weight, Mode=TwoWay}">
                 </DataGridTextColumn>
                 <DataGridTemplateColumn IsReadOnly="True" Header="Boost">
                     <DataGridTemplateColumn.CellTemplate>

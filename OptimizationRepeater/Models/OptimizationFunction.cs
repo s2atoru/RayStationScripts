@@ -11,13 +11,7 @@ namespace OptimizationRepeater.Models
         public string FunctionType
         {
             get { return functionType; }
-            set
-            {
-                if (SetProperty(ref functionType, value))
-                {
-                    UpdateDescription();
-                }
-            }
+            set { SetProperty(ref functionType, value); }
         }
 
         public string PlanLabel { get; set; }
@@ -69,17 +63,7 @@ namespace OptimizationRepeater.Models
         public bool RestrictAllBeamsIndividually { get; set; } = false;
         public string RestrictToBeam { get; set; } = null;
 
-        private string description;
-        public string Description
-        {
-            get { return description; }
-            set { SetProperty(ref description, value); }
-        }
-
-        private void UpdateDescription()
-        {
-            Description = ToString();
-        }
+        public string Description { get { return ToString(); } }
 
         public override string ToString()
         {
@@ -99,7 +83,7 @@ namespace OptimizationRepeater.Models
                     description = $"Max DVH: Dose level: {DoseLevel}, Percent volume: {PercentVolume}";
                     break;
                 case "UniformDose":
-                    description = $"Uniform dose: dose Level: {DoseLevel}";
+                    description = $"Uniform dose: Dose level: {DoseLevel}";
                     break;
                 case "MinEud":
                     description = $"Min EUD: Dose level: {DoseLevel}, Percent volume: {PercentVolume}, EUD parameter A: {EudParameterA}";
@@ -111,7 +95,7 @@ namespace OptimizationRepeater.Models
                     description = $"Target EUD: Dose level: {DoseLevel}, Percent volume: {PercentVolume}, EUD parameter A: {EudParameterA}";
                     break;
                 case "DoseFallOff":
-                    description = $"Dose Fall-Off: High dose level: {HighDoseLevel}, Low dose level: {LowDoseDistance}, Low dose distance: {LowDoseDistance}"
+                    description = $"Dose Fall-Off: High dose level: {HighDoseLevel}, Low dose level: {LowDoseLevel}, Low dose distance: {LowDoseDistance}"
                         + $" Adapt to target dose levels: {AdaptToTargetDoseLevels}";
                     break;
                 case "UniformityConstraint":
