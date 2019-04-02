@@ -11,9 +11,9 @@
         d:DataContext="{d:DesignInstance vm:MainWindowViewModel}"
         Title ="Optimization Repetition" d:DesignHeight="450" d:DesignWidth="800" SizeToContent="WidthAndHeight" FontSize="24">
     <Grid>
-
-        <view:OptimizationRepeaterView DataContext="{Binding OptimizationRepeaterViewModel}"/>
-        <view:OptimizationFunctionView/>
-        
+        <StackPanel>
+            <view:OptimizationRepeaterView DataContext="{Binding OptimizationRepeaterViewModel}"/>
+            <view:OptimizationFunctionView/>
+        </StackPanel>
     </Grid>
 </Window>

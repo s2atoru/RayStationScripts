@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using OptimizationRepeater.ViewModels;
 using OptimizationRepeater.Models;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace OptimizationRepeater.Views
 {
@@ -22,6 +24,15 @@ namespace OptimizationRepeater.Views
 
             DataContext = new MainWindowViewModel();
             ((MainWindowViewModel)DataContext).OptimizationRepeaterViewModel.RepetitionParameters = repetitionParameters;
+        }
+
+        public MainWindow(RepetitionParameters repetitionParameters, List<OptimizationFunction> optimizationFunctions)
+        {
+            InitializeComponent();
+
+            DataContext = new MainWindowViewModel();
+            ((MainWindowViewModel)DataContext).OptimizationRepeaterViewModel.RepetitionParameters = repetitionParameters;
+            ((MainWindowViewModel)DataContext).OptimizationFunctionViewModel.OptimizationFunctions = new ObservableCollection<OptimizationFunction>(optimizationFunctions);
         }
     }
 }

@@ -10,9 +10,32 @@ from System.Windows import MessageBox
 
 import json
 
+def SizeOfIterator(iterator):
+    return sum(1 for _ in iterator)
+
 def GetStructureSet(case, examination):
     examinationName = examination.Name
     return case.PatientModel.StructureSets[examinationName] 
+
+def GetOptimizationFunctionType(objectiveConstituentFunction):
+    doseFunctionParameters = objectiveConstituentFunction.DoseFunctionParameters
+    functionType = doseFunctionParameters.FunctionType if hasattr(doseFunctionParameters, 'FunctionType') else 'DoseFallOff'
+    if functionType == 'UniformEud':
+        functionType = 'TargetEud'
+
+    return functionType
+
+def GetPlanOptimizationForBeamSet(planOptimizations, beamSet):
+    if SizeOfIterator(planOptimizations) ==  1:
+        return planOptimizations[0]
+    elif SizeOfIterator(planOptimizations) ==  2:
+        dicomPlanLabel = beamSet.DicomPlanLabel
+        for po in planOptimizations:
+            for optimizedBeamSet in po.OptimizedBeamSets:
+                if dicomPlanLabel == optimizedBeamSet.DicomPlanLabel:
+                    return po
+
+    return None
 
 def GetRois(structureSet):
     roiGeometries = structureSet.RoiGeometries
@@ -207,6 +230,58 @@ def AddClinicalGoal(plan, clinicalGoal):
                                                          IsComparativeGoal=clinicalGoal.IsComparativeGoal,
                                                          Priority=clinicalGoal.Priority)
 
+def SetOptimizationFunction(objectiveConstituentFunction, order, optimizatoinFunction):
+
+        functionType = GetOptimizationFunctionType(objectiveConstituentFunction)
+        parameters = objectiveConstituentFunction.DoseFunctionParameters
+        
+        #Common for all types
+        weight = parameters.Weight
+        lqModelParameters = parameters.lqModelParameters
+
+        optimizationFunction.Order = order
+        optimizationFunction.Weight = weight
+        optimizationFunction.LqModelParameters = lqModelParameters
+
+        doseLevel = parameters.DoseLevel if hasattr(parameters, 'DoseLevel') else 0
+        percentVolume = parameters.PercentVolume if hasattr(parameters, 'PercentVolume') else 0
+        eudParameterA = parameters.EudParameterA if hasattr(parameters, 'EudParameterA') else 1
+
+        #Dose-fall off
+        adaptToTargetDoseLevels = parameters.AdaptToTargetDoseLevels if hasattr(parameters, 'AdaptToTargetDoseLevels') else False
+        highDoseLevel = parameters.HighDoseLevel if hasattr(parameters, 'HighDoseLevel') else 0
+        lowDoseLevel = parameters.LowDoseLevel if hasattr(parameters, 'LowDoseLevel') else 0
+        lowDoseDistance = parameters.LowDoseDistance if hasattr(parameters, 'LowDoseDistance') else 0
+
+        optimizationFunction.FunctionType = functionType
+        if (functionType == 'MaxDose' or functionType == 'MinDose' or functionType == 'UniformDose'):
+            optimizationFunction.DoseLevel = doseLevel
+        elif (functionType == 'MaxDvh' or functionType == 'MinDvh'):
+            optimizationFunction.DoseLevel = doseLevel
+            optimizationFunction.PercentVolume = percentVolume
+        elif (functionType == 'MaxEud' or functionType == 'MinEud' or functionType == 'TargetEud'):
+            optimizationFunction.DoseLevel = doseLevel
+            optimizationFunction.PercentVolume = percentVolume
+            optimizationFunction.EudParameterA = eudParameterA
+        elif (functionType == 'DoseFallOff'):
+            optimizationFunction.HighDoseLevel = highDoseLevel
+            optimizationFunction.LowDoseLevel = lowDoseLevel
+            optimizationFunction.LowDoseDistance = lowDoseDistance
+            optimizationFunction.AdaptToTargetDoseLevels = adaptToTargetDoseLevels
+        else:
+            optimizationFunction.FunctionType = 'NotImplemented'
+
+def UpdateObjectiveConstituentFunctionWeights(objectiveConstituentFunctions, optimizationFunctions):
+    for f in optimizationFunctions:
+        order = f.Order
+        ConstituentFunctions[order].DoseFunctionParameters.Weight = f.Weight
+
+def BoostObjectiveConstituentFunctionWeights(objectiveConstituentFunctions, optimizationFunctions):
+    for f in optimizationFunctions:
+        order = f.Order
+        if f.IsBoosted:
+            ConstituentFunctions[order].DoseFunctionParameters.Weight = f.BoostedWeight
+
 if __name__ == '__main__':
 
     MessageBox.Show('Hello world')
@@ -252,4 +327,3 @@ if __name__ == '__main__':
     structureName = 'zTestBladder_03_UD'
     baseStructureName = 'Bladder'
     MakeMarginAddedRoi(case, examination, structureName, baseStructureName, 0.3, isDerived=False)
-

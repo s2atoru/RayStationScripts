@@ -54,7 +54,7 @@ namespace OptimizationRepeater.Models
         public bool UseRbeDose { get; set; } = false;
 
         public int DoseLevel { get; set; } = 0;
-        public double EudParameterA { get; set; } = 0.0;
+        public double EudParameterA { get; set; } = 1.0;
         public int PercentVolume { get; set; } = 0;
 
         public string LqModelParameters { get; set; } = null;

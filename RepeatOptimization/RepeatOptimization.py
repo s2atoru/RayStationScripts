@@ -2,6 +2,7 @@ from connect import *
 
 import clr
 import sys, math, wpf, os
+from System.Collections.Generic import List;
 from System.Windows import MessageBox
 
 clr.AddReference("PresentationFramework")
@@ -21,6 +22,7 @@ sys.path.append(scriptsPath)
 clr.AddReference("OptimizationRepeater")
 
 from OptimizationRepeater.Models import RepetitionParameters
+from OptimizationRepeater.Models import OptimizationFunction
 from OptimizationRepeater.Views import MainWindow
 
 numberOfRepetitionTimes = 2
@@ -35,7 +37,20 @@ repetitionParameters.ScaleDoseAfterEachIteration = scaleDoseAfterEachIteration
 repetitionParameters.ScaleDoseAfterLastIteration = scaleDoseAfterLastIteration
 repetitionParameters.ResetBeforeStartingOptimization = resetBeforeStartingOptimization
 
-mainWindow = MainWindow(repetitionParameters)
+plan = get_current("Plan")
+beamSet = get_current("BeamSet")
+optimizations = plan.PlanOptimizations
+planOptimizatoin = GetPlanOptimizationForBeamSet(optimizations, beamSet)
+objectiveConstituentFunctions = planOptimizatoin.Objective.ConstituentFunctions
+
+optimizationFunctions = List[OptimizationFunction]();
+
+for i, f in enumerate(objectiveConstituentFunctions):
+    optimizatonFunction = OptimizationFunction()
+    SetOptimizationFunction(objectiveConstituentFunction, i, optimizatoinFunction)
+    optimizationFunctions.Add(optimizationFunction)
+
+mainWindow = MainWindow(repetitionParameters, optimizationFunctions)
 mainWindow.ShowDialog()
 
 numberOfRepetitionTimes = repetitionParameters.NumberOfRepetitionTimes
@@ -48,9 +63,6 @@ print numberOfRepetitionTimes, scaleDoseAfterEachIteration, scaleDoseAfterLastIt
 
 from ScaleDose import ScaleDoseBeamSets
 
-plan = get_current("Plan")
-beamSet = get_current("BeamSet")
-
 #ScaleDoseBeamSets(plan, beamSet)
 #canExecute = False
 
@@ -58,13 +70,21 @@ if (canExecute):
     if(resetBeforeStartingOptimization):
         MessageBox.Show("Reset Optimization")
         #Execute Reset Optimization
-        plan.PlanOptimizations[0].ResetOptimization()
+        planOptimizatoin.ResetOptimization()
         
+        UpdateObjectiveConstituentFunctionWeights(objectiveConstituentFunctions, optimizatonFunctions)
+
     for i in xrange(numberOfRepetitionTimes):
 
         print "Start optimization {0}".format(i+1)
+
+        # Weight boosting at the last iteration
+        if i + 1 == numberOfRepetitionTimes:
+            print "Boost weights at last iteration"
+            BoostObjectiveConstituentFunctionWeights(objectiveConstituentFunctions, optimizatonFunctions)
+
         # Execute Optimization
-        plan.PlanOptimizations[0].RunOptimization()
+        planOptimizatoin.RunOptimization()
 
         if(i+1 == numberOfRepetitionTimes and scaleDoseAfterLastIteration):
             print "Scale dose after last iteration {0}".format(i+1)
@@ -75,5 +95,4 @@ if (canExecute):
             print "Scale dose after iteration {0}".format(i+1)
             #Execute Scale dose
             ScaleDoseBeamSets(plan, beamSet)
-
 pass
