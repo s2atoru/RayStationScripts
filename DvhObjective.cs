@@ -205,6 +205,9 @@ namespace Juntendo.MedPhys
             }
         }
 
+        public string ActualTargetUnit { get { return getTargetUnit(TargetType, TargetUnit); } }
+        public string ActualArgumentUnit { get { return getArgumentUnit(TargetType, ArgumentUnit); } }
+
         private DvhEvalResult evalResult = DvhEvalResult.Na;
         public DvhEvalResult EvalResult
         {
