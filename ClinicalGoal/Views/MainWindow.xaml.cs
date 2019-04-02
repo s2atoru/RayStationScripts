@@ -1,6 +1,7 @@
 ﻿using System.Windows;
+using ClinicalGoal.ViewModels;
 
-namespace Views.ClinicalGoal
+namespace ClinicalGoal.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -10,6 +11,16 @@ namespace Views.ClinicalGoal
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        public MainWindow(ClinicalGoalViewModel clinicalGoalViewModel)
+        {
+            InitializeComponent();
+
+            var mainWindowViewModel = new MainWindowViewModel();
+            mainWindowViewModel.ClinicalGoalViewModel = clinicalGoalViewModel;
+
+            DataContext = mainWindowViewModel;
         }
     }
 }
