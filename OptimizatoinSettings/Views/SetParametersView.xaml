@@ -28,6 +28,9 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label Content="Max number of iterations:" Target="{Binding ElementName=MaxNumberOfIterationsInput}"/>
         <TextBox x:Name="MaxNumberOfIterationsInput" Grid.Column="1" Text="{Binding MaxNumberOfIterations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -41,5 +44,18 @@
                 <ScaleTransform ScaleX="2.0" ScaleY="2.0"/>
             </CheckBox.RenderTransform>
         </CheckBox>
+        <Label Grid.Row="3" Content ="Dose grid [mm]:"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DoseGrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Text="Not Implemented" Grid.Row="3" Grid.Column="2" FontSize="12" Foreground="Red"></TextBlock>
+        <Label Grid.Row="4" Content ="Constrain Max MU/fx per arc:"/>
+        <CheckBox Grid.Column="1" Grid.Row="4" FontSize="12" IsChecked="{Binding ConstrainMaxMu, Mode=TwoWay}">
+            <CheckBox.RenderTransform>
+                <ScaleTransform ScaleX="2.0" ScaleY="2.0"/>
+            </CheckBox.RenderTransform>
+        </CheckBox>
+        <TextBlock Text="Not Implemented" Grid.Row="4" Grid.Column="2" FontSize="12" Foreground="Red"></TextBlock>
+        <Label Grid.Row="5" Content ="Max MU/fx per beam:"/>
+        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding MaxMuPerFxPerBeam, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Text="Not Implemented" Grid.Row="5" Grid.Column="2" FontSize="12" Foreground="Red"></TextBlock>
     </Grid>
 </UserControl>

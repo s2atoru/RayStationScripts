@@ -35,6 +35,10 @@ namespace OptimizatoinSettings.Models
 
         public bool ComputeFinalDose { get; set; } = true;
 
+        public int DoseGrid { get; set; } = 2;
+        public bool ConstrainMaxMu { get; set; } = true;
+        public int MaxMuPerFxPerBeam { get; set; } = 250;
+
         public bool CanSetParameters { get; set; } = false;
 
         public SettingParameters()

@@ -21,6 +21,9 @@ namespace OptimizatoinSettings.ViewModels
                 MaxNumberOfIterations = settingParameters.MaxNumberOfIterations.ToString();
                 IterationsInPreparationsPhase = settingParameters.IterationsInPreparationsPhase.ToString();
                 ComputeFinalDose = settingParameters.ComputeFinalDose;
+                DoseGrid = settingParameters.DoseGrid.ToString();
+                ConstrainMaxMu = settingParameters.ConstrainMaxMu;
+                MaxMuPerFxPerBeam = settingParameters.MaxMuPerFxPerBeam.ToString();
                 CanOk = settingParameters.IsValid;
             }
         }
@@ -86,6 +89,39 @@ namespace OptimizatoinSettings.ViewModels
             {
                 SetProperty(ref computeFinalDose, value);
                 SettingParameters.ComputeFinalDose = computeFinalDose;
+            }
+        }
+
+        private string doseGrid = "2";
+        public string DoseGrid
+        {
+            get { return doseGrid; }
+            set
+            {
+                if (SetProperty(ref doseGrid, value))
+                { SettingParameters.DoseGrid = int.Parse(doseGrid); }
+            }
+        }
+
+        private bool constrainMaxMu =true;
+        public bool ConstrainMaxMu
+        {
+            get { return constrainMaxMu; }
+            set
+            {
+                if (SetProperty(ref constrainMaxMu, value))
+                { SettingParameters.ConstrainMaxMu = constrainMaxMu; }
+            }
+        }
+
+        private string maxMuPerFxPerBeam = "250";
+        public string MaxMuPerFxPerBeam
+        {
+            get { return maxMuPerFxPerBeam; }
+            set
+            {
+                if (SetProperty(ref maxMuPerFxPerBeam, value))
+                { SettingParameters.MaxMuPerFxPerBeam = int.Parse(maxMuPerFxPerBeam); }
             }
         }
 

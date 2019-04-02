@@ -22,12 +22,18 @@ plan = get_current("Plan")
 maxNumberOfIterations = 40
 iterationsInPreparationsPhase = 20
 computeFinalDose = True
+doseGrid = 2
+constrainMaxMu = True
+maxMuPerFxPerBeam = 250
 
 settingParameters = SettingParameters()
 
 settingParameters.MaxNumberOfIterations = maxNumberOfIterations
 settingParameters.IterationsInPreparationsPhase = iterationsInPreparationsPhase
 settingParameters.ComputeFinalDose = computeFinalDose
+settingParameters.DoseGrid = doseGrid
+settingParameters.ConstrainMaxMu = constrainMaxMu
+settingParameters.MaxMuPerFxPerBeam = maxMuPerFxPerBeam
 
 #print("{0}, {1}, {2}, {3}, {4}".format(settingParameters.MaxNumberOfIterations, settingParameters.IterationsInPreparationsPhase, settingParameters.ComputeFinalDose, settingParameters.IsValid, settingParameters.CanSetParameters))
 
@@ -37,6 +43,10 @@ mainWindow.ShowDialog()
 maxNumberOfIterations = settingParameters.MaxNumberOfIterations
 iterationsInPreparationsPhase = settingParameters.IterationsInPreparationsPhase
 computeFinalDose = settingParameters.ComputeFinalDose
+doseGrid = settingParameters.DoseGrid
+constrainMaxMu = settingParameters.ConstrainMaxMu
+maxMuPerFxPerBeam = settingParameters.MaxMuPerFxPerBeam
+
 canSetParameters = settingParameters.CanSetParameters
 isValid = settingParameters.IsValid
 
