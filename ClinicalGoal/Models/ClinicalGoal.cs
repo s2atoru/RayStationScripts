@@ -4,13 +4,13 @@ namespace ClinicalGoal.Models
 {
     public class ClinicalGoal
     {
-        string RoiName { get; set; }
-        string GoalCriteria { get; set; }
-        string GoalType { get; set; }
-        double AcceptanceLevel { get; set; }
-        double ParameterValue { get; set; }
-        bool IsComparativeGoal { get; set; } = false;
-        int Priority { get; set; } = 2147483647;
+        public string RoiName { get; set; }
+        public string GoalCriteria { get; set; }
+        public string GoalType { get; set; }
+        public double AcceptanceLevel { get; set; }
+        public double ParameterValue { get; set; }
+        public bool IsComparativeGoal { get; set; } = false;
+        public int Priority { get; set; } = 2147483647;
 
         public override string ToString()
         {

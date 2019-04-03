@@ -79,6 +79,7 @@ namespace ClinicalGoal.ViewModels
             {
                 ProtocolFilePath = string.Empty;
                 Message = "\"Choose file\" is canceled";
+                return;
             }
 
             DvhObjectives = new ObservableCollection<DvhObjective>(DvhObjective.ReadObjectivesFromCsv(ProtocolFilePath));
