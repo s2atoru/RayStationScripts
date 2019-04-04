@@ -65,6 +65,14 @@
                 <Label Content="Prescribed Dose [cGy]:"/>
                 <TextBox Text="{Binding PrescribedDose}" MinWidth="96"/>
             </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Clear all clinical goals:"/>
+                <CheckBox IsChecked="{Binding ClearAllExistingClinicalGoals, Mode=TwoWay}" VerticalAlignment="Center">
+                    <CheckBox.RenderTransform>
+                        <ScaleTransform ScaleX="2.0" ScaleY="2.0"/>
+                    </CheckBox.RenderTransform>
+                </CheckBox>
+            </StackPanel>
             <DataGrid ItemsSource="{Binding DvhObjectives}" AutoGenerateColumns="False" CanUserAddRows="False" FontSize="12">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn IsReadOnly="True" Header="In Use">

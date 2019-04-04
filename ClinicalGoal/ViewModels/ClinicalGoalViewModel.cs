@@ -16,6 +16,13 @@ namespace ClinicalGoal.ViewModels
 
         public int PrescribedDose { get; set; } = 0;
 
+        private bool clearAllExistingClinicalGoals;
+        public bool ClearAllExistingClinicalGoals
+        {
+            get { return clearAllExistingClinicalGoals; }
+            set { SetProperty(ref clearAllExistingClinicalGoals, value); }
+        }
+
         private string protocolId;
         public string ProtocolId
         {
