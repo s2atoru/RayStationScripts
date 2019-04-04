@@ -1,4 +1,4 @@
-#from connect import *
+from connect import *
 
 import clr
 import sys, math, wpf, os
@@ -25,9 +25,14 @@ from OptimizationRepeater.Models import RepetitionParameters
 from OptimizationRepeater.Models import OptimizationFunction
 from OptimizationRepeater.Views import MainWindow
 
+from Helpers import GetPlanOptimizationForBeamSet
+from Helpers import SetOptimizationFunction
+from Helpers import UpdateObjectiveConstituentFunctionWeights
+from Helpers import BoostObjectiveConstituentFunctionWeights
+
 numberOfRepetitionTimes = 2
 scaleDoseAfterEachIteration = True
-scaleDoseAfterLastIteration = False
+scaleDoseAfterLastIteration = True
 resetBeforeStartingOptimization = False
 
 repetitionParameters = RepetitionParameters()
@@ -37,56 +42,30 @@ repetitionParameters.ScaleDoseAfterEachIteration = scaleDoseAfterEachIteration
 repetitionParameters.ScaleDoseAfterLastIteration = scaleDoseAfterLastIteration
 repetitionParameters.ResetBeforeStartingOptimization = resetBeforeStartingOptimization
 
-#plan = get_current("Plan")
-#beamSet = get_current("BeamSet")
-#optimizations = plan.PlanOptimizations
-#planOptimizatoin = GetPlanOptimizationForBeamSet(optimizations, beamSet)
-#objectiveConstituentFunctions = planOptimizatoin.Objective.ConstituentFunctions
+plan = get_current("Plan")
+beamSet = get_current("BeamSet")
+optimizations = plan.PlanOptimizations
+planOptimization = GetPlanOptimizationForBeamSet(optimizations, beamSet)
+objectiveConstituentFunctions = planOptimization.Objective.ConstituentFunctions
 
-optimizationFunctions = List[OptimizationFunction]()
+optimizationFunctions = List[OptimizationFunction]();
 
-optimizationFunction = OptimizationFunction()
-optimizationFunction.Order = 0
-optimizationFunction.RoiName = "Bladder"
-optimizationFunction.FunctionType = "MaxEud"
-optimizationFunction.DoseLevel = 3000
-optimizationFunction.PercentVolume = 30
-optimizationFunction.EudParameterA = 1.0
-optimizationFunction.Weight = 1
-optimizationFunction.BoostedWeight = 1
-optimizationFunction.IsBoosted = False
+for i, f in enumerate(objectiveConstituentFunctions):
+    optimizationFunction = OptimizationFunction()
+    SetOptimizationFunction(beamSet, planOptimization, f, i, optimizationFunction)
+    optimizationFunctions.Add(optimizationFunction)
 
-optimizationFunctions.Add(optimizationFunction)
-
-optimizationFunction = OptimizationFunction()
-optimizationFunction.Order = 1
-optimizationFunction.RoiName = "Bladder"
-optimizationFunction.FunctionType = "MaxDose"
-optimizationFunction.DoseLevel = 3000
-optimizationFunction.Weight = 2
-optimizationFunction.BoostedWeight = 3
-optimizationFunction.IsBoosted = False
-
-optimizationFunctions.Add(optimizationFunction)
-
-optimizationFunction = OptimizationFunction()
-optimizationFunction.Order = 2
-optimizationFunction.RoiName = "PTV"
-optimizationFunction.FunctionType = "UniformDose"
-optimizationFunction.DoseLevel = 7600
-optimizationFunction.Weight = 1
-optimizationFunction.BoostedWeight = 100
-optimizationFunction.IsBoosted = True
-
-optimizationFunctions.Add(optimizationFunction)
-
-#for i, f in enumerate(objectiveConstituentFunctions):
-#    optimizatonFunction = OptimizationFunction()
-#    SetOptimizationFunction(objectiveConstituentFunction, i, optimizatoinFunction)
-#    optimizationFunctions.Add(optimizationFunction)
+for optimizationFunction in optimizationFunctions:
+    print optimizationFunction.Order, optimizationFunction
 
 mainWindow = MainWindow(repetitionParameters, optimizationFunctions)
 mainWindow.ShowDialog()
+
+for optimizationFunction in optimizationFunctions:
+    print optimizationFunction.Order, optimizationFunction.RoiName, optimizationFunction, optimizationFunction.Weight, optimizationFunction.BoostedWeight
+
+#print 'Exit'
+#sys.exit()
 
 numberOfRepetitionTimes = repetitionParameters.NumberOfRepetitionTimes
 scaleDoseAfterEachIteration = repetitionParameters.ScaleDoseAfterEachIteration
@@ -95,9 +74,6 @@ resetBeforeStartingOptimization = repetitionParameters.ResetBeforeStartingOptimi
 canExecute = repetitionParameters.CanExecute 
 
 print numberOfRepetitionTimes, scaleDoseAfterEachIteration, scaleDoseAfterLastIteration, resetBeforeStartingOptimization, canExecute
-
-for optimizationFunction in optimizationFunctions:
-    print optimizationFunction.Order, optimizationFunction.Weight, optimizationFunction.IsBoosted, optimizationFunction.BoostedWeight, optimizationFunction 
 
 from ScaleDose import ScaleDoseBeamSets
 
@@ -110,8 +86,8 @@ if (canExecute):
         #Execute Reset Optimization
         planOptimizatoin.ResetOptimization()
         
-        UpdateObjectiveConstituentFunctionWeights(objectiveConstituentFunctions, optimizatonFunctions)
-
+    UpdateObjectiveConstituentFunctionWeights(objectiveConstituentFunctions, optimizationFunctions)
+                
     for i in xrange(numberOfRepetitionTimes):
 
         print "Start optimization {0}".format(i+1)
@@ -119,7 +95,8 @@ if (canExecute):
         # Weight boosting at the last iteration
         if i + 1 == numberOfRepetitionTimes:
             print "Boost weights at last iteration"
-            BoostObjectiveConstituentFunctionWeights(objectiveConstituentFunctions, optimizatonFunctions)
+            BoostObjectiveConstituentFunctionWeights(objectiveConstituentFunctions, optimizationFunctions)
+        
 
         # Execute Optimization
         planOptimizatoin.RunOptimization()
@@ -134,3 +111,4 @@ if (canExecute):
             #Execute Scale dose
             ScaleDoseBeamSets(plan, beamSet)
 pass
+

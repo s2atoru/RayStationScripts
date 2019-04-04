@@ -59,7 +59,10 @@ def GetRoiDetails(structureSet):
     for roiGeometry in roiGeometries:
         #cast into python boolean for json
         roiDetails[roiGeometry.OfRoi.Name] = {'HasContours':bool(roiGeometry.HasContours()), 'Type':roiGeometry.OfRoi.Type}
-
+        if bool(roiGeometry.HasContours()):
+            roiDetails[roiGeometry.OfRoi.Name]['Volume'] = roiGeometry.GetRoiVolume()
+        else:
+            roiDetails[roiGeometry.OfRoi.Name]['Volume'] = 0
     return roiDetails
 
 def GetRoi(roiName, rois, case, color, roiType, TissueName=None, RbeCellTypeName=None, RoiMaterial=None):
@@ -226,18 +229,27 @@ def AddClinicalGoal(plan, clinicalGoal):
                                                          GoalCriteria=clinicalGoal.GoalCriteria,
                                                          GoalType=clinicalGoal.GoalType, 
                                                          AcceptanceLevel=clinicalGoal.AcceptanceLevel,
-                                                         ParameterValue=linicalGoal.ParameterValue,
+                                                         ParameterValue=clinicalGoal.ParameterValue,
                                                          IsComparativeGoal=clinicalGoal.IsComparativeGoal,
                                                          Priority=clinicalGoal.Priority)
 
-def SetOptimizationFunction(objectiveConstituentFunction, order, optimizatoinFunction):
+def SetOptimizationFunction(beamSet, planOptimization, objectiveConstituentFunction, order, optimizationFunction):
+
+        planLabel = GetPlanLabelForConstituentFunction(beamSet, planOptimization, objectiveConstituentFunction)
+        print planLabel
+        optimizationFunction.PlanLabel = planLabel
+
+        roiName = objectiveConstituentFunction.ForRegionOfInterest.Name
+        optimizationFunction.RoiName = roiName
 
         functionType = GetOptimizationFunctionType(objectiveConstituentFunction)
+        optimizationFunction.FunctionType = functionType
+
         parameters = objectiveConstituentFunction.DoseFunctionParameters
         
         #Common for all types
         weight = parameters.Weight
-        lqModelParameters = parameters.lqModelParameters
+        lqModelParameters = parameters.LqModelParameters
 
         optimizationFunction.Order = order
         optimizationFunction.Weight = weight
@@ -253,7 +265,6 @@ def SetOptimizationFunction(objectiveConstituentFunction, order, optimizatoinFun
         lowDoseLevel = parameters.LowDoseLevel if hasattr(parameters, 'LowDoseLevel') else 0
         lowDoseDistance = parameters.LowDoseDistance if hasattr(parameters, 'LowDoseDistance') else 0
 
-        optimizationFunction.FunctionType = functionType
         if (functionType == 'MaxDose' or functionType == 'MinDose' or functionType == 'UniformDose'):
             optimizationFunction.DoseLevel = doseLevel
         elif (functionType == 'MaxDvh' or functionType == 'MinDvh'):
@@ -274,13 +285,37 @@ def SetOptimizationFunction(objectiveConstituentFunction, order, optimizatoinFun
 def UpdateObjectiveConstituentFunctionWeights(objectiveConstituentFunctions, optimizationFunctions):
     for f in optimizationFunctions:
         order = f.Order
-        ConstituentFunctions[order].DoseFunctionParameters.Weight = f.Weight
+        objectiveConstituentFunctions[order].DoseFunctionParameters.Weight = f.Weight
 
 def BoostObjectiveConstituentFunctionWeights(objectiveConstituentFunctions, optimizationFunctions):
     for f in optimizationFunctions:
         order = f.Order
         if f.IsBoosted:
-            ConstituentFunctions[order].DoseFunctionParameters.Weight = f.BoostedWeight
+            objectiveConstituentFunctions[order].DoseFunctionParameters.Weight = f.BoostedWeight
+
+def GetPlanLabelForConstituentFunction(currentBeamSet, planOptimization, constituentFunction):
+    if SizeOfIterator(planOptimization.OptimizedBeamSets) == 1:
+        return currentBeamSet.DicomPlanLabel
+    elif SizeOfIterator(planOptimization.OptimizedBeamSets) == 2:
+        return constituentFunction.OfDoseDistribution.ForBeamSet.DicomPlanLabel if hasattr(constituentFunction.OfDoseDistribution, 'ForBeamSet') else 'Combined dose'
+    else:
+        return None
+
+def SetMaxArcMu(beamSetting, maxArcMu):
+    
+    properties = beamSetting.ArcConversionPropertiesPerBeam
+
+    print 'SetMaxArcMu: CreateDualArcs -> False and BurstGantrySpacing -> None'
+
+    conformalArcStyle = properties.ConformalArcStyle  
+    createDualArcs = False
+    finalGantrySpacing = properties.FinalArcGantrySpacing
+    maxArcDeliveryTime = properties.MaxArcDeliveryTime
+    burstGantrySpacing = None
+    #maxArcMU = properties.MaxArcMU
+
+    beamSetting.ArcConversionPropertiesPerBeam.EditArcBasedBeamOptimizationSettings(ConformalArcStyle=conformalArcStyle, CreateDualArcs=createDualArcs, FinalGantrySpacing=finalGantrySpacing, MaxArcDeliveryTime=maxArcDeliveryTime, BurstGantrySpacing=burstGantrySpacing, MaxArcMU=maxArcMu)
+    
 
 if __name__ == '__main__':
 
@@ -299,31 +334,32 @@ if __name__ == '__main__':
 
     structureSet = GetStructureSet(case, examination)
 
-    rois = GetRois(structureSet)
+    rois = GetRoiDetails(structureSet)
 
     for key, value in rois.items():
-        print key, value
+        print key, value['HasContours'], value['Type'],  value['Volume']
 
     #jsonString = json.JSONEncoder().encode(rois)
-    jsonString = json.dumps(rois)
-    print jsonString
+    #jsonString = json.dumps(rois)
+    #print jsonString
 
-    resultRoiName = 'zPTV1-Rectum'
-    sourceRoiNames = ['PTV1']
-    subtractedRoiNames = ['Rectum']
-    outerMargins = [0.1]*6
+    #resultRoiName = 'zPTV1-Rectum'
+    #sourceRoiNames = ['PTV1']
+    #subtractedRoiNames = ['Rectum']
+    #outerMargins = [0.1]*6
 
     #MakeRoisSubtractedRoi(case, examination, resultRoiName, sourceRoiNames, subtractedRoiNames, outerMargins, innerMargins=[0.2] * 6, resultMargins=[0] * 6, isDerived=True, color="Yellow", roiType='Control')
     
-    structureName = 'zTestRing1_UD'
-    baseStructureName = 'PTV1'
-    MakeRingRoi(case, examination, structureName, baseStructureName, 1.5, 0.2, isDerived=False)
+    #structureName = 'zTestRing1_UD'
+    #baseStructureName = 'PTV1'
+    #MakeRingRoi(case, examination, structureName, baseStructureName, 1.5, 0.2, isDerived=False)
 
-    structureName = 'zTestRectum-PTV1_01_UD'
-    baseStructureName = 'Rectum'
-    subtractedRoiName = 'PTV1'
-    MakeRoiSubtractedRoi(case, examination, structureName, baseStructureName, subtractedRoiName, 0.1, isDerived=False)
+    #structureName = 'zTestRectum-PTV1_01_UD'
+    #baseStructureName = 'Rectum'
+    #subtractedRoiName = 'PTV1'
+    #MakeRoiSubtractedRoi(case, examination, structureName, baseStructureName, subtractedRoiName, 0.1, isDerived=False)
 
-    structureName = 'zTestBladder_03_UD'
-    baseStructureName = 'Bladder'
-    MakeMarginAddedRoi(case, examination, structureName, baseStructureName, 0.3, isDerived=False)
+    #structureName = 'zTestBladder_03_UD'
+    #baseStructureName = 'Bladder'
+    #MakeMarginAddedRoi(case, examination, structureName, baseStructureName, 0.3, isDerived=False)
+

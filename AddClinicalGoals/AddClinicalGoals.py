@@ -1,4 +1,4 @@
-#from connect import *
+from connect import *
 
 import clr
 clr.AddReference("PresentationFramework")
@@ -24,21 +24,29 @@ from ClinicalGoal.Views import MainWindow
 from ClinicalGoal.ViewModels import ClinicalGoalViewModel
 from ClinicalGoal.Models import ClinicalGoal
 
-#case = get_current("Case")
-#examination = get_current("Examination")
-#structureSet = GetStructureSet(case, examination)
-#roiDetails = GetRoiDetails(structureSet)
+from Helpers import GetStructureSet
+from Helpers import GetRoiDetails
+
+case = get_current("Case")
+examination = get_current("Examination")
+structureSet = GetStructureSet(case, examination)
+roiDetails = GetRoiDetails(structureSet)
+
+#for key, value in roiDetails.items():
+#    print key, value['HasContours']
+
+plan = get_current("Plan")
 
 clinicalGoalViewModel = ClinicalGoalViewModel()
 
-dvhCheckerDirectoryPath = r"C:\Users\satoru\Desktop\DvhChecker"
+dvhCheckerDirectoryPath = r"\\10.208.223.10\Eclipse\DvhChecker"
 clinicalGoalViewModel.DvhCheckerDirectoryPath = dvhCheckerDirectoryPath
 
-#structureNames = List[str]()
-#for roiName in roiDetails.keys:
-#    structureNames.Add(roiName)
+structureNames = List[str]()
+for roiName in roiDetails.keys():
+    structureNames.Add(roiName)
 
-structureNames = List[str]({'PTV', 'CTV', 'Rectal outline', 'Bladder outline'})
+#structureNames = List[str]({'PTV', 'CTV', 'Rectal outline', 'Bladder outline'})
 
 clinicalGoalViewModel.StructureNames = ObservableCollection[str](structureNames)
 
@@ -52,6 +60,8 @@ if not clinicalGoalViewModel.CanExecute:
 
 dvhObjectives = clinicalGoalViewModel.DvhObjectives;
 prscrivedDose = clinicalGoalViewModel.PrescribedDose;
+
+from Helpers import AddClinicalGoal
 
 with CompositeAction('Add Clinical Goals'):
     for dvhObjective in dvhObjectives:
