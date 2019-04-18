@@ -27,7 +27,7 @@ namespace ClinicalGoal.Models
         public ClinicalGoal(DvhObjective dvhObjective, double prescribedDose = 0, double volume = 0)
         {
 
-            RoiName = dvhObjective.StructureName;
+            RoiName = dvhObjective.StructureNameTps;
 
             switch (dvhObjective.TargetType)
             {
