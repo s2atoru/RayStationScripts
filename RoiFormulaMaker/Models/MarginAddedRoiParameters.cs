@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -15,7 +16,7 @@ namespace RoiFormulaMaker.Models
         [DataMember()]
         public string StructureType { get; set; }
         [DataMember()]
-        public string BaseStructureName { get; set; }
+        public List<string> BaseStructureNames { get; set; } = new List<string>();
         [DataMember()]
         public int Margin { get; set; }
 
@@ -24,7 +25,7 @@ namespace RoiFormulaMaker.Models
 
         public override string ToString()
         {
-            return $"Margin Added ROI: {StructureName} ({StructureType}), Base Structure: {BaseStructureName}, Margin = {Margin} mm";
+            return $"Margin Added ROI: {StructureName} ({StructureType}), Base Structures: {string.Join(",",BaseStructureNames)}, Margin = {Margin} mm";
         }
 
         public string ToJson()
@@ -46,14 +47,17 @@ namespace RoiFormulaMaker.Models
             }
             //Compare BaseStructureName and Margin
             MarginAddedRoiParameters c = (MarginAddedRoiParameters)obj;
-            return (this.BaseStructureName == c.BaseStructureName) && (this.Margin == c.Margin);
+
+            var baseStructureNameSet = new HashSet<string>(BaseStructureNames);
+
+            return (baseStructureNameSet.SetEquals(c.BaseStructureNames)) && (this.Margin == c.Margin);
         }
 
         //Return the same value if Equals return true
         public override int GetHashCode()
         {
             //XOR
-            return this.BaseStructureName.GetHashCode() ^ this.Margin;
+            return this.BaseStructureNames.GetHashCode() ^ this.Margin;
         }
 
         //Overload of equality operators, == and !=

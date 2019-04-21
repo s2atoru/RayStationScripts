@@ -1,6 +1,8 @@
 ﻿using RoiFormulaMaker.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows;
 
 namespace RoiFormulaMaker.Views
@@ -14,7 +16,11 @@ namespace RoiFormulaMaker.Views
         {
             InitializeComponent();
 
-            this.DataContext = new ViewModels.MainWindowViewModel();
+            var mainWindowViewModel = new ViewModels.MainWindowViewModel();
+            mainWindowViewModel.structureFormulas = mainWindowViewModel.RoiFormulas.Formulas;
+
+            mainWindowViewModel.DefaultDirectoryPath = Path.Combine(Environment.GetEnvironmentVariable("HOMEPATH"), @"Desktop\RayStationScripts\RoiFormulas");
+            this.DataContext = mainWindowViewModel;
         }
 
         public MainWindow(List<string> structureNames, List<dynamic> structureFormulas)

@@ -73,14 +73,14 @@ for rf in roiFormulas:
     formulaType = rf['FormulaType']
     if(formulaType  == 'MarginAddedRoi'):
         structureName = rf['StructureName']
-        baseStructureName = rf['BaseStructureName']
+        baseStructureNames = rf['BaseStructureNames']
         margin = rf['Margin']
         roiType = rf['StructureType']
 
         marginInCm = margin/10.
 
         print formulaType , structureName, baseStructureName, marginInCm, roiType
-        MakeMarginAddedRoi(case, examination, structureName, baseStructureName, marginInCm, isDerived=True, color='Yellow', roiType=roiType)
+        MakeMarginAddedRoi(case, examination, structureName, baseStructureNames, marginInCm, isDerived=True, color='Yellow', roiType=roiType)
     
     elif(formulaType  == 'RingRoi'):
         structureName = rf['StructureName']

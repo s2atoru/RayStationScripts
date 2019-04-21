@@ -96,10 +96,10 @@ def HaveAllRoisContours(roiNames, rois):
     for roiName in roiNames:
         if(not (roiName in rois)):
             return False
-        if(rois[roiName]):
-            return True
+        if(not rois[roiName]):
+            return False
 
-    return False
+    return True
 
 def MakeRoisSubtractedRoi(case, examination, resultRoiName, sourceRoiNames, subtractedRoiNames, outerMargins = [0] * 6, innerMargins=[0] * 6, resultMargins=[0] * 6, isDerived=True, color='Yellow', roiType='Control'):
     
@@ -145,6 +145,41 @@ def MakeRoisSubtractedRoi(case, examination, resultRoiName, sourceRoiNames, subt
 
     return False
 
+def MakeUnionRoi(case, examination, resultRoiName, sourceRoiNames, margins=[0] * 6, marginType='Expand', isDerived=True, color='Yellow', roiType='Control'):
+    
+    structureSet = GetStructureSet(case, examination)
+
+    if(resultRoiName in sourceRoiNames):
+        isDerived = False
+
+    rois = GetRois(structureSet)
+    roi = GetRoi(resultRoiName, rois, case, color, roiType)
+
+    marginSettingsResult = MarginDict(margins)
+
+    expressionA = ExpressionDict('Union', sourceRoiNames, margins)
+    #expressionB = ExpressionDict('Union', subtractedRoiNames, innerMargins)
+    #resultOperation = 'Subtraction'
+
+    roiNames = sourceRoiNames
+    haveAllRoisContours = HaveAllRoisContours(roiNames, rois)
+
+    if(isDerived):
+        roi.SetAlgebraExpression(ExpressionA=expressionA, ExpressionB=expressionB, ResultOperation=resultOperation, ResultMarginSettings=marginSettingsResult)
+        if(haveAllRoisContours):
+            roi.UpdateDerivedGeometry(Examination=examination, Algorithm='Auto')
+            return True
+        else:
+            print 'MakeUnionRoi for {0}: Not updated derived geometry because all ROIs do not have contours'.format(resultRoiName)
+    else:
+        if(haveAllRoisContours):
+            roi.CreateAlgebraGeometry(Examination=examination, Algorithm='Auto', ExpressionA=expressionA, ExpressionB=expressionB, ResultOperation=resultOperation, ResultMarginSettings=marginSettingsResult)
+            return True
+        else:
+            print 'MakeUnionRoi for {0}: Not created geometry because all ROIs do not have contours'.format(resultRoiName)
+
+    return False
+
 def MakeRingRoi(case, examination, structureName, baseStructureName, outerMargin, innerMargin, isDerived=True, color='Yellow', roiType='Control'):
     
     with CompositeAction('Ring ROI Algebra ({0})'.format(structureName)):
@@ -175,11 +210,11 @@ def MakeRoiSubtractedRoi(case, examination, structureName, baseStructureName, su
         MessageBox.Show(message)
         return False
 
-def MakeMarginAddedRoi(case, examination, structureName, baseStructureName, margin, isDerived=True, color='Yellow', roiType='Control'):
+def MakeMarginAddedRoi(case, examination, structureName, baseStructureNames, margin, isDerived=True, color='Yellow', roiType='Control'):
     
     resultRoiName = structureName
-    sourceRoiName = baseStructureName
-    if(resultRoiName == sourceRoiName):
+    sourceRoiNames = baseStructureNames
+    if(resultRoiName in sourceRoiNames):
         isDerived = False
 
     structureSet = GetStructureSet(case, examination)
@@ -189,22 +224,30 @@ def MakeMarginAddedRoi(case, examination, structureName, baseStructureName, marg
 
     marginSettingsResult = MarginDict([margin]*6)
 
-    hasSourceRoiContours = HaveAllRoisContours([sourceRoiName], rois)
+    hasSourceRoiContours = HaveAllRoisContours(sourceRoiNames, rois)
 
     with CompositeAction('Margin Added ROI ({0})'.format(structureName)):
-        if(isDerived):
-            roi.SetMarginExpression(SourceRoiName=sourceRoiName, MarginSettings=marginSettingsResult)
-            if(hasSourceRoiContours):
-                roi.UpdateDerivedGeometry(Examination=examination, Algorithm='Auto')
-                return True
+
+        if (len(sourceRoiNames) == 1):
+            if(isDerived):
+                roi.SetMarginExpression(SourceRoiName=sourceRoiName[0], MarginSettings=marginSettingsResult)
+                if(hasSourceRoiContours):
+                    roi.UpdateDerivedGeometry(Examination=examination, Algorithm='Auto')
+                    return True
+                else:
+                    print 'MakeMarginAddedRoi for {0}: Not updated derived geometry because baseStructure does not have contours'.format(resultRoiName)
             else:
-                print 'MakeMarginAddedRoi for {0}: Not updated derived geometry because baseStructure does not have contours'.format(resultRoiName)
+                if(hasSourceRoiContours):
+                    roi.CreateMarginGeometry(Examination=examination, SourceRoiName=sourceRoiName, MarginSettings=marginSettingsResult)
+                    return True
+                else:
+                    print 'MakeMarginAddedRoi for {0}: Not created geometry because baseStructure does not have contours'.format(resultRoiName)
+        elif (len(sourceRoiNames) > 1):
+            hasGeometry = MakeUnionRoi(case, examination, resultRoiName, sourceRoiNames, [margin]*6)
+            if(hasGeometry):
+                return True
         else:
-            if(hasSourceRoiContours):
-                roi.CreateMarginGeometry(Examination=examination, SourceRoiName=sourceRoiName, MarginSettings=marginSettingsResult)
-                return True
-            else:
-                print 'MakeMarginAddedRoi for {0}: Not created geometry because baseStructure does not have contours'.format(resultRoiName)
+            print 'MakeMarginAddedRoi for {0}: Do nothing because baseStructureNames is empty'
 
       # CompositeAction ends     
 

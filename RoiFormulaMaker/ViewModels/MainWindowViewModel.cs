@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using MvvmCommon.ViewModels;
 using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
@@ -81,7 +82,7 @@ namespace RoiFormulaMaker.ViewModels
         }
 
         public ObservableCollection<string> StructureNames { get; set; } = new ObservableCollection<string> { "PTV", "Rectum", "Bladder" };
-        public ObservableCollection<string> ContouredStructureNames { get; set; } = new ObservableCollection<string> { "PTV", "Rectum" };
+        public ObservableCollection<string> ContouredStructureNames { get; set; } = new ObservableCollection<string> { "PTV", "Rectum", "PTV2", "CTV1", "CTV2", "GTV1", "GTV2" };
 
         public ObservableCollection<string> StructureTypes { get; set; } = new ObservableCollection<string>
         {
@@ -114,7 +115,7 @@ namespace RoiFormulaMaker.ViewModels
             "Undefined"
         };
 
-        public RoiFormulas RoiFormulas { get; set; }
+        public RoiFormulas RoiFormulas { get; set; } = new RoiFormulas();
 
         public InteractionRequest<MakeRingRoiNotification> MakeRingRoiRequest { get; set; }
         public DelegateCommand MakeRingRoiCommand { get; set; }
@@ -297,31 +298,38 @@ namespace RoiFormulaMaker.ViewModels
 
         private void RaiseMakeMarginAddedRoiInteraction()
         {
+
+            var contouredStructureList = new ObservableCollection<ListBoxItemViewModel>();
+
+            foreach (var c in ContouredStructureNames)
+            {
+                contouredStructureList.Add(new ListBoxItemViewModel { Name = c, IsSelected = false });
+            }
+
             MakeMarginAddedRoiRequest.Raise(new MakeMarginAddedRoiNotification
             {
                 Title = "Make Margin Added ROI",
                 Margin = 0,
                 StructureNames = this.StructureNames,
-                ContouredStructureNames = this.ContouredStructureNames,
+                ContouredStructureList = contouredStructureList,
                 StructureTypes = this.StructureTypes
             },
             r =>
             {
-                if (r.Confirmed && r.BaseStructureName != null)
+                if (r.Confirmed && r.BaseStructureNames != null && r.BaseStructureNames.Count > 0)
                 {
-                    Message = $"User selected: Base => { r.BaseStructureName}";
+                    Message = $"User selected: Base => { string.Join(",", r.BaseStructureNames) }";
                     var marginAddedRoiParameters = new MarginAddedRoiParameters
                     {
                         StructureName = r.StructureName,
                         StructureType = r.StructureType,
-                        BaseStructureName = r.BaseStructureName,
+                        BaseStructureNames = r.BaseStructureNames,
                         Margin = r.Margin
                     };
                     if (StructureFormulas.Contains(marginAddedRoiParameters))
                     {
                         Message = "The margin added ROI is already in the list";
                         return;
-                        ;
                     }
 
                     UpdateStructureNames(r.StructureName);

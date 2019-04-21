@@ -3,6 +3,7 @@ using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
 using System;
 using RoiFormulaMaker.Notifications;
+using System.Collections.Generic;
 
 namespace RoiFormulaMaker.ViewModels
 {
@@ -10,8 +11,6 @@ namespace RoiFormulaMaker.ViewModels
     {
         public string SelectedStructureName { get; set; }
         public string SelectedStructureType { get; set; } = "Control";
-
-        public string SelectedBaseStructureName { get; set; }
 
         public DelegateCommand MakeMarginAddedRoiCommand { get; private set; }
 
@@ -28,21 +27,29 @@ namespace RoiFormulaMaker.ViewModels
             notification.StructureName = null;
             notification.StructureType = null;
             notification.Margin = 0;
-            notification.BaseStructureName = null;
+            notification.BaseStructureNames = null;
             notification.Confirmed = false;
             FinishInteraction?.Invoke();
         }
 
         private void AcceptMakingMarginAddedRoi()
         {
-            notification.BaseStructureName = SelectedBaseStructureName;
+            var baseStructureNames = new List<string>();
+            foreach (var c in notification.ContouredStructureList)
+            {
+                if (c.IsSelected)
+                {
+                    baseStructureNames.Add(c.Name);
+                }
+            }
+            notification.BaseStructureNames = baseStructureNames;
 
             notification.StructureName = SelectedStructureName;
             notification.StructureType = SelectedStructureType;
             
             if (string.IsNullOrEmpty(notification.StructureName))
             {
-                notification.StructureName = $"z{notification.BaseStructureName}_{notification.Margin}";
+                notification.StructureName = $"z{notification.BaseStructureNames[0]}_{notification.Margin}";
             }
 
             notification.Confirmed = true;
