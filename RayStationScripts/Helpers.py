@@ -155,11 +155,10 @@ def MakeUnionRoi(case, examination, resultRoiName, sourceRoiNames, margins=[0] *
     rois = GetRois(structureSet)
     roi = GetRoi(resultRoiName, rois, case, color, roiType)
 
-    marginSettingsResult = MarginDict(margins)
-
     expressionA = ExpressionDict('Union', sourceRoiNames, margins)
-    #expressionB = ExpressionDict('Union', subtractedRoiNames, innerMargins)
-    #resultOperation = 'Subtraction'
+    expressionB = ExpressionDict('Union', [])
+    resultOperation = 'None'
+    marginSettingsResult = MarginDict([0]*6)
 
     roiNames = sourceRoiNames
     haveAllRoisContours = HaveAllRoisContours(roiNames, rois)
@@ -177,6 +176,135 @@ def MakeUnionRoi(case, examination, resultRoiName, sourceRoiNames, margins=[0] *
             return True
         else:
             print 'MakeUnionRoi for {0}: Not created geometry because all ROIs do not have contours'.format(resultRoiName)
+
+    return False
+
+def MakeMonoAlgebraRoi(case, examination, resultRoiName, sourceRoiNames, operation='Union', margins=[0] * 6, marginType='Expand', isDerived=True, color='Yellow', roiType='Control'):
+    
+    structureSet = GetStructureSet(case, examination)
+
+    if(resultRoiName in sourceRoiNames):
+        isDerived = False
+
+    rois = GetRois(structureSet)
+    roi = GetRoi(resultRoiName, rois, case, color, roiType)
+
+    expressionA = ExpressionDict(operation, sourceRoiNames, margins, marginType)
+    expressionB = ExpressionDict('Union', [])
+    resultOperation = 'None'
+    marginSettingsResult = MarginDict([0]*6)
+
+    roiNames = sourceRoiNames
+    haveAllRoisContours = HaveAllRoisContours(roiNames, rois)
+
+    if(isDerived):
+        roi.SetAlgebraExpression(ExpressionA=expressionA, ExpressionB=expressionB, ResultOperation=resultOperation, ResultMarginSettings=marginSettingsResult)
+        if(haveAllRoisContours):
+            roi.UpdateDerivedGeometry(Examination=examination, Algorithm='Auto')
+            return True
+        else:
+            print 'MakeMonoAlgebraRoi for {0}: Not updated derived geometry because all ROIs do not have contours'.format(resultRoiName)
+    else:
+        if(haveAllRoisContours):
+            roi.CreateAlgebraGeometry(Examination=examination, Algorithm='Auto', ExpressionA=expressionA, ExpressionB=expressionB, ResultOperation=resultOperation, ResultMarginSettings=marginSettingsResult)
+            return True
+        else:
+            print 'MakeMonoAlgebraRoi for {0}: Not created geometry because all ROIs do not have contours'.format(resultRoiName)
+
+    return False
+
+def MakeBiAlgebraRoi(case, examination, resultRoiName, operation='Union', margins=[0]*6, marginType='Expand', sourceRoiNamesA=[], operationA='Union', marginsA=[0] * 6, marginTypeA='Expand', sourceRoiNamesB=[],  operationB='Union', marginsB=[0] * 6, marginTypeB='Expand', isDerived=True, color='Yellow', roiType='Control'):
+    
+    structureSet = GetStructureSet(case, examination)
+
+    sourceRoiNames = sourceRoiNamesA + sourceRoiNamesB
+    if(resultRoiName in sourceRoiNames):
+        isDerived = False
+
+    rois = GetRois(structureSet)
+    roi = GetRoi(resultRoiName, rois, case, color, roiType)
+
+    expressionA = ExpressionDict(operationA, sourceRoiNamesA, marginsA, marginTypeA)
+    expressionB = ExpressionDict(operationB, sourceRoiNamesB, marginsB, marginTypeB)
+    resultOperation = operation
+    marginSettingsResult = MarginDict(margins, marginType)
+
+    roiNames = sourceRoiNames
+    haveAllRoisContours = HaveAllRoisContours(roiNames, rois)
+
+    if(isDerived):
+        roi.SetAlgebraExpression(ExpressionA=expressionA, ExpressionB=expressionB, ResultOperation=resultOperation, ResultMarginSettings=marginSettingsResult)
+        if(haveAllRoisContours):
+            roi.UpdateDerivedGeometry(Examination=examination, Algorithm='Auto')
+            return True
+        else:
+            print 'MakeBilgebraRoi for {0}: Not updated derived geometry because all ROIs do not have contours'.format(resultRoiName)
+    else:
+        if(haveAllRoisContours):
+            roi.CreateAlgebraGeometry(Examination=examination, Algorithm='Auto', ExpressionA=expressionA, ExpressionB=expressionB, ResultOperation=resultOperation, ResultMarginSettings=marginSettingsResult)
+            return True
+        else:
+            print 'MakeBiAlgebraRoi for {0}: Not created geometry because all ROIs do not have contours'.format(resultRoiName)
+
+    return False
+
+def MakeMarginRoi(case, examination, resultRoiName, sourceRoiName, margin, marginType='Expand', isDerived=True, color='Yellow', roiType='Control'):
+    
+    structureSet = GetStructureSet(case, examination)
+
+    if(resultRoiName == sourceRoiName):
+        isDerived = False
+
+    rois = GetRois(structureSet)
+    roi = GetRoi(resultRoiName, rois, case, color, roiType)
+
+    marginSettings = MarginDict([0]*6, marginType)
+
+    roiNames = [sourceRoiName]
+    haveAllRoisContours = HaveAllRoisContours(roiNames, rois)
+
+    if(isDerived):
+        roi.SetMarginExpression(SourceRoiName=sourceRoiName, MarginSettings=marginSettings)
+        if(haveAllRoisContours):
+            roi.UpdateDerivedGeometry(Examination=examination, Algorithm='Auto')
+            return True
+        else:
+            print 'MakeMarginRoi for {0}: Not updated derived geometry because the source ROI does not have contours'.format(resultRoiName)
+    else:
+        if(haveAllRoisContours):
+            roi.CreateMarginGeometry(SourceRoiName=sourceRoiName, MarginSettings=marginSettings)
+            return True
+        else:
+            print 'MakeMarginRoi for {0}: Not created geometry because the source ROI does not have contours'.format(resultRoiName)
+
+    return False
+
+def MakeWallRoi(case, examination, resultRoiName, sourceRoiName, outwardDistance, inwardDistance=0.0, isDerived=True, color='Yellow', roiType='Control'):
+    
+    structureSet = GetStructureSet(case, examination)
+
+    if(resultRoiName == sourceRoiName):
+        isDerived = False
+
+    rois = GetRois(structureSet)
+    roi = GetRoi(resultRoiName, rois, case, color, roiType)
+
+    roiNames = [sourceRoiName]
+    haveAllRoisContours = HaveAllRoisContours(roiNames, rois)
+
+    if(isDerived):
+        roi.SetWallExpression(SourceRoiName=sourceRoiName, OutwardDistance=outwardDistance, InwardDistance=inwardDistance)
+        if(haveAllRoisContours):
+            roi.UpdateDerivedGeometry(Examination=examination, Algorithm='Auto')
+            return True
+        else:
+            print 'MakeWallRoi for {0}: Not updated derived geometry because the source ROI does not have contours'.format(resultRoiName)
+    else:
+        if(haveAllRoisContours):
+            roi.CreateWallGeometry(SourceRoiName=sourceRoiName, OutwardDistance=outwardDistance, InwardDistance=inwardDistance)
+            return True
+        else:
+            print 'MakeWallRoi for {0}: Not created geometry because the source ROI does not have contours'.format(resultRoiName)
 
     return False
 
