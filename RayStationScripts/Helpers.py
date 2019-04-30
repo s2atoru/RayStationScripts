@@ -366,7 +366,7 @@ def MakeMarginAddedRoi(case, examination, structureName, baseStructureNames, mar
                     print 'MakeMarginAddedRoi for {0}: Not updated derived geometry because baseStructure does not have contours'.format(resultRoiName)
             else:
                 if(hasSourceRoiContours):
-                    roi.CreateMarginGeometry(Examination=examination, SourceRoiName=sourceRoiName, MarginSettings=marginSettingsResult)
+                    roi.CreateMarginGeometry(Examination=examination, SourceRoiName=sourceRoiName[0], MarginSettings=marginSettingsResult)
                     return True
                 else:
                     print 'MakeMarginAddedRoi for {0}: Not created geometry because baseStructure does not have contours'.format(resultRoiName)

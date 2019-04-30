@@ -318,7 +318,7 @@ namespace RoiFormulaMaker.ViewModels
             {
                 if (r.Confirmed && r.BaseStructureNames != null && r.BaseStructureNames.Count > 0)
                 {
-                    Message = $"User selected: Base => { string.Join(",", r.BaseStructureNames) }";
+                    Message = $"User selected: Base => { string.Join(", ", r.BaseStructureNames) }";
                     var marginAddedRoiParameters = new MarginAddedRoiParameters
                     {
                         StructureName = r.StructureName,
