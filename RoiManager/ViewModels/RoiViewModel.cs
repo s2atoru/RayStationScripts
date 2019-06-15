@@ -18,13 +18,11 @@ namespace RoiManager.ViewModels
         public ReactiveProperty<bool> CanUnderive { get; }
         public ReactiveProperty<bool> CanDeleteGeometry { get; }
 
-        
-
         public RoiViewModel(Models.Roi roi)
         {
             Name = roi.ObserveProperty(x => x.Name).ToReadOnlyReactiveProperty().AddTo(Disposable);
             IsDerived = roi.ObserveProperty(x => x.IsDerived).ToReadOnlyReactiveProperty().AddTo(Disposable);
-            DependentRois = (new ObservableCollection<string>(roi.DependentRois)).ToReadOnlyReactiveCollection(x => x);
+            DependentRois = (new ObservableCollection<string>(roi.DependentRois)).ToReadOnlyReactiveCollection(x => x).AddTo(Disposable);
             CanUnderive = roi.ToReactivePropertyAsSynchronized(x => x.CanUnderive).AddTo(Disposable);
             CanDeleteGeometry = roi.ToReactivePropertyAsSynchronized(x => x.CanDeleteGeometry).AddTo(Disposable);
         }
