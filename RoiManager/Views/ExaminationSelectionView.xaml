@@ -1,0 +1,44 @@
+﻿<Window x:Class="RoiManager.Views.ExaminationSelectionView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RoiManager.Views"
+        xmlns:vm="clr-namespace:RoiManager.ViewModels" 
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:prism="http://prismlibrary.com/"
+        xmlns:ac="clr-namespace:MvvmCommon.Actions;assembly=MvvmCommon"
+        d:DataContext="{d:DesignInstance vm:ExaminationSelectionViewModel}"
+        mc:Ignorable="d"
+        Title="Select Examination" SizeToContent="WidthAndHeight" 
+        d:DesignHeight="450" d:DesignWidth="800">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="Width" Value="72"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <StackPanel>
+            <ComboBox x:Name="comboBox" ItemsSource="{Binding ExaminationNames}" SelectedItem="{Binding SelectedExamination, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <StackPanel Orientation="Horizontal" >
+                <Button Content="OK">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <prism:InvokeCommandAction Command="{Binding OkCommand}"/>
+                            <ac:CloseWindowAction/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button Content="Cancel">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <prism:InvokeCommandAction Command="{Binding CancelCommand}"/>
+                            <ac:CloseWindowAction/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

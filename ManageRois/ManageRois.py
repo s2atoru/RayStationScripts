@@ -19,6 +19,27 @@ print(scriptsPath)
 sys.path.append(scriptsPath)
 
 clr.AddReference("RoiManager")
+
+from RoiManager.ViewModels import ExaminationSelectionViewModel
+
+examinations = ExaminationSelectionViewModel()
+
+examinationNames = List[str]()
+examinationNames.Add("CT1")
+examinationNames.Add("CT2")
+examinationNames.Add("CT3")
+
+examinations.CanExecute = False
+examinations.ExaminationNames = examinationNames
+
+from RoiManager.Views import ExaminationSelectionView
+
+examinationSelectionWindow = ExaminationSelectionView(examinations)
+examinationSelectionWindow.ShowDialog();
+
+print "Selected Examination: ", examinations.SelectedExamination
+print "CanExecute: ", examinations.CanExecute
+
 from RoiManager.Models import Roi
 rois = List[Roi]()
 
@@ -50,11 +71,16 @@ roi.ExaminationName = "CT1"
 
 rois.Add(roi)
 
+from RoiManager.ViewModels import RoiSelectionViewModel
+
+roiSelectionViewModel = RoiSelectionViewModel(rois)
+
 from RoiManager.Views import MainWindow
-mainWindow = MainWindow(rois)
+mainWindow = MainWindow(roiSelectionViewModel)
 mainWindow.ShowDialog();
 
-for r in rois:
-    print(r)
+print "CanExecute: ", roiSelectionViewModel.CanExecute
 
+for r in rois:
+    print r
 pass

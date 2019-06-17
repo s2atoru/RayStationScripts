@@ -22,12 +22,9 @@ namespace RoiManager.Views
             DataContext = roiSelectionViewModel;
         }
 
-        public MainWindow(List<Models.Roi> rois)
+        public MainWindow(ViewModels.RoiSelectionViewModel roiSelectionViewModel)
         {
             InitializeComponent();
-
-            var roiSelectionViewModel = new ViewModels.RoiSelectionViewModel(rois);
-
             DataContext = roiSelectionViewModel;
         }
     }

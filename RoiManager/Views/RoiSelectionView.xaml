@@ -5,42 +5,92 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RoiManager.Views"
              xmlns:vm="clr-namespace:RoiManager.ViewModels" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:ac="clr-namespace:MvvmCommon.Actions;assembly=MvvmCommon"
              d:DataContext="{d:DesignInstance vm:RoiSelectionViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="Width" Value="72"/>
+        </Style>
+    </UserControl.Resources>
     <Grid>
-        <DataGrid ItemsSource="{Binding RoiViewModels}" AutoGenerateColumns="False" CanUserAddRows="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn
+        <StackPanel>
+            <DataGrid ItemsSource="{Binding RoiViewModels}" AutoGenerateColumns="False" CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                    Header="Examination"
+                    Binding="{Binding ExaminationName.Value, Mode=OneTime}"
+                    IsReadOnly="True">
+                    </DataGridTextColumn>
+                    <DataGridTextColumn
                     Header="Name"
                     Binding="{Binding Name.Value, Mode=OneTime}"
                     IsReadOnly="True">
-                </DataGridTextColumn>
-                <DataGridTextColumn
+                    </DataGridTextColumn>
+                    <DataGridTextColumn
+                    Header="Geometry"
+                    Binding="{Binding HasGeometry.Value, Mode=OneTime}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn
                     Header="Derived"
                     Binding="{Binding IsDerived.Value, Mode=OneTime}">
-                </DataGridTextColumn>
-                <DataGridTextColumn
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn
                     Header="ROIs"
-                    Binding="{Binding DependentRois.Value, Mode=OneTime}">
-                </DataGridTextColumn>
-                <DataGridTemplateColumn IsReadOnly="True" Header="Underive">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <CheckBox IsChecked="{Binding CanUnderive.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Binding="{Binding DependentRoisDisplay, Mode=OneTime}">
+                    </DataGridTextColumn>
+                    <DataGridTemplateColumn IsReadOnly="True" Header="Underive">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding CanUnderive.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn IsReadOnly="True" Header="Delete Geometry">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <CheckBox IsChecked="{Binding CanDeleteGeometry.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn IsReadOnly="True" Header="Delete Geometry">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding CanDeleteGeometry.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel Orientation="Horizontal" >
+                <Button Content="OK">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <prism:InvokeCommandAction Command="{Binding OkCommand}"/>
+                            <ac:CloseWindowAction/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button Content="Cancel">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <prism:InvokeCommandAction Command="{Binding CancelCommand}"/>
+                            <ac:CloseWindowAction/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </UserControl>
