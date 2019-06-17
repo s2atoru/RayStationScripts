@@ -1,4 +1,4 @@
-#from connect import *
+from connect import *
 
 import clr
 import sys, math, wpf, os
@@ -11,76 +11,86 @@ clr.AddReference("PresentationCore")
 RayStationScriptsPath = os.environ["USERPROFILE"] + r"\DeskTop\RayStationScripts" + "\\"
 
 dllsPath = RayStationScriptsPath + "Dlls"
-print(dllsPath)
+#print(dllsPath)
 sys.path.append(dllsPath)
 
 scriptsPath = RayStationScriptsPath + "Scripts"
-print(scriptsPath)
+#print(scriptsPath)
 sys.path.append(scriptsPath)
 
 clr.AddReference("RoiManager")
 
 from RoiManager.ViewModels import ExaminationSelectionViewModel
 
+case = get_current("Case")
+
 examinations = ExaminationSelectionViewModel()
 
 examinationNames = List[str]()
-examinationNames.Add("CT1")
-examinationNames.Add("CT2")
-examinationNames.Add("CT3")
+
+for e in case.Examinations:
+    examinationNames.Add(e.Name)
+    print(e.Name)
 
 examinations.CanExecute = False
 examinations.ExaminationNames = examinationNames
-
 from RoiManager.Views import ExaminationSelectionView
-
 examinationSelectionWindow = ExaminationSelectionView(examinations)
 examinationSelectionWindow.ShowDialog();
 
 print "Selected Examination: ", examinations.SelectedExamination
-print "CanExecute: ", examinations.CanExecute
+print "ExaminationSelection CanExecute: ", examinations.CanExecute
+if not examinations.CanExecute:
+    print "Canceled"
+    sys.exit()
+
+roiGeometries = case.PatientModel.StructureSets[examinations.SelectedExamination].RoiGeometries
 
 from RoiManager.Models import Roi
 rois = List[Roi]()
 
-# Add a new Roi
-roi = Roi()
-roi.Name = "PTV-CTV"
-roi.IsDerived = True
-dependentRois = List[str]()
-dependentRois.Add("PTV")
-dependentRois.Add("CTV")
-roi.DependentRois = dependentRois
-roi.HasGeometry = True
-roiCanDeleteGeometry = False
-roi.CanUnderive = False
-roi.CaseName = "C1"
-roi.ExaminationName = "CT1"
-rois.Add(roi)
+for r in roiGeometries:
+    roi = Roi()
+    ofRoi = r.OfRoi
+    roi.Name = ofRoi.Name
+    if ofRoi.DerivedRoiExpression is not None:
+        roi.IsDerived = True
+        roi.DependentRois = r.GetDependentRois()
+    else:
+        roi.IsDerived = False
+        roi.DependentRois = List[str]()
 
-# Add a new Roi
-roi = Roi()
-roi.Name = "PTV"
-roi.IsDerived = False
-roi.DependentRois =List[str]()
-roi.HasGeometry = True
-roiCanDeleteGeometry = False
-roi.CanUnderive = False
-roi.CaseName = "C1"
-roi.ExaminationName = "CT1"
-
-rois.Add(roi)
+    roi.HasGeometry = r.HasContours()
+    roi.CanDeleteGeometry = False
+    roi.CanUnderive = False
+    roi. CanDeleteGeometry = False
+    roi.CaseName = case.CaseName
+    roi.ExaminationName = examinations.SelectedExamination
+    rois.Add(roi)
 
 from RoiManager.ViewModels import RoiSelectionViewModel
-
 roiSelectionViewModel = RoiSelectionViewModel(rois)
 
 from RoiManager.Views import MainWindow
 mainWindow = MainWindow(roiSelectionViewModel)
 mainWindow.ShowDialog();
 
-print "CanExecute: ", roiSelectionViewModel.CanExecute
+print "RoiSelection CanExecute: ", roiSelectionViewModel.CanExecute
+
+if not roiSelectionViewModel.CanExecute:
+    print "Canceled"
+    sys.exit()
 
 for r in rois:
-    print r
+    roiGeometry = roiGeometries[r.Name]
+    ofRoi = roiGeometry.OfRoi
+    if r.IsDerived and r.CanUnderive:
+        ofRoi.DeleteExpression()
+    if r.HasGeometry and r.CanDeleteGeometry:
+        roiGeometry.DeleteGeometry()
+    if r.CanDeleteRoi:
+        ofRoi.DeleteRoi()
 pass
+
+
+
