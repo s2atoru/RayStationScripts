@@ -18,9 +18,13 @@ namespace RoiManager.ViewModels
         public ReadOnlyReactiveCollection<string> DependentRois { get; }
         public ReactiveProperty<bool> CanUnderive { get; }
         public ReactiveProperty<bool> CanDeleteGeometry { get; }
+        public ReactiveProperty<bool> CanDeleteRoi { get; }
 
         public ReadOnlyReactiveProperty<string> ExaminationName { get; }
         public ReadOnlyReactiveProperty<string> HasGeometry { get; }
+
+        public ReadOnlyReactiveProperty<bool> CanDisableUnderive { get;  }
+        public ReadOnlyReactiveProperty<bool> CanDisableDeleteGeometry { get; }
 
         public string DependentRoisDisplay { get { return string.Join(", ", DependentRois); }}
 
@@ -32,9 +36,13 @@ namespace RoiManager.ViewModels
 
             CanUnderive = roi.ToReactivePropertyAsSynchronized(x => x.CanUnderive).AddTo(Disposable);
             CanDeleteGeometry = roi.ToReactivePropertyAsSynchronized(x => x.CanDeleteGeometry).AddTo(Disposable);
+            CanDeleteRoi = roi.ToReactivePropertyAsSynchronized(x => x.CanDeleteRoi).AddTo(Disposable);
 
             ExaminationName = roi.ObserveProperty(x => x.ExaminationName).ToReadOnlyReactiveProperty().AddTo(Disposable);
             HasGeometry = roi.ObserveProperty(x => x.HasGeometry).Select(x => x ? "✓" : "").ToReadOnlyReactiveProperty().AddTo(Disposable);
+
+            CanDisableUnderive = roi.ObserveProperty(x => x.IsDerived).ToReadOnlyReactiveProperty().AddTo(Disposable);
+            CanDisableDeleteGeometry = roi.ObserveProperty(x => x.HasGeometry).ToReadOnlyReactiveProperty().AddTo(Disposable);
         }
 
         void IDisposable.Dispose()

@@ -19,13 +19,50 @@
     </UserControl.Resources>
     <Grid>
         <StackPanel>
-            <DataGrid ItemsSource="{Binding RoiViewModels}" AutoGenerateColumns="False" CanUserAddRows="False">
+            <StackPanel Orientation="Horizontal" >
+                <Button Content="OK">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <prism:InvokeCommandAction Command="{Binding OkCommand}"/>
+                            <ac:CloseWindowAction/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button Content="Cancel">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <prism:InvokeCommandAction Command="{Binding CancelCommand}"/>
+                            <ac:CloseWindowAction/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </StackPanel>
+            <DataGrid ItemsSource="{Binding RoiViewModels}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="600" MaxWidth="1000" >
                 <DataGrid.Columns>
-                    <DataGridTextColumn
-                    Header="Examination"
-                    Binding="{Binding ExaminationName.Value, Mode=OneTime}"
-                    IsReadOnly="True">
-                    </DataGridTextColumn>
+                    <DataGridTemplateColumn IsReadOnly="True" Header="Underive">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding CanUnderive.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="{Binding CanDisableUnderive.Value}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn IsReadOnly="True" Header="Delete Geometry">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding CanDeleteGeometry.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="{Binding CanDisableDeleteGeometry.Value}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn IsReadOnly="True" Header="Delete ROI">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding CanDeleteRoi.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn
                     Header="Name"
                     Binding="{Binding Name.Value, Mode=OneTime}"
@@ -55,42 +92,13 @@
                     Header="ROIs"
                     Binding="{Binding DependentRoisDisplay, Mode=OneTime}">
                     </DataGridTextColumn>
-                    <DataGridTemplateColumn IsReadOnly="True" Header="Underive">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <CheckBox IsChecked="{Binding CanUnderive.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn IsReadOnly="True" Header="Delete Geometry">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <CheckBox IsChecked="{Binding CanDeleteGeometry.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                    <DataGridTextColumn
+                    Header="Examination"
+                    Binding="{Binding ExaminationName.Value, Mode=OneTime}"
+                    IsReadOnly="True">
+                    </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
-            <StackPanel Orientation="Horizontal" >
-                <Button Content="OK">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <prism:InvokeCommandAction Command="{Binding OkCommand}"/>
-                            <ac:CloseWindowAction/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Button>
-                <Button Content="Cancel">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <prism:InvokeCommandAction Command="{Binding CancelCommand}"/>
-                            <ac:CloseWindowAction/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Button>
-            </StackPanel>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -17,10 +17,11 @@ namespace RoiManager.Models
         public List<string> DependentRois { get; set; }
         public bool CanUnderive { get; set; }
         public bool CanDeleteGeometry { get; set; }
+        public bool CanDeleteRoi { get; set; }
 
         public override string ToString()
         {
-            return $"ROI Name: {Name}, HasGeometry: {HasGeometry}, CanUnderive: {CanUnderive}, CanDeleteGeometry: {CanDeleteGeometry}"
+            return $"ROI Name: {Name}, HasGeometry: {HasGeometry}, CanUnderive: {CanUnderive}, CanDeleteGeometry: {CanDeleteGeometry}, CanDeleteRoi: {CanDeleteRoi}"
                 + $" IsDerved: {IsDerived}, DependentRois: [{string.Join(",",DependentRois)}], Case: {CaseName}, Examination: {ExaminationName}";
         }
     }
