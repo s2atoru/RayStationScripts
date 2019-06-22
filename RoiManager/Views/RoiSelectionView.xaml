@@ -12,6 +12,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
+        <CollectionViewSource
+            x:Key="RoiNameList"
+            Source="{Binding RoiNameList}" />
         <Style TargetType="Button">
             <Setter Property="Margin" Value="3"/>
             <Setter Property="Width" Value="72"/>
@@ -97,6 +100,26 @@
                     Binding="{Binding ExaminationName.Value, Mode=OneTime}"
                     IsReadOnly="True">
                     </DataGridTextColumn>
+                    <DataGridTemplateColumn IsReadOnly="True" Header="Rename">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding CanRename.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn CanUserReorder="False" CanUserResize="False" CanUserSort="False" Header="New Name">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=NewName.Value, Mode=TwoWay}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <ComboBox IsEditable="True" Text="{Binding Path=NewName.Value}" ItemsSource="{Binding Source={StaticResource RoiNameList}}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>

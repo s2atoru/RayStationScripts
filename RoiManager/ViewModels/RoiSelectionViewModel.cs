@@ -16,6 +16,8 @@ namespace RoiManager.ViewModels
 
         public bool CanExecute { get; set; } = false;
 
+        public List<string> RoiNameList { get; set; } = new List<string>(); 
+
         public RoiSelectionViewModel(List<Models.Roi> rois)
         {
             Rois = new ObservableCollection<Models.Roi>(rois);
