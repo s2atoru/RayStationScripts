@@ -29,7 +29,7 @@
                 </DataGridTextColumn>
                 <DataGridTextColumn
                     Header="Weight"
-                    Binding="{Binding Weight, Mode=TwoWay}">
+                    Binding="{Binding Weight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 </DataGridTextColumn>
                 <DataGridTemplateColumn IsReadOnly="True" Header="Boost">
                     <DataGridTemplateColumn.CellTemplate>
@@ -41,7 +41,7 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn
                     Header="Boosted Weight"
-                    Binding="{Binding BoostedWeight, Mode=TwoWay}"
+                    Binding="{Binding BoostedWeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     IsReadOnly="False">
                 </DataGridTextColumn>
                 <DataGridTextColumn
