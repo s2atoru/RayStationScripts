@@ -49,6 +49,14 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
+                    <DataGridTemplateColumn IsReadOnly="True" Header="Update">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding CanUpdate.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="{Binding CanDisableUpdate.Value}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTemplateColumn IsReadOnly="True" Header="Delete Geometry">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
