@@ -56,7 +56,12 @@ namespace RoiNameReplacer.ViewModels
                     var oldWord = item.Key;
                     var newWord = item.Value;
 
+                    // in double quotes
                     fileContent.Replace("\"" + oldWord + "\"", "\"" + newWord + "\"");
+                    // in single quoutes
+                    fileContent.Replace("'" + oldWord + "'", "'" + newWord + "'");
+                    // in parentheses
+                    fileContent.Replace("(" + oldWord + ")", "(" + newWord + ")");
                 }
 
                 var directoryName = Path.GetDirectoryName(FilePath);
