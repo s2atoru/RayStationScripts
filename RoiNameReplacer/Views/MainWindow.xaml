@@ -1,4 +1,4 @@
-﻿<Window x:Class="ReplaceWordsInTextFile.MainWindow"
+﻿<Window x:Class="RoiNameReplacer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,8 +6,8 @@
         xmlns:prism="http://prismlibrary.com/"
         xmlns:ac="clr-namespace:MvvmCommon.Actions;assembly=MvvmCommon"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        xmlns:local="clr-namespace:ReplaceWordsInTextFile"
-        xmlns:vm="clr-namespace:ReplaceWordsInTextFile.ViewModels"
+        xmlns:local="clr-namespace:RoiNameReplacer"
+        xmlns:vm="clr-namespace:RoiNameReplacer.ViewModels"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:MainWindowViewModel}"
         Title="Replace ROI Names" SizeToContent="WidthAndHeight" d:DesignHeight="400" d:DesignWidth="600">

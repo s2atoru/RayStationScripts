@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace ReplaceWordsInTextFile.ViewModels
+namespace RoiNameReplacer.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
