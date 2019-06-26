@@ -132,12 +132,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\MvvmCommon\MvvmCommon\MvvmCommon.csproj">
-      <Project>{8faa44f1-7d9d-452c-81d7-33a09e354b92}</Project>
-      <Name>MvvmCommon</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.1</Version>
     </PackageReference>
@@ -150,6 +144,12 @@
     <PackageReference Include="WindowsAPICodePack-Shell">
       <Version>1.1.1</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MvvmCommon\MvvmCommon\MvvmCommon.csproj">
+      <Project>{8faa44f1-7d9d-452c-81d7-33a09e354b92}</Project>
+      <Name>MvvmCommon</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -143,7 +143,7 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\MvvmCommon\MvvmCommon\MvvmCommon.csproj">
+    <ProjectReference Include="..\MvvmCommon\MvvmCommon\MvvmCommon.csproj">
       <Project>{8faa44f1-7d9d-452c-81d7-33a09e354b92}</Project>
       <Name>MvvmCommon</Name>
     </ProjectReference>
