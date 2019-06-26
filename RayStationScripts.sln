@@ -17,8 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoiFormulaMaker", "RoiFormu
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "RoiFormulaOrganizer", "RoiFormulaOrganizer\RoiFormulaOrganizer.pyproj", "{DE89E6B8-88A0-4B9D-B52B-260ABC7FAC16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DvhChecker", "..\dvhchecker\DvhChecker\DvhChecker.csproj", "{210B4FF8-D390-477E-9A12-72EE29CB5374}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClinicalGoal", "ClinicalGoal\ClinicalGoal.csproj", "{FB59101C-668E-48C2-896F-2EED19CF725B}"
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "AddClinicalGoals", "AddClinicalGoals\AddClinicalGoals.pyproj", "{28D07B3B-A3AE-4422-9DE9-FABD723F920A}"
@@ -32,6 +30,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoiNameReplacer", "RoiNameReplacer\RoiNameReplacer.csproj", "{2EAE53D6-C08B-42FB-BC7B-0A3F433498A2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvvmCommon", "MvvmCommon\MvvmCommon\MvvmCommon.csproj", "{8FAA44F1-7D9D-452C-81D7-33A09E354B92}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DvhChecker", "DvhChecker\DvhChecker\DvhChecker.csproj", "{210B4FF8-D390-477E-9A12-72EE29CB5374}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,14 +81,6 @@ Global
 		{DE89E6B8-88A0-4B9D-B52B-260ABC7FAC16}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{DE89E6B8-88A0-4B9D-B52B-260ABC7FAC16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE89E6B8-88A0-4B9D-B52B-260ABC7FAC16}.Release|x64.ActiveCfg = Release|Any CPU
-		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Debug|x64.ActiveCfg = Debug|x64
-		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Debug|x64.Build.0 = Debug|x64
-		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Release|Any CPU.Build.0 = Release|Any CPU
-		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Release|x64.ActiveCfg = Release|x64
-		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Release|x64.Build.0 = Release|x64
 		{FB59101C-668E-48C2-896F-2EED19CF725B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FB59101C-668E-48C2-896F-2EED19CF725B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB59101C-668E-48C2-896F-2EED19CF725B}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -137,6 +129,14 @@ Global
 		{8FAA44F1-7D9D-452C-81D7-33A09E354B92}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8FAA44F1-7D9D-452C-81D7-33A09E354B92}.Release|x64.ActiveCfg = Release|Any CPU
 		{8FAA44F1-7D9D-452C-81D7-33A09E354B92}.Release|x64.Build.0 = Release|Any CPU
+		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Debug|x64.ActiveCfg = Debug|x64
+		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Debug|x64.Build.0 = Debug|x64
+		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Release|Any CPU.Build.0 = Release|Any CPU
+		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Release|x64.ActiveCfg = Release|x64
+		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
