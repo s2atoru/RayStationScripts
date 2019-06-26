@@ -22,12 +22,14 @@
             <StackPanel Orientation="Horizontal">
                 <Button Command="{Binding ChooseFileCommand}" Content="Choose File" Width="140"/>
                 <Label Content="Chosen file:" />
-                <TextBlock Text="{Binding FilePath}" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding FilePath.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" MinWidth="120"/>
+                <TextBlock Text="{Binding FilePathErrorMessage.Value, Mode=OneWay}" Foreground="Red" Margin="6,0,3,0"  VerticalAlignment="Center"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" >
-                <Button Command="{Binding ChooseMappingFileCommand}" Content="Choose Mapping File" Width="140"/>
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding ChooseMappingFileCommand}" Content="Choose Mapping File" Width="140" VerticalAlignment="Center"/>
                 <Label Content="Chosen mapping file:" />
-                <TextBlock Text="{Binding MappingFilePath}" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding MappingFilePath.Value}" VerticalAlignment="Center" MinWidth="120"/>
+                <TextBlock Text="{Binding MappingFilePathErrorMessage.Value, Mode=OneWay}" Foreground="Red" Margin="6,0,3,0"  VerticalAlignment="Center"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" >
                 <Button Content="OK">

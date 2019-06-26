@@ -2,8 +2,12 @@
 using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;
+using Reactive.Bindings;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Reactive.Linq;
+using System.Linq;
 using System.Text;
 
 namespace RoiNameReplacer.ViewModels
@@ -13,23 +17,18 @@ namespace RoiNameReplacer.ViewModels
 
         public bool CanExecute { get; set; }
 
-        private string filePath;
-        public string FilePath
-        {
-            get { return filePath; }
-            set { SetProperty(ref filePath, value); }
-        }
+        [Required(ErrorMessage ="Choose File!")]
+        public ReactiveProperty<string> FilePath { get; }
+        public ReadOnlyReactiveProperty<string> FilePathErrorMessage { get; }
 
-        private string mappingFilePath;
-        public string MappingFilePath
-        {
-            get { return mappingFilePath; }
-            set { SetProperty(ref mappingFilePath, value); }
-        }
+        [Required(ErrorMessage = "Choose Mapping File!")]
+        public ReactiveProperty<string> MappingFilePath { get; }
+        public ReadOnlyReactiveProperty<string> MappingFilePathErrorMessage { get; }
 
         private Dictionary<string, string> MappingTable { get; set; } = new Dictionary<string, string>();
 
-        public DelegateCommand OkCommand { get; private set; }
+        public ReactiveCommand OkCommand { get; }
+
         public DelegateCommand CancelCommand { get; private set; }
 
         public DelegateCommand ChooseFileCommand { get; private set; }
@@ -37,7 +36,30 @@ namespace RoiNameReplacer.ViewModels
 
         public MainWindowViewModel()
         {
-            OkCommand = new DelegateCommand(() => { CanExecute = true; ReplaceRoiNames(); });
+
+            FilePath = new ReactiveProperty<string>().SetValidateAttribute(() => FilePath);
+            FilePathErrorMessage = FilePath
+            .ObserveErrorChanged
+            .Select(x => x?.Cast<string>()?.FirstOrDefault())
+            .ToReadOnlyReactiveProperty();
+
+            MappingFilePath = new ReactiveProperty<string>().SetValidateAttribute(() => MappingFilePath);
+            MappingFilePathErrorMessage = MappingFilePath
+            .ObserveErrorChanged
+            .Select(x => x?.Cast<string>()?.FirstOrDefault())
+            .ToReadOnlyReactiveProperty();
+
+            //OkCommand = new DelegateCommand(() => { CanExecute = true; ReplaceRoiNames(); });
+            OkCommand = new[]
+            {
+                FilePath.ObserveHasErrors,
+                MappingFilePath.ObserveHasErrors
+            }
+            .CombineLatest(x => x.All(y => !y))
+            .ToReactiveCommand();
+
+            OkCommand.Subscribe(() => { CanExecute = true; ReplaceRoiNames(); });
+
             CancelCommand = new DelegateCommand(() => { CanExecute = false; });
 
             ChooseFileCommand = new DelegateCommand(ChooseFile);
@@ -47,7 +69,7 @@ namespace RoiNameReplacer.ViewModels
         private void ReplaceRoiNames()
         {
 
-            using (var reader = new StreamReader(FilePath))
+            using (var reader = new StreamReader(FilePath.Value))
             {
                 var fileContent = new StringBuilder(reader.ReadToEnd());
 
@@ -64,8 +86,8 @@ namespace RoiNameReplacer.ViewModels
                     fileContent.Replace("(" + oldWord + ")", "(" + newWord + ")");
                 }
 
-                var directoryName = Path.GetDirectoryName(FilePath);
-                var fileName = Path.GetFileName(FilePath);
+                var directoryName = Path.GetDirectoryName(FilePath.Value);
+                var fileName = Path.GetFileName(FilePath.Value);
                 var newFileName = "New_" + fileName;
                 var newFilePath = Path.Combine(directoryName, newFileName);
 
@@ -83,11 +105,11 @@ namespace RoiNameReplacer.ViewModels
             dialog.Filter = "全てのファイル(*.*)|*.*";
             if (dialog.ShowDialog() == true)
             {
-                FilePath = dialog.FileName;
+                FilePath.Value = dialog.FileName;
             }
             else
             {
-                FilePath = string.Empty;
+                FilePath.Value = string.Empty;
             }
         }
 
@@ -98,9 +120,9 @@ namespace RoiNameReplacer.ViewModels
             dialog.Filter = "CSVファイル(*.csv)|*.csv";
             if (dialog.ShowDialog() == true)
             {
-                MappingFilePath = dialog.FileName;
+                MappingFilePath.Value = dialog.FileName;
 
-                using (var reader = new StreamReader(MappingFilePath))
+                using (var reader = new StreamReader(MappingFilePath.Value))
                 using (var csv = new CsvReader(reader))
                 {
                     MappingTable.Clear();
@@ -113,7 +135,7 @@ namespace RoiNameReplacer.ViewModels
             }
             else
             {
-                MappingFilePath = string.Empty;
+                MappingFilePath.Value = string.Empty;
             }
         }
     }
