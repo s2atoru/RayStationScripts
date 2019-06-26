@@ -73,7 +73,7 @@
                     </CheckBox.RenderTransform>
                 </CheckBox>
             </StackPanel>
-            <DataGrid ItemsSource="{Binding DvhObjectives}" AutoGenerateColumns="False" CanUserAddRows="False" FontSize="12">
+            <DataGrid ItemsSource="{Binding DvhObjectives}" AutoGenerateColumns="False" CanUserAddRows="False" FontSize="12" MaxHeight="400">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn IsReadOnly="True" Header="In Use">
                         <DataGridTemplateColumn.CellTemplate>
