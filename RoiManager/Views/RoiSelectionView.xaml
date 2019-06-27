@@ -9,7 +9,7 @@
              xmlns:ac="clr-namespace:MvvmCommon.Actions;assembly=MvvmCommon"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance vm:RoiSelectionViewModel}">
+             d:DesignHeight="450" d:DesignWidth="1000" d:DataContext="{d:DesignInstance vm:RoiSelectionViewModel}">
     <UserControl.Resources>
         <CollectionViewSource
             x:Key="RoiNameList"
@@ -126,6 +126,17 @@
                                 <ComboBox IsEditable="True" Text="{Binding Path=NewName.Value, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource RoiNameList}}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Color">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button
+                                Content="{Binding ColorName, Mode=OneWay}" Background="{Binding SelectedColorBrush, Mode=OneWay}"
+                                Command="{Binding RelativeSource={RelativeSource AncestorType=DataGrid},
+                                    Path=DataContext.SelectColorCommand}"
+                                CommandParameter="{Binding Name.Value}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>

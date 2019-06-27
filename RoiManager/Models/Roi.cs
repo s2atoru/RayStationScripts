@@ -1,9 +1,6 @@
 ﻿using Prism.Mvvm;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace RoiManager.Models
 {
@@ -22,11 +19,13 @@ namespace RoiManager.Models
         public bool CanRename { get; set; }
         public string NewName { get; set; }
 
+        public Color Color { get; set; }
+
         public override string ToString()
         {
             return $"ROI Name: {Name}, HasGeometry: {HasGeometry}, CanUnderive: {CanUnderive}, CanUpdate: {CanUpdate}, CanDeleteGeometry: {CanDeleteGeometry}, CanDeleteRoi: {CanDeleteRoi}"
                 + $", IsDerved: {IsDerived}, DependentRois: [{string.Join(",", DependentRois)}], Case: {CaseName}, Examination: {ExaminationName}"
-                + $", CanRename: {CanRename}, NewName: {NewName}";
+                + $", CanRename: {CanRename}, NewName: {NewName}, Color: {Color}";
         }
     }
 }

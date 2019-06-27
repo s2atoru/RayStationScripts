@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Windows.Media;
 
 namespace RoiManager.ViewModels
 {
@@ -26,6 +27,22 @@ namespace RoiManager.ViewModels
 
         public ReactiveProperty<bool> CanRename { get; }
         public ReactiveProperty<string> NewName { get; }
+
+        public ReactiveProperty<Color> Color { get; }
+
+        private string colorName;
+        public string ColorName
+        {
+            get { return colorName; }
+            set { SetProperty(ref colorName, value); }
+        }
+
+        private Brush selectedColorBrush = new SolidColorBrush(Colors.White);
+        public Brush SelectedColorBrush
+        {
+            get { return selectedColorBrush; }
+            set { SetProperty(ref selectedColorBrush, value); }
+        }
 
         public ReadOnlyReactiveProperty<bool> CanDisableUnderive { get;  }
         public ReadOnlyReactiveProperty<bool> CanDisableUpdate { get; }
@@ -49,6 +66,8 @@ namespace RoiManager.ViewModels
 
             CanRename = roi.ToReactivePropertyAsSynchronized(x => x.CanRename).AddTo(Disposable);
             NewName = roi.ToReactivePropertyAsSynchronized(x => x.NewName).AddTo(Disposable);
+
+            Color = roi.ToReactivePropertyAsSynchronized(x => x.Color).AddTo(Disposable);
 
             CanDisableUnderive = roi.ObserveProperty(x => x.IsDerived).ToReadOnlyReactiveProperty().AddTo(Disposable);
             CanDisableUpdate = roi.ObserveProperty(x => x.IsDerived).ToReadOnlyReactiveProperty().AddTo(Disposable);
