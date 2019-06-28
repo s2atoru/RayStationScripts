@@ -8,6 +8,7 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:ac="clr-namespace:MvvmCommon.Actions;assembly=MvvmCommon"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="1000" d:DataContext="{d:DesignInstance vm:RoiSelectionViewModel}">
     <UserControl.Resources>
@@ -127,14 +128,23 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
+                    <DataGridTemplateColumn IsReadOnly="True" Header="Change">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding CanChangeColor.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="Color">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button
+                                <!--<Button
                                 Content="{Binding ColorName, Mode=OneWay}" Background="{Binding SelectedColorBrush, Mode=OneWay}"
                                 Command="{Binding RelativeSource={RelativeSource AncestorType=DataGrid},
                                     Path=DataContext.SelectColorCommand}"
-                                CommandParameter="{Binding Name.Value}" />
+                                CommandParameter="{Binding Name.Value}" />-->
+                                <xctk:ColorPicker SelectedColor="{Binding Color.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DisplayColorAndName="True"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

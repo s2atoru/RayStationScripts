@@ -28,6 +28,7 @@ namespace RoiManager.ViewModels
         public ReactiveProperty<bool> CanRename { get; }
         public ReactiveProperty<string> NewName { get; }
 
+        public ReactiveProperty<bool> CanChangeColor { get; }
         public ReactiveProperty<Color> Color { get; }
 
         private string colorName;
@@ -68,6 +69,7 @@ namespace RoiManager.ViewModels
             NewName = roi.ToReactivePropertyAsSynchronized(x => x.NewName).AddTo(Disposable);
 
             Color = roi.ToReactivePropertyAsSynchronized(x => x.Color).AddTo(Disposable);
+            CanChangeColor = roi.ToReactivePropertyAsSynchronized(x => x.CanChangeColor).AddTo(Disposable);
 
             CanDisableUnderive = roi.ObserveProperty(x => x.IsDerived).ToReadOnlyReactiveProperty().AddTo(Disposable);
             CanDisableUpdate = roi.ObserveProperty(x => x.IsDerived).ToReadOnlyReactiveProperty().AddTo(Disposable);

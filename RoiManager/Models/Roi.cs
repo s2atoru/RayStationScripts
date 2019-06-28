@@ -19,13 +19,14 @@ namespace RoiManager.Models
         public bool CanRename { get; set; }
         public string NewName { get; set; }
 
+        public bool CanChangeColor { get; set; }
         public Color Color { get; set; }
 
         public override string ToString()
         {
             return $"ROI Name: {Name}, HasGeometry: {HasGeometry}, CanUnderive: {CanUnderive}, CanUpdate: {CanUpdate}, CanDeleteGeometry: {CanDeleteGeometry}, CanDeleteRoi: {CanDeleteRoi}"
                 + $", IsDerved: {IsDerived}, DependentRois: [{string.Join(",", DependentRois)}], Case: {CaseName}, Examination: {ExaminationName}"
-                + $", CanRename: {CanRename}, NewName: {NewName}, Color: {Color}";
+                + $", CanRename: {CanRename}, NewName: {NewName}, CanChageColor: {CanChangeColor}, Color: {Color}";
         }
     }
 }
