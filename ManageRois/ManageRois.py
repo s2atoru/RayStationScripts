@@ -1,12 +1,16 @@
 #from connect import *
 
 import clr
+
+clr.AddReference("System.Drawing")
+#clr.AddReference("PresentationFramework")
+#clr.AddReference("PresentationCore")
+
 import sys, math, wpf, os
 from System.Collections.Generic import List, Dictionary
 from System.Windows import MessageBox
-
-clr.AddReference("PresentationFramework")
-clr.AddReference("PresentationCore")
+from System.Windows import Media
+from System import Drawing
 
 RayStationScriptsPath = os.environ["USERPROFILE"] + r"\DeskTop\RayStationScripts" + "\\"
 
@@ -47,6 +51,11 @@ roi.CanRename = False
 roi.NewName = ''
 roi.CaseName = 'C1'
 roi.ExaminationName = 'CT1'
+
+colorDrawing = Drawing.Color.FromArgb(255,0,0)
+colorMedia = Media.Color.FromRgb(colorDrawing.R, colorDrawing.G, colorDrawing.B)
+roi.Color = colorMedia
+
 rois.Add(roi)
 
 roi = Roi()
@@ -64,6 +73,11 @@ roi.CanRename = False
 roi.NewName = ''
 roi.CaseName = 'C1'
 roi.ExaminationName = 'CT1'
+
+colorDrawing = Drawing.Color.FromArgb(0,255,0)
+colorMedia = Media.Color.FromRgb(colorDrawing.R, colorDrawing.G, colorDrawing.B)
+roi.Color = colorMedia
+
 rois.Add(roi)
 
 from RoiManager.ViewModels import RoiSelectionViewModel
@@ -75,6 +89,8 @@ mainWindow.ShowDialog();
 
 for r in rois:
     print r
+    colorString = "{} {} {}".format(r.Color.R, r.Color.G, r.Color.B)
+    print "Color: {}".format(colorString)
 
 pass
 #from RoiManager.ViewModels import ExaminationSelectionViewModel
