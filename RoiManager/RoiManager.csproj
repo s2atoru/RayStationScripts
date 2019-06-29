@@ -61,7 +61,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="NamedColor.cs" />
+    <Compile Include="Models\NamedColor.cs" />
     <Compile Include="ViewModels\ExaminationSelectionViewModel.cs" />
     <Compile Include="ViewModels\RoiViewModel.cs" />
     <Compile Include="Views\ExaminationSelectionView.xaml.cs">

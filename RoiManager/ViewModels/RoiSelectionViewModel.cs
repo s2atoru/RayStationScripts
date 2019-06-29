@@ -1,5 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -23,6 +24,8 @@ namespace RoiManager.ViewModels
         public List<string> RoiNameList { get; set; } = new List<string>();
         public Dictionary<string, string> RoiNameMappingTable { get; set; } = new Dictionary<string, string>();
 
+        public List<string> RoiTypeList { get; set; } = Enum.GetNames(typeof(Models.RoiType)).ToList();
+
         public RoiSelectionViewModel(List<Models.Roi> rois)
         {
             Rois = new ObservableCollection<Models.Roi>(rois);
@@ -34,9 +37,6 @@ namespace RoiManager.ViewModels
 
             OkCommand = new DelegateCommand(() => { CanExecute = true; });
             CancelCommand = new DelegateCommand(() => { CanExecute = false; });
-
-            NamedColors = NamedColor.GetNamedColors();
-            SelectColorCommand = new DelegateCommand<string>(SelectColor);
         }
 
         public RoiSelectionViewModel(List<Models.Roi> rois, Dictionary<string,string> roiNameMappingTable)
@@ -59,40 +59,6 @@ namespace RoiManager.ViewModels
 
             OkCommand = new DelegateCommand(() => { CanExecute = true; });
             CancelCommand = new DelegateCommand(() => { CanExecute = false; });
-
-            NamedColors = NamedColor.GetNamedColors();
-            SelectColorCommand = new DelegateCommand<string>(SelectColor);
         }
-
-        private void SelectColor(string Id)
-        {
-
-            var roiViewModel = (from r in RoiViewModels where r.Name.Value == Id select r).Single();
-
-            ColorDialog colorDialog = new ColorDialog();
-            if (colorDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                Color color =
-                Color.FromArgb(colorDialog.Color.A,
-                                                    colorDialog.Color.R,
-                                                    colorDialog.Color.G,
-                                                    colorDialog.Color.B);
-
-                roiViewModel.Color.Value = color;
-
-                var query = from c in NamedColors where c.Color == color select c;
-                if (query.Count() == 0)
-                {
-                    roiViewModel.ColorName = color.ToString();
-                }
-                else
-                {
-                    roiViewModel.ColorName = query.Last().Name;
-                }
-                roiViewModel.SelectedColorBrush = new SolidColorBrush(color);
-            }
-        }
-
-        private List<NamedColor> NamedColors { get; }
     }
 }

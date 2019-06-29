@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace RoiManager
+namespace RoiManager.Models
 {
     public class NamedColor
     {

@@ -31,6 +31,9 @@ namespace RoiManager.ViewModels
         public ReactiveProperty<bool> CanChangeColor { get; }
         public ReactiveProperty<Color> Color { get; }
 
+        public ReactiveProperty<bool> CanChangeRoiType { get; }
+        public ReactiveProperty<string> RoiType { get; }
+
         private string colorName;
         public string ColorName
         {
@@ -70,6 +73,10 @@ namespace RoiManager.ViewModels
 
             Color = roi.ToReactivePropertyAsSynchronized(x => x.Color).AddTo(Disposable);
             CanChangeColor = roi.ToReactivePropertyAsSynchronized(x => x.CanChangeColor).AddTo(Disposable);
+
+            RoiType = roi.ToReactivePropertyAsSynchronized(x => x.RoiType,
+                convert: x => x.ToString(), convertBack: x => (Models.RoiType)Enum.Parse(typeof(Models.RoiType),x)).AddTo(Disposable);
+            CanChangeRoiType = roi.ToReactivePropertyAsSynchronized(x => x.CanChangeRoiType).AddTo(Disposable);
 
             CanDisableUnderive = roi.ObserveProperty(x => x.IsDerived).ToReadOnlyReactiveProperty().AddTo(Disposable);
             CanDisableUpdate = roi.ObserveProperty(x => x.IsDerived).ToReadOnlyReactiveProperty().AddTo(Disposable);

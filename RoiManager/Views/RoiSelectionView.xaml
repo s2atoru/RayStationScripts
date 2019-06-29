@@ -10,7 +10,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="1000" d:DataContext="{d:DesignInstance vm:RoiSelectionViewModel}">
+             d:DesignHeight="450" d:DesignWidth="1200" d:DataContext="{d:DesignInstance vm:RoiSelectionViewModel}">
     <UserControl.Resources>
         <CollectionViewSource
             x:Key="RoiNameList"
@@ -40,7 +40,7 @@
                     </i:Interaction.Triggers>
                 </Button>
             </StackPanel>
-            <DataGrid ItemsSource="{Binding RoiViewModels}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="600" MaxWidth="1000" >
+            <DataGrid ItemsSource="{Binding RoiViewModels}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="600" MaxWidth="1200" >
                 <DataGrid.Columns>
                     <DataGridTemplateColumn IsReadOnly="True" Header="Underive">
                         <DataGridTemplateColumn.CellTemplate>
@@ -77,13 +77,12 @@
                     <DataGridTextColumn
                     Header="Name"
                     Binding="{Binding Name.Value, Mode=OneTime}"
-                    IsReadOnly="True">
-                    </DataGridTextColumn>
+                    IsReadOnly="True"/>
                     <DataGridTextColumn
                     Header="Geometry"
                     Binding="{Binding HasGeometry.Value, Mode=OneTime}">
                         <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
+                            <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="HorizontalAlignment" Value="Center"/>
                             </Style>
@@ -93,7 +92,7 @@
                     Header="Derived"
                     Binding="{Binding IsDerived.Value, Mode=OneTime}">
                         <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
+                            <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="HorizontalAlignment" Value="Center"/>
                             </Style>
@@ -101,13 +100,11 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn
                     Header="ROIs"
-                    Binding="{Binding DependentRoisDisplay, Mode=OneTime}">
-                    </DataGridTextColumn>
+                    Binding="{Binding DependentRoisDisplay, Mode=OneTime}"/>
                     <DataGridTextColumn
                     Header="Examination"
                     Binding="{Binding ExaminationName.Value, Mode=OneTime}"
-                    IsReadOnly="True">
-                    </DataGridTextColumn>
+                    IsReadOnly="True"/>
                     <DataGridTemplateColumn IsReadOnly="True" Header="Rename">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -119,16 +116,32 @@
                     <DataGridTemplateColumn CanUserReorder="False" CanUserResize="False" CanUserSort="False" Header="New Name">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Path=NewName.Value, Mode=TwoWay}" />
+                                <TextBlock Text="{Binding NewName.Value, Mode=TwoWay}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                         <DataGridTemplateColumn.CellEditingTemplate>
                             <DataTemplate>
-                                <ComboBox IsEditable="True" Text="{Binding Path=NewName.Value, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource RoiNameList}}" />
+                                <ComboBox IsEditable="True" Text="{Binding NewName.Value, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource RoiNameList}}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn IsReadOnly="True" Header="Change">
+                    <DataGridTemplateColumn IsReadOnly="True" Header="Change Type">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding CanChangeRoiType.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn IsReadOnly="True" Header="Type">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox ItemsSource="{Binding DataContext.RoiTypeList, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}, Mode=FindAncestor}}"
+                                          SelectedValue="{Binding RoiType.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn IsReadOnly="True" Header="Change Color">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <CheckBox IsChecked="{Binding CanChangeColor.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -139,11 +152,6 @@
                     <DataGridTemplateColumn Header="Color">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <!--<Button
-                                Content="{Binding ColorName, Mode=OneWay}" Background="{Binding SelectedColorBrush, Mode=OneWay}"
-                                Command="{Binding RelativeSource={RelativeSource AncestorType=DataGrid},
-                                    Path=DataContext.SelectColorCommand}"
-                                CommandParameter="{Binding Name.Value}" />-->
                                 <xctk:ColorPicker SelectedColor="{Binding Color.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DisplayColorAndName="True"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
