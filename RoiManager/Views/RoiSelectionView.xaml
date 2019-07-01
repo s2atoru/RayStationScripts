@@ -40,7 +40,7 @@
                     </i:Interaction.Triggers>
                 </Button>
             </StackPanel>
-            <DataGrid ItemsSource="{Binding RoiViewModels}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="600" MaxWidth="1200" >
+            <DataGrid ItemsSource="{Binding RoiViewModels}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="800" MaxWidth="1450" >
                 <DataGrid.Columns>
                     <DataGridTemplateColumn IsReadOnly="True" Header="Underive">
                         <DataGridTemplateColumn.CellTemplate>

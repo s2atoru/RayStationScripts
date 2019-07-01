@@ -10,6 +10,7 @@ import sys, math, wpf, os
 from System.Collections.Generic import List, Dictionary
 from System.Windows import MessageBox
 from System.Windows import Media
+from System import Enum
 from System import Drawing
 
 RayStationScriptsPath = os.environ["USERPROFILE"] + r"\DeskTop\RayStationScripts" + "\\"
@@ -36,6 +37,8 @@ with codecs.open(RayStationScriptsPath + r"RoiNameMappingTable.csv","r", "utf-8-
         roiNameMappingTable[row['New']] = row['Old']
 
 from RoiManager.Models import Roi
+from RoiManager.Models import RoiType
+
 rois = List[Roi]()
 
 roi = Roi()
@@ -77,6 +80,9 @@ roi.ExaminationName = 'CT1'
 colorDrawing = Drawing.Color.FromArgb(0,255,0)
 colorMedia = Media.Color.FromRgb(colorDrawing.R, colorDrawing.G, colorDrawing.B)
 roi.Color = colorMedia
+
+
+roi.RoiType = Enum.Parse(clr.GetClrType(RoiType),"Ptv");
 
 rois.Add(roi)
 
