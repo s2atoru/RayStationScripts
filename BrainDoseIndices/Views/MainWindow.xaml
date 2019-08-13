@@ -1,0 +1,47 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BrainDoseIndices"
+        xmlns:ViewModels="clr-namespace:BrainDoseIndices.ViewModels" x:Class="BrainDoseIndices.Views.MainWindow"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+        xmlns:prism="http://prismlibrary.com/"
+        xmlns:ac="clr-namespace:MvvmCommon.Actions;assembly=MvvmCommon"
+        mc:Ignorable="d"
+        Title="ROIs for Brain Dose Indices"  d:DataContext="{d:DesignInstance {x:Type ViewModels:DoseIndicesViewModel}}" SizeToContent="WidthAndHeight">
+    <StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock TextWrapping="Wrap" Text="Target" MinWidth="120"/>
+            <TextBlock Grid.Column="1" TextWrapping="Wrap" Text="Dose volume" MinWidth="120" Margin="6,0,0,0"/>
+            <ComboBox Grid.Row="1" ItemsSource="{Binding StructureNames}" SelectedValue="{Binding TargetRx.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="{Binding TargetRxErrorMessage.Value}"/>
+            <ComboBox Grid.Row="1" Grid.Column="1"  ItemsSource="{Binding StructureNames}" SelectedValue="{Binding DoseVolumeRx.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="{Binding DoseVolumeRxErrorMessage.Value}"   Margin="6,0,0,0"/>
+        </Grid>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="OK" Width="60">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <prism:InvokeCommandAction Command="{Binding OkCommand}"/>
+                        <ac:CloseWindowAction/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button Content="Cancel" Width="60" Margin="6,0,0,0">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <prism:InvokeCommandAction Command="{Binding CancelCommand}"/>
+                        <ac:CloseWindowAction/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+        </StackPanel>
+    </StackPanel>
+</Window>

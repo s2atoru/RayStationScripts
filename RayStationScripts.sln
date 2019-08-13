@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvvmCommon", "MvvmCommon\Mv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DvhChecker", "DvhChecker\DvhChecker\DvhChecker.csproj", "{210B4FF8-D390-477E-9A12-72EE29CB5374}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrainDoseIndices", "BrainDoseIndices\BrainDoseIndices.csproj", "{BFB0F6F8-8CD4-423C-AE4B-707FB0CE5561}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +139,14 @@ Global
 		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Release|Any CPU.Build.0 = Release|Any CPU
 		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Release|x64.ActiveCfg = Release|x64
 		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Release|x64.Build.0 = Release|x64
+		{BFB0F6F8-8CD4-423C-AE4B-707FB0CE5561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFB0F6F8-8CD4-423C-AE4B-707FB0CE5561}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFB0F6F8-8CD4-423C-AE4B-707FB0CE5561}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BFB0F6F8-8CD4-423C-AE4B-707FB0CE5561}.Debug|x64.Build.0 = Debug|Any CPU
+		{BFB0F6F8-8CD4-423C-AE4B-707FB0CE5561}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFB0F6F8-8CD4-423C-AE4B-707FB0CE5561}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFB0F6F8-8CD4-423C-AE4B-707FB0CE5561}.Release|x64.ActiveCfg = Release|Any CPU
+		{BFB0F6F8-8CD4-423C-AE4B-707FB0CE5561}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
