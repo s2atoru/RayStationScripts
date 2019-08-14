@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DvhChecker", "DvhChecker\Dv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrainDoseIndices", "BrainDoseIndices\BrainDoseIndices.csproj", "{BFB0F6F8-8CD4-423C-AE4B-707FB0CE5561}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "GetGradientIndices", "GetGradientIndices\GetGradientIndices.pyproj", "{D64C3D5E-F6A1-4AC0-8083-C15619EE2A28}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -147,6 +149,10 @@ Global
 		{BFB0F6F8-8CD4-423C-AE4B-707FB0CE5561}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BFB0F6F8-8CD4-423C-AE4B-707FB0CE5561}.Release|x64.ActiveCfg = Release|Any CPU
 		{BFB0F6F8-8CD4-423C-AE4B-707FB0CE5561}.Release|x64.Build.0 = Release|Any CPU
+		{D64C3D5E-F6A1-4AC0-8083-C15619EE2A28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D64C3D5E-F6A1-4AC0-8083-C15619EE2A28}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D64C3D5E-F6A1-4AC0-8083-C15619EE2A28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D64C3D5E-F6A1-4AC0-8083-C15619EE2A28}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
