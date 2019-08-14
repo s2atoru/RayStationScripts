@@ -13,31 +13,47 @@
     <StackPanel>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition MinWidth="120"/>
+                <ColumnDefinition MinWidth="120"/>
+                <ColumnDefinition MinWidth="120"/>
+                <ColumnDefinition MinWidth="120"/>
+                <ColumnDefinition MinWidth="120"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
+            <!--Header-->
             <TextBlock Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" Text="ROI ID" Margin="6,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <TextBlock Grid.Row="2" TextWrapping="Wrap" Text="Volume index [cc]" Margin="6,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Row="3" TextWrapping="Wrap" Text="Gradient index" Margin="6,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="1" TextWrapping="Wrap" Text="Dose volume 50%" MinWidth="120" Margin="6,0,0,0"/>
-            <ComboBox Grid.Row="1" Grid.Column="1"  ItemsSource="{Binding StructureNames}" SelectedValue="{Binding Dose50VolumeRx.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="{Binding DoseVolumeRxErrorMessage.Value}"   Margin="6,0,0,0"/>
+            <TextBlock Grid.Row="3" TextWrapping="Wrap" Text="Gradient/Conformity index" Margin="6,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Grid.Row="4" TextWrapping="Wrap" Text="Formula" Margin="6,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <!--50% dose volume-->
+            <TextBlock Grid.Column="1" TextWrapping="Wrap" Text="50% dose volume (VD50)" Margin="6,0,0,0"/>
+            <ComboBox Grid.Row="1" Grid.Column="1"  ItemsSource="{Binding StructureNames}" SelectedValue="{Binding Dose50VolumeRx.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="{Binding Dose50VolumeRxErrorMessage.Value}"   Margin="6,0,0,0"/>
             <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Dose50VolumeValueRx.Value, Mode=TwoWay}" Margin="6,0,0,0"/>
-            <TextBlock Grid.Column="2" TextWrapping="Wrap" Text="Target" MinWidth="120" Margin="6,0,0,0"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="NA" Margin="6,0,0,0"/>
+            <!--Target-->
+            <TextBlock Grid.Column="2"  Text="Target volume (TV)" Margin="6,0,0,0"/>
             <ComboBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding StructureNames}" SelectedValue="{Binding TargetRx.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="{Binding TargetRxErrorMessage.Value}" Margin="6,0,0,0"/>
             <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding TargetVolumeValueRx.Value, Mode=TwoWay}" Margin="6,0,0,0"/>
             <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding GradientIndexTargetRx.Value, Mode=TwoWay}" Margin="6,0,0,0"/>
-            <TextBlock Grid.Column="3" TextWrapping="Wrap" Text="Dose volume 100%" MinWidth="120" Margin="6,0"/>
-            <ComboBox Grid.Row="1" Grid.Column="3"  ItemsSource="{Binding StructureNames}" SelectedValue="{Binding Dose100VolumeRx.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="{Binding DoseVolumeRxErrorMessage.Value}"   Margin="6,0"/>
-            <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding Dose100VolumeValueRx.Value, Mode=TwoWay}" Margin="6,0"/>
-            <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding GradientIndex100Rx.Value, Mode=TwoWay}" Margin="6,0"/>
+            <TextBlock Grid.Row="4" Grid.Column="2" Text="VD50/TV" Margin="6,0,0,0"/>
+            <!--100% dose volume-->
+            <TextBlock Grid.Column="3" TextWrapping="Wrap" Text="100% dose volume (VD100)" Margin="6,0,0,0"/>
+            <ComboBox Grid.Row="1" Grid.Column="3"  ItemsSource="{Binding StructureNames}" SelectedValue="{Binding Dose100VolumeRx.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="{Binding Dose100VolumeRxErrorMessage.Value}"   Margin="6,0,0,0"/>
+            <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding Dose100VolumeValueRx.Value, Mode=TwoWay}" Margin="6,0,0,0"/>
+            <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding GradientIndex100Rx.Value, Mode=TwoWay}" Margin="6,0,0,0"/>
+            <TextBlock Grid.Row="4" Grid.Column="3" Text="VD50/VD100" Margin="5,0,0,0"/>
+            <!--Target-100%-dose overlap volume-->
+            <TextBlock Grid.Column="4" TextWrapping="Wrap" Text="Target-100%-dose overlap volume (VOL)" Margin="6,0"/>
+            <ComboBox Grid.Row="1" Grid.Column="4"  ItemsSource="{Binding StructureNames}" SelectedValue="{Binding OverlapTargetDose100VolumeRx.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="{Binding OverlapTargetDose100VolumeRxErrorMessage.Value}"   Margin="6,0"/>
+            <TextBlock Grid.Row="2" Grid.Column="4" Text="{Binding OverlapTargetDose100VolumeValueRx.Value, Mode=TwoWay}" Margin="6,0"/>
+            <TextBlock Grid.Row="3" Grid.Column="4" Text="{Binding PaddickConformityIndexRx.Value, Mode=TwoWay}" Margin="6,0"/>
+            <TextBlock Grid.Row="4" Grid.Column="4" Text="(VOL**2)/(TV*VD100)" Margin="6,0"/>
         </Grid>
         <StackPanel Orientation="Horizontal">
             <Button Content="OK" Width="60" Margin="6,6,0,6">
