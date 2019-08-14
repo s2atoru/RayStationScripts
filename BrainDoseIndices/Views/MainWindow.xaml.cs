@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Collections.Generic;
 
 namespace BrainDoseIndices.Views
 {
@@ -12,6 +13,13 @@ namespace BrainDoseIndices.Views
             InitializeComponent();
 
             DataContext = new ViewModels.DoseIndicesViewModel();
+        }
+
+        public MainWindow(List<Models.StructureDetail> structureDetails)
+        {
+            InitializeComponent();
+
+            DataContext = new ViewModels.DoseIndicesViewModel(structureDetails);
         }
     }
 }

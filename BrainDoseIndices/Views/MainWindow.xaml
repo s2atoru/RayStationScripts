@@ -15,18 +15,32 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <TextBlock TextWrapping="Wrap" Text="Target" MinWidth="120"/>
-            <TextBlock Grid.Column="1" TextWrapping="Wrap" Text="Dose volume" MinWidth="120" Margin="6,0,0,0"/>
-            <ComboBox Grid.Row="1" ItemsSource="{Binding StructureNames}" SelectedValue="{Binding TargetRx.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="{Binding TargetRxErrorMessage.Value}"/>
-            <ComboBox Grid.Row="1" Grid.Column="1"  ItemsSource="{Binding StructureNames}" SelectedValue="{Binding DoseVolumeRx.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="{Binding DoseVolumeRxErrorMessage.Value}"   Margin="6,0,0,0"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" Text="ROI ID" Margin="6,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Grid.Row="2" TextWrapping="Wrap" Text="Volume index [cc]" Margin="6,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Grid.Row="3" TextWrapping="Wrap" Text="Gradient index" Margin="6,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="1" TextWrapping="Wrap" Text="Dose volume 50%" MinWidth="120" Margin="6,0,0,0"/>
+            <ComboBox Grid.Row="1" Grid.Column="1"  ItemsSource="{Binding StructureNames}" SelectedValue="{Binding Dose50VolumeRx.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="{Binding DoseVolumeRxErrorMessage.Value}"   Margin="6,0,0,0"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Dose50VolumeValueRx.Value, Mode=TwoWay}" Margin="6,0,0,0"/>
+            <TextBlock Grid.Column="2" TextWrapping="Wrap" Text="Target" MinWidth="120" Margin="6,0,0,0"/>
+            <ComboBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding StructureNames}" SelectedValue="{Binding TargetRx.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="{Binding TargetRxErrorMessage.Value}" Margin="6,0,0,0"/>
+            <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding TargetVolumeValueRx.Value, Mode=TwoWay}" Margin="6,0,0,0"/>
+            <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding GradientIndexTargetRx.Value, Mode=TwoWay}" Margin="6,0,0,0"/>
+            <TextBlock Grid.Column="3" TextWrapping="Wrap" Text="Dose volume 100%" MinWidth="120" Margin="6,0"/>
+            <ComboBox Grid.Row="1" Grid.Column="3"  ItemsSource="{Binding StructureNames}" SelectedValue="{Binding Dose100VolumeRx.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ToolTip="{Binding DoseVolumeRxErrorMessage.Value}"   Margin="6,0"/>
+            <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding Dose100VolumeValueRx.Value, Mode=TwoWay}" Margin="6,0"/>
+            <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding GradientIndex100Rx.Value, Mode=TwoWay}" Margin="6,0"/>
         </Grid>
         <StackPanel Orientation="Horizontal">
-            <Button Content="OK" Width="60">
+            <Button Content="OK" Width="60" Margin="6,6,0,6">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <prism:InvokeCommandAction Command="{Binding OkCommand}"/>
@@ -34,7 +48,7 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>
-            <Button Content="Cancel" Width="60" Margin="6,0,0,0">
+            <Button Content="Cancel" Width="60" Margin="6,6,0,6">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <prism:InvokeCommandAction Command="{Binding CancelCommand}"/>
