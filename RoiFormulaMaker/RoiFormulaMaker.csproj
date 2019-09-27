@@ -60,21 +60,21 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Actions\CloseWindowAction.cs" />
-    <Compile Include="Models\OverlappedRoisParameters.cs" />
+    <Compile Include="Models\OverlappedRoiParameters.cs" />
     <Compile Include="Models\MarginAddedRoiParameters.cs" />
     <Compile Include="Models\RingRoiParameters.cs" />
     <Compile Include="Models\RoiFormulas.cs" />
     <Compile Include="Models\RoiSubtractedRoiParameters.cs" />
-    <Compile Include="Notifications\MakeOverlappedRoisNotification.cs" />
+    <Compile Include="Notifications\MakeOverlappedRoiNotification.cs" />
     <Compile Include="Notifications\MakeRingRoiNotification.cs" />
     <Compile Include="Notifications\MakeMarginAddedRoiNotification.cs" />
     <Compile Include="Notifications\MakeRoiSubtractedRoiNotification.cs" />
-    <Compile Include="ViewModels\MakeOverlappedRoisViewModel.cs" />
+    <Compile Include="ViewModels\MakeOverlappedRoiViewModel.cs" />
     <Compile Include="ViewModels\MakeRingRoiViewModel.cs" />
     <Compile Include="ViewModels\MakeMarginAddedRoiViewModel.cs" />
     <Compile Include="ViewModels\MakeRoiSubtractedRoiViewModel.cs" />
-    <Compile Include="Views\MakeOverlappedRoisView.xaml.cs">
-      <DependentUpon>MakeOverlappedRoisView.xaml</DependentUpon>
+    <Compile Include="Views\MakeOverlappedRoiView.xaml.cs">
+      <DependentUpon>MakeOverlappedRoiView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MakeRingRoiView.xaml.cs">
       <DependentUpon>MakeRingRoiView.xaml</DependentUpon>
@@ -98,7 +98,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\MakeOverlappedRoisView.xaml">
+    <Page Include="Views\MakeOverlappedRoiView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

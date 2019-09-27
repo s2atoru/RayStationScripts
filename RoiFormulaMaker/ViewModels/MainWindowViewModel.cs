@@ -127,8 +127,8 @@ namespace RoiFormulaMaker.ViewModels
         public InteractionRequest<MakeMarginAddedRoiNotification> MakeMarginAddedRoiRequest { get; set; }
         public DelegateCommand MakeMarginAddedRoiCommand { get; set; }
 
-        public InteractionRequest<MakeOverlappedRoisNotification> MakeOverlappedRoisRequest { get; set; }
-        public DelegateCommand MakeOverlappedRoisCommand { get; set; }
+        public InteractionRequest<MakeOverlappedRoiNotification> MakeOverlappedRoiRequest { get; set; }
+        public DelegateCommand MakeOverlappedRoiCommand { get; set; }
 
         public List<dynamic> structureFormulas = new List<dynamic>();
         public List<dynamic> StructureFormulas
@@ -183,8 +183,8 @@ namespace RoiFormulaMaker.ViewModels
             MakeMarginAddedRoiRequest = new InteractionRequest<MakeMarginAddedRoiNotification>();
             MakeMarginAddedRoiCommand = new DelegateCommand(RaiseMakeMarginAddedRoiInteraction);
 
-            MakeOverlappedRoisRequest = new InteractionRequest<MakeOverlappedRoisNotification>();
-            MakeOverlappedRoisCommand = new DelegateCommand(RaiseMakeOverlappedRoisInteraction);
+            MakeOverlappedRoiRequest = new InteractionRequest<MakeOverlappedRoiNotification>();
+            MakeOverlappedRoiCommand = new DelegateCommand(RaiseMakeOverlappedRoiInteraction);
 
             OkCommand = new DelegateCommand(() => { RoiFormulas.CanExecute = true; RoiFormulas.WriteToFile(Path.Combine(DefaultDirectoryPath, DefaultFileName)); });
             CancelCommand = new DelegateCommand(() => { RoiFormulas.CanExecute = false; });
@@ -357,7 +357,7 @@ namespace RoiFormulaMaker.ViewModels
             });
         }
 
-        private void RaiseMakeOverlappedRoisInteraction()
+        private void RaiseMakeOverlappedRoiInteraction()
         {
 
             var contouredStructureList = new ObservableCollection<ListBoxItemViewModel>();
@@ -367,9 +367,9 @@ namespace RoiFormulaMaker.ViewModels
                 contouredStructureList.Add(new ListBoxItemViewModel { Name = c, IsSelected = false });
             }
 
-            MakeOverlappedRoisRequest.Raise(new MakeOverlappedRoisNotification
+            MakeOverlappedRoiRequest.Raise(new MakeOverlappedRoiNotification
             {
-                Title = "Make Overlapped ROIs",
+                Title = "Make Overlapped ROI",
                 Margin = 0,
                 StructureNames = this.StructureNames,
                 ContouredStructureList = contouredStructureList,
@@ -380,7 +380,7 @@ namespace RoiFormulaMaker.ViewModels
                 if (r.Confirmed && r.BaseStructureNames != null && r.BaseStructureNames.Count > 0)
                 {
                     Message = $"User selected: Base => { string.Join(", ", r.BaseStructureNames) }";
-                    var OverlappedRoisParameters = new OverlappedRoisParameters
+                    var OverlappedRoisParameters = new OverlappedRoiParameters
                     {
                         StructureName = r.StructureName,
                         StructureType = r.StructureType,

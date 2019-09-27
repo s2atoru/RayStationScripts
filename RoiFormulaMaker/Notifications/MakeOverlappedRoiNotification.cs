@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 
 namespace RoiFormulaMaker.Notifications
 {
-    public class MakeOverlappedRoisNotification : Confirmation
+    public class MakeOverlappedRoiNotification : Confirmation
     {
         public string StructureName { get; set; }
         public List<string> BaseStructureNames { get; set; }

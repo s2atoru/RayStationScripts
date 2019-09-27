@@ -7,10 +7,10 @@ using System.Text;
 namespace RoiFormulaMaker.Models
 {
     [DataContract]
-    public class OverlappedRoisParameters
+    public class OverlappedRoiParameters
     {
         [DataMember()]
-        public string FormulaType { get; set; } = "OverlappedRois";
+        public string FormulaType { get; set; } = "OverlappedRoi";
         [DataMember()]
         public string StructureName { get; set; }
         [DataMember()]
@@ -25,7 +25,7 @@ namespace RoiFormulaMaker.Models
 
         public override string ToString()
         {
-            return $"Overlapped ROIs: {StructureName} ({StructureType}), Base Structures: {string.Join(", ",BaseStructureNames)}, Margin = {Margin} mm";
+            return $"Overlapped ROI: {StructureName} ({StructureType}), Base Structures: {string.Join(", ",BaseStructureNames)}, Margin = {Margin} mm";
         }
 
         public string ToJson()
@@ -46,7 +46,7 @@ namespace RoiFormulaMaker.Models
                 return false;
             }
             //Compare BaseStructureName and Margin
-            OverlappedRoisParameters c = (OverlappedRoisParameters)obj;
+            OverlappedRoiParameters c = (OverlappedRoiParameters)obj;
 
             var baseStructureNameSet = new HashSet<string>(BaseStructureNames);
 
@@ -61,7 +61,7 @@ namespace RoiFormulaMaker.Models
         }
 
         //Overload of equality operators, == and !=
-        public static bool operator ==(OverlappedRoisParameters c1, OverlappedRoisParameters c2)
+        public static bool operator ==(OverlappedRoiParameters c1, OverlappedRoiParameters c2)
         {
             //Check if null
             if ((object)c1 == null)
@@ -76,7 +76,7 @@ namespace RoiFormulaMaker.Models
             return c1.Equals(c2);
         }
 
-        public static bool operator !=(OverlappedRoisParameters c1, OverlappedRoisParameters c2)
+        public static bool operator !=(OverlappedRoiParameters c1, OverlappedRoiParameters c2)
         {
             //Return the opposite of ==
             return !(c1 == c2);

@@ -61,8 +61,8 @@ namespace RoiFormulaMaker.Models
                             formula = formulaJObject.ToObject<MarginAddedRoiParameters>();
                             Formulas.Add(formula);
                             break;
-                        case "OverlappedRois":
-                            formula = formulaJObject.ToObject<OverlappedRoisParameters>();
+                        case "OverlappedRoi":
+                            formula = formulaJObject.ToObject<OverlappedRoiParameters>();
                             Formulas.Add(formula);
                             break;
                         case "RoiSubtractedRoi":

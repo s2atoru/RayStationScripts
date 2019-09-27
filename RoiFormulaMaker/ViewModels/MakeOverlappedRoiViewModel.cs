@@ -7,18 +7,18 @@ using System.Collections.Generic;
 
 namespace RoiFormulaMaker.ViewModels
 {
-    class MakeOverlappedRoisViewModel : BindableBase, IInteractionRequestAware
+    class MakeOverlappedRoiViewModel : BindableBase, IInteractionRequestAware
     {
         public string SelectedStructureName { get; set; }
         public string SelectedStructureType { get; set; } = "Control";
 
-        public DelegateCommand MakeOverlappedRoisCommand { get; private set; }
+        public DelegateCommand MakeOverlappedRoiCommand { get; private set; }
 
         public DelegateCommand CancelCommand { get; private set; }
 
-        public MakeOverlappedRoisViewModel()
+        public MakeOverlappedRoiViewModel()
         {
-            MakeOverlappedRoisCommand = new DelegateCommand(AcceptMakingOverlappedRois);
+            MakeOverlappedRoiCommand = new DelegateCommand(AcceptMakingOverlappedRoi);
             CancelCommand = new DelegateCommand(CancelInteraction);
         }
 
@@ -32,7 +32,7 @@ namespace RoiFormulaMaker.ViewModels
             FinishInteraction?.Invoke();
         }
 
-        private void AcceptMakingOverlappedRois()
+        private void AcceptMakingOverlappedRoi()
         {
             var baseStructureNames = new List<string>();
             foreach (var c in notification.ContouredStructureList)
@@ -58,12 +58,12 @@ namespace RoiFormulaMaker.ViewModels
 
         public Action FinishInteraction { get; set; }
 
-        private MakeOverlappedRoisNotification notification;
+        private MakeOverlappedRoiNotification notification;
 
         public INotification Notification
         {
             get { return notification; }
-            set { SetProperty(ref notification, (MakeOverlappedRoisNotification)value); }
+            set { SetProperty(ref notification, (MakeOverlappedRoiNotification)value); }
         }
     }
 }

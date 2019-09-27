@@ -3,11 +3,11 @@
 namespace RoiFormulaMaker.Views
 {
     /// <summary>
-    /// Interaction logic for MakeOverlappedRois.xaml
+    /// Interaction logic for MakeOverlappedRoi.xaml
     /// </summary>
-    public partial class MakeOverlappedRoisView : UserControl
+    public partial class MakeOverlappedRoiView : UserControl
     {
-        public MakeOverlappedRoisView()
+        public MakeOverlappedRoiView()
         {
             InitializeComponent();
         }
