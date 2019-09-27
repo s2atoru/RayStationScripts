@@ -48,6 +48,14 @@
                 </prism:PopupWindowAction.WindowContent>
             </prism:PopupWindowAction>
         </prism:InteractionRequestTrigger>
+        
+        <prism:InteractionRequestTrigger SourceObject="{Binding MakeOverlappedRoisRequest}">
+            <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True">
+                <prism:PopupWindowAction.WindowContent>
+                    <views:MakeOverlappedRoisView />
+                </prism:PopupWindowAction.WindowContent>
+            </prism:PopupWindowAction>
+        </prism:InteractionRequestTrigger>
     </i:Interaction.Triggers>
     <Grid>
         <StackPanel Orientation="Vertical">
@@ -56,6 +64,7 @@
             <Button Content="Add Ring ROI" Command="{Binding MakeRingRoiCommand}"/>
             <Button Content="Add ROI Subtracted ROI" Command="{Binding MakeRoiSubtractedRoiCommand}"/>
             <Button Content="Add Margin Added ROI" Command="{Binding MakeMarginAddedRoiCommand}"/>
+            <Button Content="Add Overlapped ROIs" Command="{Binding MakeOverlappedRoisCommand}"/>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Message:"/>
                 <TextBlock  TextWrapping="Wrap" Text="{Binding Message}" Margin="5,6,6.6,6" Foreground="Red"/>

@@ -179,6 +179,40 @@ def MakeUnionRoi(case, examination, resultRoiName, sourceRoiNames, margins=[0] *
 
     return False
 
+def MakeIntersectionRoi(case, examination, resultRoiName, sourceRoiNames, margins=[0] * 6, marginType='Expand', isDerived=True, color='Yellow', roiType='Control'):
+    
+    structureSet = GetStructureSet(case, examination)
+
+    if(resultRoiName in sourceRoiNames):
+        isDerived = False
+
+    rois = GetRois(structureSet)
+    roi = GetRoi(resultRoiName, rois, case, color, roiType)
+
+    expressionA = ExpressionDict('Intersection', sourceRoiNames, margins)
+    expressionB = ExpressionDict('Intersection', [])
+    resultOperation = 'None'
+    marginSettingsResult = MarginDict([0]*6)
+
+    roiNames = sourceRoiNames
+    haveAllRoisContours = HaveAllRoisContours(roiNames, rois)
+
+    if(isDerived):
+        roi.SetAlgebraExpression(ExpressionA=expressionA, ExpressionB=expressionB, ResultOperation=resultOperation, ResultMarginSettings=marginSettingsResult)
+        if(haveAllRoisContours):
+            roi.UpdateDerivedGeometry(Examination=examination, Algorithm='Auto')
+            return True
+        else:
+            print 'MakeIntersectionRoi for {0}: Not updated derived geometry because all ROIs do not have contours'.format(resultRoiName)
+    else:
+        if(haveAllRoisContours):
+            roi.CreateAlgebraGeometry(Examination=examination, Algorithm='Auto', ExpressionA=expressionA, ExpressionB=expressionB, ResultOperation=resultOperation, ResultMarginSettings=marginSettingsResult)
+            return True
+        else:
+            print 'MakeIntersectionRoi for {0}: Not created geometry because all ROIs do not have contours'.format(resultRoiName)
+
+    return False
+
 def MakeMonoAlgebraRoi(case, examination, resultRoiName, sourceRoiNames, operation='Union', margins=[0] * 6, marginType='Expand', isDerived=True, color='Yellow', roiType='Control'):
     
     structureSet = GetStructureSet(case, examination)
@@ -380,6 +414,52 @@ def MakeMarginAddedRoi(case, examination, structureName, baseStructureNames, mar
       # CompositeAction ends     
 
     message = 'MakeMarginAddedRoi for {0}: not created geometry'.format(structureName)
+    MessageBox.Show(message)
+
+    return False
+
+def MakeOverlappedRois(case, examination, structureName, baseStructureNames, margin, isDerived=True, color='Yellow', roiType='Control'):
+    
+    resultRoiName = structureName
+    sourceRoiNames = baseStructureNames
+    if(resultRoiName in sourceRoiNames):
+        isDerived = False
+
+    structureSet = GetStructureSet(case, examination)
+    
+    rois = GetRois(structureSet)
+    roi = GetRoi(resultRoiName, rois, case, color, roiType)
+
+    marginSettingsResult = MarginDict([margin]*6)
+
+    hasSourceRoiContours = HaveAllRoisContours(sourceRoiNames, rois)
+
+    with CompositeAction('Overlapped ROIs ({0})'.format(structureName)):
+
+        if (len(sourceRoiNames) == 1):
+            if(isDerived):
+                roi.SetMarginExpression(SourceRoiName=sourceRoiName[0], MarginSettings=marginSettingsResult)
+                if(hasSourceRoiContours):
+                    roi.UpdateDerivedGeometry(Examination=examination, Algorithm='Auto')
+                    return True
+                else:
+                    print 'MakeOverlappedRois for {0}: Not updated derived geometry because baseStructure does not have contours'.format(resultRoiName)
+            else:
+                if(hasSourceRoiContours):
+                    roi.CreateMarginGeometry(Examination=examination, SourceRoiName=sourceRoiName[0], MarginSettings=marginSettingsResult)
+                    return True
+                else:
+                    print 'MakeOverlappedRois for {0}: Not created geometry because baseStructure does not have contours'.format(resultRoiName)
+        elif (len(sourceRoiNames) > 1):
+            hasGeometry = MakeIntersectionRoi(case, examination, resultRoiName, sourceRoiNames, [margin]*6)
+            if(hasGeometry):
+                return True
+        else:
+            print 'MakeOverlappedRois for {0}: Do nothing because baseStructureNames is empty'
+
+      # CompositeAction ends     
+
+    message = 'MakeOverlappedRois for {0}: not created geometry'.format(structureName)
     MessageBox.Show(message)
 
     return False

@@ -9,6 +9,7 @@ using RoiFormulaMaker.Notifications;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Windows;
 
 namespace RoiFormulaMaker.ViewModels
 {
@@ -126,6 +127,9 @@ namespace RoiFormulaMaker.ViewModels
         public InteractionRequest<MakeMarginAddedRoiNotification> MakeMarginAddedRoiRequest { get; set; }
         public DelegateCommand MakeMarginAddedRoiCommand { get; set; }
 
+        public InteractionRequest<MakeOverlappedRoisNotification> MakeOverlappedRoisRequest { get; set; }
+        public DelegateCommand MakeOverlappedRoisCommand { get; set; }
+
         public List<dynamic> structureFormulas = new List<dynamic>();
         public List<dynamic> StructureFormulas
         {
@@ -178,6 +182,9 @@ namespace RoiFormulaMaker.ViewModels
 
             MakeMarginAddedRoiRequest = new InteractionRequest<MakeMarginAddedRoiNotification>();
             MakeMarginAddedRoiCommand = new DelegateCommand(RaiseMakeMarginAddedRoiInteraction);
+
+            MakeOverlappedRoisRequest = new InteractionRequest<MakeOverlappedRoisNotification>();
+            MakeOverlappedRoisCommand = new DelegateCommand(RaiseMakeOverlappedRoisInteraction);
 
             OkCommand = new DelegateCommand(() => { RoiFormulas.CanExecute = true; RoiFormulas.WriteToFile(Path.Combine(DefaultDirectoryPath, DefaultFileName)); });
             CancelCommand = new DelegateCommand(() => { RoiFormulas.CanExecute = false; });
@@ -350,6 +357,60 @@ namespace RoiFormulaMaker.ViewModels
             });
         }
 
+        private void RaiseMakeOverlappedRoisInteraction()
+        {
+
+            var contouredStructureList = new ObservableCollection<ListBoxItemViewModel>();
+
+            foreach (var c in ContouredStructureNames)
+            {
+                contouredStructureList.Add(new ListBoxItemViewModel { Name = c, IsSelected = false });
+            }
+
+            MakeOverlappedRoisRequest.Raise(new MakeOverlappedRoisNotification
+            {
+                Title = "Make Overlapped ROIs",
+                Margin = 0,
+                StructureNames = this.StructureNames,
+                ContouredStructureList = contouredStructureList,
+                StructureTypes = this.StructureTypes
+            },
+            r =>
+            {
+                if (r.Confirmed && r.BaseStructureNames != null && r.BaseStructureNames.Count > 0)
+                {
+                    Message = $"User selected: Base => { string.Join(", ", r.BaseStructureNames) }";
+                    var OverlappedRoisParameters = new OverlappedRoisParameters
+                    {
+                        StructureName = r.StructureName,
+                        StructureType = r.StructureType,
+                        BaseStructureNames = r.BaseStructureNames,
+                        Margin = r.Margin
+                    };
+                    if (StructureFormulas.Contains(OverlappedRoisParameters))
+                    {
+                        Message = "The overlapped ROIs is already in the list";
+                        return;
+                    }
+
+                    UpdateStructureNames(r.StructureName);
+
+                    StructureFormulas.Add(OverlappedRoisParameters);
+                    var structureDescription = OverlappedRoisParameters.ToString();
+                    if (string.IsNullOrEmpty(StructureDescriptions))
+                    {
+                        StructureDescriptions = structureDescription;
+                    }
+                    else
+                    {
+                        StructureDescriptions += "\n" + structureDescription;
+                    }
+                }
+                else
+                    Message = "User canceled or didn't select structures";
+            });
+        }
+
         private void ChooseFile()
         {
             //var dialog = new OpenFileDialog();
@@ -366,7 +427,10 @@ namespace RoiFormulaMaker.ViewModels
 
             var dialog = new CommonOpenFileDialog("Choose File");
 
-            dialog.InitialDirectory = DefaultDirectoryPath;
+            if (Directory.Exists(DefaultDirectoryPath))
+            {
+                dialog.InitialDirectory = DefaultDirectoryPath;
+            }
 
             dialog.IsFolderPicker = false;
 
@@ -391,7 +455,10 @@ namespace RoiFormulaMaker.ViewModels
             var dialog = new SaveFileDialog();
             dialog.Title = "Save to File";
 
-            dialog.InitialDirectory = DefaultDirectoryPath;
+            if (Directory.Exists(DefaultDirectoryPath))
+            {
+                dialog.InitialDirectory = DefaultDirectoryPath;
+            }
 
             //dialog.Filter = "text file|*.txt";
             if (dialog.ShowDialog() == true)

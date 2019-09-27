@@ -82,6 +82,17 @@ for rf in roiFormulas:
         print formulaType , structureName, baseStructureName, marginInCm, roiType
         MakeMarginAddedRoi(case, examination, structureName, baseStructureNames, marginInCm, isDerived=True, color='Yellow', roiType=roiType)
     
+    if(formulaType  == 'MarginOverlappedRois'):
+        structureName = rf['StructureName']
+        baseStructureNames = rf['BaseStructureNames']
+        margin = rf['Margin']
+        roiType = rf['StructureType']
+
+        marginInCm = margin/10.
+
+        print formulaType , structureName, baseStructureName, marginInCm, roiType
+        MakeOverlappedRois(case, examination, structureName, baseStructureNames, marginInCm, isDerived=True, color='Yellow', roiType=roiType)
+
     elif(formulaType  == 'RingRoi'):
         structureName = rf['StructureName']
         baseStructureName = rf['BaseStructureName']

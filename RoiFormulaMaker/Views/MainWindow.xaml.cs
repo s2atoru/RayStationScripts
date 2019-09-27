@@ -20,6 +20,7 @@ namespace RoiFormulaMaker.Views
             mainWindowViewModel.structureFormulas = mainWindowViewModel.RoiFormulas.Formulas;
 
             mainWindowViewModel.DefaultDirectoryPath = Path.Combine(Environment.GetEnvironmentVariable("HOMEPATH"), @"Desktop\RayStationScripts\RoiFormulas");
+            mainWindowViewModel.DefaultDirectoryPath = @"C:" + mainWindowViewModel.DefaultDirectoryPath;
             this.DataContext = mainWindowViewModel;
         }
 
