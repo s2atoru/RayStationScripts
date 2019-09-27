@@ -613,4 +613,3 @@ if __name__ == '__main__':
     #structureName = 'zTestBladder_03_UD'
     #baseStructureName = 'Bladder'
     #MakeMarginAddedRoi(case, examination, structureName, baseStructureName, 0.3, isDerived=False)
-
