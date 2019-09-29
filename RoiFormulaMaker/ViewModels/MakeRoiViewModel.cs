@@ -4,10 +4,11 @@ using RoiFormulaMaker.Models;
 using System.Collections.ObjectModel;
 using MvvmCommon.ViewModels;
 using Prism.Commands;
+using System.Linq;
 
 namespace RoiFormulaMaker.ViewModels
 {
-    class MakeRoiViewModel : BindableBase
+    public class MakeRoiViewModel : BindableBase
     {
         private bool isChecked;
         public bool IsChecked
@@ -33,6 +34,13 @@ namespace RoiFormulaMaker.ViewModels
             }
         }
 
+        private string structureDescription;
+        public string StructureDescription
+        {
+            get { return structureDescription; }
+            set { SetProperty(ref structureDescription, value); }
+        }
+
         public DelegateCommand MakeRoiCommand { get; set; }
 
         public MakeRoiViewModel(dynamic structureFormula, MainWindowViewModel mainWindowViewModel)
@@ -40,6 +48,7 @@ namespace RoiFormulaMaker.ViewModels
             StructureFormula = structureFormula;
             MainWindowViewModel = mainWindowViewModel;
             IsChecked = false;
+            StructureDescription = StructureFormula.ToString();
 
             switch (StructureFormula.FormulaType)
             {
@@ -86,9 +95,10 @@ namespace RoiFormulaMaker.ViewModels
                     ((RingRoiParameters)StructureFormula).OuterMargin = r.OuterMargin;
                     ((RingRoiParameters)StructureFormula).InnerMargin = r.InnerMargin;
 
-                    MainWindowViewModel.UpdateStructureNames(r.StructureName);
+                    StructureDescription = ((RingRoiParameters)StructureFormula).ToString();
 
-                    var structureDescription = ((RingRoiParameters)StructureFormula).ToString();
+                    MainWindowViewModel.UpdateStructureNames(r.StructureName);
+                    MainWindowViewModel.UpdateStructureDescriptions();
                 }
                 else
                     MainWindowViewModel.Message = "User canceled or didn't select structure";
@@ -120,8 +130,11 @@ namespace RoiFormulaMaker.ViewModels
                     ((RoiSubtractedRoiParameters)StructureFormula).BaseStructureName = r.BaseStructureName;
                     ((RoiSubtractedRoiParameters)StructureFormula).SubtractedRoiName = r.SubtractedRoiName;
                     ((RoiSubtractedRoiParameters)StructureFormula).Margin = r.Margin;
-                                        
+
+                    StructureDescription = ((RoiSubtractedRoiParameters)StructureFormula).ToString();
+
                     MainWindowViewModel.UpdateStructureNames(r.StructureName);
+                    MainWindowViewModel.UpdateStructureDescriptions();
                 }
                 else
                     MainWindowViewModel.Message = "User canceled or didn't select structures";
@@ -165,7 +178,10 @@ namespace RoiFormulaMaker.ViewModels
                     ((MarginAddedRoiParameters)StructureFormula).BaseStructureNames = r.BaseStructureNames;
                     ((MarginAddedRoiParameters)StructureFormula).Margin = r.Margin;
 
+                    StructureDescription = ((MarginAddedRoiParameters)StructureFormula).ToString();
+
                     MainWindowViewModel.UpdateStructureNames(r.StructureName);
+                    MainWindowViewModel.UpdateStructureDescriptions();
                 }
                 else
                     MainWindowViewModel.Message = "User canceled or didn't select structures";
@@ -208,7 +224,10 @@ namespace RoiFormulaMaker.ViewModels
                     ((OverlappedRoiParameters)StructureFormula).BaseStructureNames = r.BaseStructureNames;
                     ((OverlappedRoiParameters)StructureFormula).Margin = r.Margin;
 
+                    StructureDescription = ((OverlappedRoiParameters)StructureFormula).ToString();
+                    
                     MainWindowViewModel.UpdateStructureNames(r.StructureName);
+                    MainWindowViewModel.UpdateStructureDescriptions();
                 }
                 else
                     MainWindowViewModel.Message = "User canceled or didn't select structures";

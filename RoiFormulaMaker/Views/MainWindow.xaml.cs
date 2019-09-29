@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Windows;
 
 namespace RoiFormulaMaker.Views
@@ -19,6 +20,9 @@ namespace RoiFormulaMaker.Views
             var mainWindowViewModel = new ViewModels.MainWindowViewModel();
             mainWindowViewModel.structureFormulas = mainWindowViewModel.RoiFormulas.Formulas;
 
+            mainWindowViewModel.StructureNames = new ObservableCollection<string>(mainWindowViewModel.StructureNames.OrderBy(s => s));
+            mainWindowViewModel.ContouredStructureNames = new ObservableCollection<string>(mainWindowViewModel.ContouredStructureNames.OrderBy(s => s));
+
             mainWindowViewModel.DefaultDirectoryPath = Path.Combine(Environment.GetEnvironmentVariable("HOMEPATH"), @"Desktop\RayStationScripts\RoiFormulas");
             mainWindowViewModel.DefaultDirectoryPath = @"C:" + mainWindowViewModel.DefaultDirectoryPath;
             this.DataContext = mainWindowViewModel;
@@ -28,6 +32,7 @@ namespace RoiFormulaMaker.Views
         {
             InitializeComponent();
 
+            structureNames.Sort();
             var viewModel = new ViewModels.MainWindowViewModel
             {
                 StructureNames = new ObservableCollection<string>(structureNames),
@@ -41,6 +46,7 @@ namespace RoiFormulaMaker.Views
         {
             InitializeComponent();
 
+            structureNames.Sort();
             var viewModel = new ViewModels.MainWindowViewModel
             {
                 StructureNames = new ObservableCollection<string>(structureNames),

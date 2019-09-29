@@ -9,6 +9,7 @@ using RoiFormulaMaker.Notifications;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Windows;
 
 namespace RoiFormulaMaker.ViewModels
@@ -16,7 +17,7 @@ namespace RoiFormulaMaker.ViewModels
     public class MainWindowViewModel : BindableBase
     {
 
-        private string title = "Make Dummy ROIs";
+        private string title = "Make composite ROIs";
         public string Title
         {
             get { return title; }
@@ -77,12 +78,13 @@ namespace RoiFormulaMaker.ViewModels
                         contouredStructureNames.Add(s.Key);
                     }
                 }
-
                 ContouredStructureNames = new ObservableCollection<string>(contouredStructureNames);
+
+                SortStructureNames();
             }
         }
 
-        public ObservableCollection<string> StructureNames { get; set; } = new ObservableCollection<string> { "PTV", "Rectum", "Bladder" };
+        public ObservableCollection<string> StructureNames { get; set; } = new ObservableCollection<string> { "PTV", "Rectum", "Bladder", "PTV2", "CTV1", "CTV2", "GTV1", "GTV2" };
         public ObservableCollection<string> ContouredStructureNames { get; set; } = new ObservableCollection<string> { "PTV", "Rectum", "PTV2", "CTV1", "CTV2", "GTV1", "GTV2" };
 
         public ObservableCollection<string> StructureTypes { get; set; } = new ObservableCollection<string>
@@ -141,7 +143,9 @@ namespace RoiFormulaMaker.ViewModels
             }
         }
 
-        private void UpdateStructureDescriptions()
+        public ObservableCollection<MakeRoiViewModel> MakeRoiViewModels { get; set; } = new ObservableCollection<MakeRoiViewModel>();
+
+        public void UpdateStructureDescriptions()
         {
             StructureDescriptions = string.Empty;
             foreach (var sf in StructureFormulas)
@@ -158,6 +162,12 @@ namespace RoiFormulaMaker.ViewModels
             }
         }
 
+        public void SortStructureNames()
+        {
+            StructureNames = new ObservableCollection<string>(StructureNames.OrderBy(s => s));
+            ContouredStructureNames = new ObservableCollection<string>(ContouredStructureNames.OrderBy(s => s));
+        }
+
         private string structureDescriptions;
         public string StructureDescriptions
         {
@@ -170,6 +180,8 @@ namespace RoiFormulaMaker.ViewModels
 
         public DelegateCommand ChooseFileCommand { get; private set; }
         public DelegateCommand SaveFileCommand { get; private set; }
+
+        public DelegateCommand DeleteStructureFormulasCommand { get; private set; }
 
         public MainWindowViewModel()
         {
@@ -191,6 +203,8 @@ namespace RoiFormulaMaker.ViewModels
 
             ChooseFileCommand = new DelegateCommand(ChooseFile);
             SaveFileCommand = new DelegateCommand(SaveFile);
+
+            DeleteStructureFormulasCommand = new DelegateCommand(DeleteStructureFromulas);
         }
 
         public void UpdateStructureNames(string structureName)
@@ -204,6 +218,8 @@ namespace RoiFormulaMaker.ViewModels
             {
                 ContouredStructureNames.Add(structureName);
             }
+
+            SortStructureNames();
         }
 
         private void RaiseMakeRingRoiInteraction()
@@ -240,15 +256,9 @@ namespace RoiFormulaMaker.ViewModels
                     UpdateStructureNames(r.StructureName);
 
                     StructureFormulas.Add(ringRoiParameters);
-                    var structureDescription = ringRoiParameters.ToString();
-                    if (string.IsNullOrEmpty(StructureDescriptions))
-                    {
-                        StructureDescriptions = structureDescription;
-                    }
-                    else
-                    {
-                        StructureDescriptions += "\n" + structureDescription;
-                    }
+                    UpdateStructureDescriptions();
+
+                    MakeRoiViewModels.Add(new MakeRoiViewModel(ringRoiParameters, this));
                 }
                 else
                     Message = "User canceled or didn't select structure";
@@ -288,15 +298,9 @@ namespace RoiFormulaMaker.ViewModels
                     UpdateStructureNames(r.StructureName);
 
                     StructureFormulas.Add(roiSubtractedRoiParameters);
-                    var structureDescription = roiSubtractedRoiParameters.ToString();
-                    if (string.IsNullOrEmpty(StructureDescriptions))
-                    {
-                        StructureDescriptions = structureDescription;
-                    }
-                    else
-                    {
-                        StructureDescriptions += "\n" + structureDescription;
-                    }
+                    UpdateStructureDescriptions();
+
+                    MakeRoiViewModels.Add(new MakeRoiViewModel(roiSubtractedRoiParameters, this));
                 }
                 else
                     Message = "User canceled or didn't select structures";
@@ -342,15 +346,9 @@ namespace RoiFormulaMaker.ViewModels
                     UpdateStructureNames(r.StructureName);
 
                     StructureFormulas.Add(marginAddedRoiParameters);
-                    var structureDescription = marginAddedRoiParameters.ToString();
-                    if (string.IsNullOrEmpty(StructureDescriptions))
-                    {
-                        StructureDescriptions = structureDescription;
-                    }
-                    else
-                    {
-                        StructureDescriptions += "\n" + structureDescription;
-                    }
+                    UpdateStructureDescriptions();
+
+                    MakeRoiViewModels.Add(new MakeRoiViewModel(marginAddedRoiParameters, this));
                 }
                 else
                     Message = "User canceled or didn't select structures";
@@ -380,31 +378,25 @@ namespace RoiFormulaMaker.ViewModels
                 if (r.Confirmed && r.BaseStructureNames != null && r.BaseStructureNames.Count > 0)
                 {
                     Message = $"User selected: Base => { string.Join(", ", r.BaseStructureNames) }";
-                    var OverlappedRoisParameters = new OverlappedRoiParameters
+                    var overlappedRoiParameters = new OverlappedRoiParameters
                     {
                         StructureName = r.StructureName,
                         StructureType = r.StructureType,
                         BaseStructureNames = r.BaseStructureNames,
                         Margin = r.Margin
                     };
-                    if (StructureFormulas.Contains(OverlappedRoisParameters))
+                    if (StructureFormulas.Contains(overlappedRoiParameters))
                     {
-                        Message = "The overlapped ROIs is already in the list";
+                        Message = "The overlapped ROI is already in the list";
                         return;
                     }
 
                     UpdateStructureNames(r.StructureName);
+                    
+                    StructureFormulas.Add(overlappedRoiParameters);
+                    UpdateStructureDescriptions();
 
-                    StructureFormulas.Add(OverlappedRoisParameters);
-                    var structureDescription = OverlappedRoisParameters.ToString();
-                    if (string.IsNullOrEmpty(StructureDescriptions))
-                    {
-                        StructureDescriptions = structureDescription;
-                    }
-                    else
-                    {
-                        StructureDescriptions += "\n" + structureDescription;
-                    }
+                    MakeRoiViewModels.Add(new MakeRoiViewModel(overlappedRoiParameters, this));
                 }
                 else
                     Message = "User canceled or didn't select structures";
@@ -439,13 +431,16 @@ namespace RoiFormulaMaker.ViewModels
                 FilePath = dialog.FileName;
 
                 var roiFormulas = new Models.RoiFormulas() { Formulas = StructureFormulas };
+                // StructureFromulas will be cleared in roiFormulas.ReadFromFile
                 roiFormulas.ReadFromFile(FilePath);
 
                 Description = roiFormulas.Description;
                 UpdateStructureDescriptions();
 
+                MakeRoiViewModels.Clear();
                 foreach (var sf in StructureFormulas)
                 {
+                    MakeRoiViewModels.Add(new MakeRoiViewModel(sf, this));
                     UpdateStructureNames(sf.StructureName);
                 }
             }
@@ -475,6 +470,21 @@ namespace RoiFormulaMaker.ViewModels
             else
             {
                 Message = "\"Save to File\" is canceled";
+            }
+        }
+
+        private void DeleteStructureFromulas()
+        {
+            List<MakeRoiViewModel> makeRoiViewModels = MakeRoiViewModels.ToList();
+
+            foreach (var m in makeRoiViewModels)
+            {
+                if (m.IsChecked)
+                {
+                    var structureFormula = m.StructureFormula;
+                    MakeRoiViewModels.Remove(m);
+                    StructureFormulas.Remove(structureFormula);
+                }
             }
         }
     }
