@@ -193,7 +193,7 @@ namespace RoiFormulaMaker.ViewModels
             SaveFileCommand = new DelegateCommand(SaveFile);
         }
 
-        private void UpdateStructureNames(string structureName)
+        public void UpdateStructureNames(string structureName)
         {
             if (!StructureNames.Contains(structureName))
             {
@@ -443,6 +443,11 @@ namespace RoiFormulaMaker.ViewModels
 
                 Description = roiFormulas.Description;
                 UpdateStructureDescriptions();
+
+                foreach (var sf in StructureFormulas)
+                {
+                    UpdateStructureNames(sf.StructureName);
+                }
             }
             else
             {

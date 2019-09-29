@@ -73,6 +73,7 @@
     <Compile Include="ViewModels\MakeRingRoiViewModel.cs" />
     <Compile Include="ViewModels\MakeMarginAddedRoiViewModel.cs" />
     <Compile Include="ViewModels\MakeRoiSubtractedRoiViewModel.cs" />
+    <Compile Include="ViewModels\MakeRoiViewModel.cs" />
     <Compile Include="Views\MakeOverlappedRoiView.xaml.cs">
       <DependentUpon>MakeOverlappedRoiView.xaml</DependentUpon>
     </Compile>
