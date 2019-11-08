@@ -1,0 +1,52 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MlcShifter"
+        xmlns:ViewModels="clr-namespace:MlcShifter.ViewModels" x:Class="MlcShifter.MainWindow"
+        mc:Ignorable="d"
+        Title="MlcShifter" SizeToContent="WidthAndHeight" d:DataContext="{d:DesignInstance {x:Type ViewModels:MlcShifterViewModel}}">
+    <Grid>
+        <DataGrid ItemsSource="{Binding MlcDetails}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="500">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Header="Leaf Number"
+                    Binding="{Binding LeafNumber, Mode=OneWay}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTemplateColumn IsReadOnly="True" Header="B Bank">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsCheckedB, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn
+                    Header="Shift [mm]"
+                    Binding="{Binding ShiftB, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    IsReadOnly="False">
+                </DataGridTextColumn>
+                <DataGridTemplateColumn IsReadOnly="True" Header="A Bank">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsCheckedA, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn
+                    Header="Shift [mm]"
+                    Binding="{Binding ShiftA, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    IsReadOnly="False">
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+
+    </Grid>
+</Window>
