@@ -1,21 +1,56 @@
-﻿using Prism.Mvvm;
+﻿using Prism.Commands;
+using Prism.Mvvm;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace MlcShifter.ViewModels
 {
     public class MlcShifterViewModel : BindableBase
     {
-        public ObservableCollection<Models.MlcShiftDetail> MlcDetails { get; set; } = new ObservableCollection<Models.MlcShiftDetail>();
+        public ObservableCollection<BeamViewModel> BeamViewModels { get; set; } = new ObservableCollection<BeamViewModel>();
 
-        public int NumberOfLeafPairs = 60;
+        private string selectedBeamId;
+        public string SelectedBeamId
+        {
+            get { return selectedBeamId; }
+            set { SetProperty(ref selectedBeamId, value); }
+        }
+
+        private bool isOk = false;
+        public bool IsOk
+        {
+            get { return isOk; }
+            set { SetProperty(ref isOk, value); }
+        }
+
+        private bool isDifferentShift = false;
+        public bool IsDifferentShift
+        {
+            get { return isDifferentShift; }
+            set { SetProperty(ref isDifferentShift, value); }
+        }
+
+        public DelegateCommand OkCommand { get; private set; }
+        public DelegateCommand CancelCommand { get; private set; }
 
         public MlcShifterViewModel()
         {
-            for (int i =0; i<NumberOfLeafPairs; i++)
+            List<string> beamIds = new List<string>{ "Beam1", "Beam2", "Beam3" };
+
+            foreach(var beamId in beamIds)
             {
-                MlcDetails.Add(new Models.MlcShiftDetail { LeafNumber = NumberOfLeafPairs -i , IsCheckedA = false, IsCheckedB = false, ShiftA = 0, ShiftB = 0 });
+                BeamViewModels.Add(new BeamViewModel(beamId));
             }
+
+            OkCommand = new DelegateCommand(() => { IsOk = true; });
+            CancelCommand = new DelegateCommand(() => { IsOk = false; });
+        }
+
+        public MlcShifterViewModel(List<BeamViewModel> beamViewModels)
+        {
+            BeamViewModels = new ObservableCollection<BeamViewModel>(beamViewModels);
+            OkCommand = new DelegateCommand(() => { IsOk = true; });
+            CancelCommand = new DelegateCommand(() => { IsOk = false; });
         }
     }
 }

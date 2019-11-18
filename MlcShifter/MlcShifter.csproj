@@ -77,6 +77,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\MlcShiftDetail.cs" />
+    <Compile Include="ViewModels\BeamViewModel.cs" />
     <Compile Include="ViewModels\MlcShifterViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

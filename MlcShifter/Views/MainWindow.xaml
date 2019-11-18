@@ -8,45 +8,66 @@
         mc:Ignorable="d"
         Title="MlcShifter" SizeToContent="WidthAndHeight" d:DataContext="{d:DesignInstance {x:Type ViewModels:MlcShifterViewModel}}">
     <Grid>
-        <DataGrid ItemsSource="{Binding MlcDetails}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="500">
-            <DataGrid.Columns>
-                <DataGridTextColumn
+        <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="OK" Width ="48" Margin="3" Command="{Binding OkCommand}" Click="Button_Click"></Button>
+                <Button Content="Cancel" Width ="48" Margin="3" Command="{Binding CancelCommand}" Click="Button_Click"></Button>
+            </StackPanel>
+            <CheckBox Content="Different shift" Margin="3" IsChecked="{Binding IsDifferentShift}"></CheckBox>
+            <TabControl ItemsSource="{Binding BeamViewModels}" SelectedValue="{Binding SelectedBeamId}" SelectedValuePath="BeamId">
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding BeamId}" />
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <DataGrid ItemsSource="{Binding MlcDetails}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="500">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn
                     Header="Leaf Number"
                     Binding="{Binding LeafNumber, Mode=OneWay}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="HorizontalAlignment" Value="Center"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTemplateColumn IsReadOnly="True" Header="B Bank">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <CheckBox IsChecked="{Binding IsCheckedB, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn
-                    Header="Shift [mm]"
-                    Binding="{Binding ShiftB, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    IsReadOnly="False">
-                </DataGridTextColumn>
-                <DataGridTemplateColumn IsReadOnly="True" Header="A Bank">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <CheckBox IsChecked="{Binding IsCheckedA, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn
-                    Header="Shift [mm]"
-                    Binding="{Binding ShiftA, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    IsReadOnly="False">
-                </DataGridTextColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-
-
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="{x:Type TextBlock}">
+                                            <Setter Property="VerticalAlignment" Value="Center"/>
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTemplateColumn IsReadOnly="True" Header="B Bank">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding IsCheckedB, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Shift [mm]">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding ShiftB, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn IsReadOnly="True" Header="A Bank">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding IsCheckedA, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.IsDifferentShift}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Shift [mm]">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding ShiftA, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    IsEnabled="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.IsDifferentShift}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
+        </StackPanel>
     </Grid>
 </Window>
