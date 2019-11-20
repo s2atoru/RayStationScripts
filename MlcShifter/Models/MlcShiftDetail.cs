@@ -37,5 +37,13 @@ namespace MlcShifter.Models
             get { return shiftB; }
             set { SetProperty(ref shiftB, value); }
         }
+
+        private double maximumGap;
+        public double MaximumGap
+        {
+            get { return maximumGap; }
+            set { SetProperty(ref maximumGap, value); }
+        }
+
     }
 }

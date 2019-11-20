@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MlcShifter"
-        xmlns:ViewModels="clr-namespace:MlcShifter.ViewModels" x:Class="MlcShifter.MainWindow"
+        xmlns:local="clr-namespace:MlcShifter.Views"
+        xmlns:ViewModels="clr-namespace:MlcShifter.ViewModels" x:Class="MlcShifter.Views.MainWindow"
         mc:Ignorable="d"
         Title="MlcShifter" SizeToContent="WidthAndHeight" d:DataContext="{d:DesignInstance {x:Type ViewModels:MlcShifterViewModel}}">
     <Grid>
@@ -22,7 +22,7 @@
                 </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate>
                     <DataTemplate>
-                        <DataGrid ItemsSource="{Binding MlcDetails}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="500">
+                        <DataGrid ItemsSource="{Binding MlcShiftDetails}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="500">
                             <DataGrid.Columns>
                                 <DataGridTextColumn
                     Header="Leaf Number"
@@ -34,31 +34,41 @@
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
+                                <DataGridTextColumn
+                    Header="Max Gap [cm]"
+                    Binding="{Binding MaximumGap, Mode=OneWay, StringFormat={}{0:F2}}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="{x:Type TextBlock}">
+                                            <Setter Property="VerticalAlignment" Value="Center"/>
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTemplateColumn IsReadOnly="True" Header="B Bank">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding IsCheckedB, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <CheckBox IsChecked="{Binding IsCheckedB, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="Shift [mm]">
+                                <DataGridTemplateColumn Header="Shift [cm]">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBox Text="{Binding ShiftB, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBox Text="{Binding ShiftB, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F2}}"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
                                 <DataGridTemplateColumn IsReadOnly="True" Header="A Bank">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding IsCheckedA, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.IsDifferentShift}"/>
+                                            <CheckBox IsChecked="{Binding IsCheckedA, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.IsDifferentShift}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="Shift [mm]">
+                                <DataGridTemplateColumn Header="Shift [cm]">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBox Text="{Binding ShiftA, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            <TextBox Text="{Binding ShiftA, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,StringFormat={}{0:F2}}"
                                     IsEnabled="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.IsDifferentShift}"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
