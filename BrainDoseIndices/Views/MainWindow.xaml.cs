@@ -21,5 +21,12 @@ namespace BrainDoseIndices.Views
 
             DataContext = new ViewModels.DoseIndicesViewModel(structureDetails);
         }
+
+        public MainWindow(List<Models.StructureDetail> structureDetails, string defaultTargetName = "PTV", string defaultDose100VolumeName = "zDose100^GI", string defaultDose50VolumeName = "zDose50^GI", string defaultOverlapTargetDose100VolumeName = "zTVPV^GI")
+        {
+            InitializeComponent();
+
+            DataContext = new ViewModels.DoseIndicesViewModel(structureDetails, defaultTargetName, defaultDose100VolumeName, defaultOverlapTargetDose100VolumeName);
+        }
     }
 }

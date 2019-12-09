@@ -149,9 +149,9 @@ namespace BrainDoseIndices.ViewModels
         }
 
         public DoseIndicesViewModel(List<StructureDetail> structureDetails,
-            string defautTargetName= "PTV", string defaultDose100VolumeName="zDose100", string defaultDose50VolumeName="zDose50", string defaultOverlapTargetDose100VolumeName="zOL_PTV_Dose100")
+            string defaultTargetName= "PTV", string defaultDose100VolumeName="zDose100^GI", string defaultDose50VolumeName="zDose50^GI", string defaultOverlapTargetDose100VolumeName="zTVPV^GI")
         {
-            DefaultTargetName = defautTargetName;
+            DefaultTargetName = defaultTargetName;
             DefaultDose100VolumeName = defaultDose100VolumeName;
             DefaultDose50VolumeName = defaultDose50VolumeName;
             DefaultOverlapTargetDose100VolumeName = defaultOverlapTargetDose100VolumeName;
