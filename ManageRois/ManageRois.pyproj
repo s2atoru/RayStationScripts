@@ -29,6 +29,10 @@
     <InterpreterReference Include="IronPython|2.7-32" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="mscorlib">
+      <Name>mscorlib</Name>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="PresentationCore, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <Name>PresentationCore</Name>
       <AssemblyName>PresentationCore.dll</AssemblyName>
