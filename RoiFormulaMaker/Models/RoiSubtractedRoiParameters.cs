@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -17,7 +18,7 @@ namespace RoiFormulaMaker.Models
         [DataMember()]
         public string BaseStructureName { get; set; }
         [DataMember()]
-        public string SubtractedRoiName { get; set; }
+        public List<string> SubtractedRoiNames { get; set; }
         [DataMember()]
         public int Margin { get; set; }
 
@@ -26,7 +27,7 @@ namespace RoiFormulaMaker.Models
 
         public override string ToString()
         {
-            return $"ROI Subtracted ROI: {StructureName} ({StructureType}), Base Structure: {BaseStructureName}, Subtracted ROI = {SubtractedRoiName}, Margin = {Margin} mm";
+            return $"ROI Subtracted ROI: {StructureName} ({StructureType}), Base Structure: {BaseStructureName}, Subtracted ROIs = {string.Join(", ", SubtractedRoiNames)}, Margin = {Margin} mm";
         }
 
         public string ToJson()
@@ -46,16 +47,19 @@ namespace RoiFormulaMaker.Models
             {
                 return false;
             }
-            //Compare BaseStructureName, SubtractetRoiName, and Margin
+            //Compare BaseStructureName, SubtractetRoiNames, and Margin
             RoiSubtractedRoiParameters c = (RoiSubtractedRoiParameters)obj;
-            return (this.BaseStructureName == c.BaseStructureName) && (this.SubtractedRoiName == c.SubtractedRoiName) && (this.Margin == c.Margin);
+
+            var subtractedRoiNameSet = new HashSet<string>(SubtractedRoiNames);
+
+            return (this.BaseStructureName == c.BaseStructureName) && subtractedRoiNameSet.SetEquals(c.SubtractedRoiNames) && (this.Margin == c.Margin);
         }
 
         //Return the same value if Equals return true
         public override int GetHashCode()
         {
             //XOR
-            return this.BaseStructureName.GetHashCode() ^ this.SubtractedRoiName.GetHashCode() ^ this.Margin;
+            return this.BaseStructureName.GetHashCode() ^ this.SubtractedRoiNames.GetHashCode() ^ this.Margin;
         }
 
         //Overload of equality operators, == and !=

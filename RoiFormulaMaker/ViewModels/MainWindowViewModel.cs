@@ -250,7 +250,6 @@ namespace RoiFormulaMaker.ViewModels
                     {
                         Message = "The same ring is already in the list";
                         return;
-                        ;
                     }
 
                     UpdateStructureNames(r.StructureName);
@@ -267,32 +266,40 @@ namespace RoiFormulaMaker.ViewModels
 
         private void RaiseMakeRoiSubtractedRoiInteraction()
         {
+            var contouredStructureList = new ObservableCollection<ListBoxItemViewModel>();
+
+            foreach (var c in ContouredStructureNames)
+            {
+                contouredStructureList.Add(new ListBoxItemViewModel { Name = c, IsSelected = false });
+            }
+
             MakeRoiSubtractedRoiRequest.Raise(new MakeRoiSubtractedRoiNotification
             {
-                Title = "Make ROI Subtracted ROI",
+                Title = "Make ROIs Subtracted ROI",
                 Margin = 0,
                 StructureNames = this.StructureNames,
                 ContouredStructureNames = this.ContouredStructureNames,
+                ContouredStructureList = contouredStructureList,
                 StructureTypes = this.StructureTypes
             },
             r =>
             {
-                if (r.Confirmed && r.BaseStructureName != null && r.SubtractedRoiName != null)
+                if (r.Confirmed && r.BaseStructureName != null && r.SubtractedRoiNames != null)
                 {
-                    Message = $"User selected: Base => { r.BaseStructureName}, Subtracted ROI => {r.SubtractedRoiName}";
+                    Message = $"User selected: Base => { r.BaseStructureName}, "
+                        + $"Subtracted ROIs => { string.Join(", ", r.SubtractedRoiNames)}";
                     var roiSubtractedRoiParameters = new RoiSubtractedRoiParameters
                     {
                         StructureName = r.StructureName,
                         StructureType = r.StructureType,
                         BaseStructureName = r.BaseStructureName,
-                        SubtractedRoiName = r.SubtractedRoiName,
+                        SubtractedRoiNames = r.SubtractedRoiNames,
                         Margin = r.Margin
                     };
                     if (StructureFormulas.Contains(roiSubtractedRoiParameters))
                     {
-                        Message = "The same ROI subtracted ROI is already in the list";
+                        Message = "The same ROIs subtracted ROI is already in the list";
                         return;
-                        ;
                     }
 
                     UpdateStructureNames(r.StructureName);

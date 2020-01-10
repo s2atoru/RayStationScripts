@@ -45,7 +45,7 @@ namespace RoiFormulaMaker.Models
             {
                 return false;
             }
-            //Compare BaseStructureName and Margin
+            //Compare BaseStructureNames and Margin
             MarginAddedRoiParameters c = (MarginAddedRoiParameters)obj;
 
             var baseStructureNameSet = new HashSet<string>(BaseStructureNames);

@@ -38,15 +38,21 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <TextBlock  TextWrapping="Wrap" Text="Base Structure"/>
-        <ComboBox ItemsSource="{Binding Notification.ContouredStructureNames}" Grid.Row="1" SelectedItem="{Binding SelectedBaseStructureName}"/>
+        <ComboBox ItemsSource="{Binding Notification.ContouredStructureNames}" Grid.Row="1" SelectedItem="{Binding SelectedBaseStructureName}" VerticalAlignment="Top"/>
         <TextBlock  TextWrapping="Wrap" Text="Subtracted ROI" Grid.Column="1"/>
-        <ComboBox ItemsSource="{Binding Notification.ContouredStructureNames}" Grid.Row="1" Grid.Column="1" SelectedItem="{Binding SelectedSubtractedRoiName}"/>
+        <ListBox ItemsSource="{Binding Notification.ContouredStructureList}" Grid.Row="1" Grid.Column="1" DisplayMemberPath="Name" SelectionMode="Multiple" MinHeight="40" MaxHeight="400" Margin="3">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="IsSelected" Value="{Binding IsSelected}" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
         <TextBlock  TextWrapping="Wrap" Text="Margin [mm]" Grid.Column="2"/>
-        <TextBox Text="{Binding Notification.Margin}" Grid.Row="1" Grid.Column="2"/>
+        <TextBox Text="{Binding Notification.Margin}" Grid.Row="1" Grid.Column="2" VerticalAlignment="Top"/>
         <TextBlock  TextWrapping="Wrap" Text="Structure Name" Grid.Column="3"/>
-        <ComboBox ItemsSource="{Binding Notification.StructureNames}" Grid.Row="1" Grid.Column="3" Text="{Binding SelectedStructureName, Mode=TwoWay}" IsEditable="True"/>
+        <ComboBox ItemsSource="{Binding Notification.StructureNames}" Grid.Row="1" Grid.Column="3" Text="{Binding SelectedStructureName, Mode=TwoWay}" IsEditable="True" VerticalAlignment="Top"/>
         <TextBlock  TextWrapping="Wrap" Text="Structure Type" Grid.Column="4"/>
-        <ComboBox ItemsSource="{Binding Notification.StructureTypes}" Grid.Row="1" Grid.Column="4" SelectedItem="{Binding SelectedStructureType, Mode=TwoWay}"/>
+        <ComboBox ItemsSource="{Binding Notification.StructureTypes}" Grid.Row="1" Grid.Column="4" SelectedItem="{Binding SelectedStructureType, Mode=TwoWay}" VerticalAlignment="Top"/>
         <Button Grid.Row="2" Content="OK" Command="{Binding MakeRoiSubtractedRoiCommand}"/>
         <Button Grid.Row="2" Content="Cancel" Grid.Column="1" Command="{Binding CancelCommand}"/>
     </Grid>

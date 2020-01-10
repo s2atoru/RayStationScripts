@@ -3,6 +3,7 @@ using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
 using System;
 using RoiFormulaMaker.Notifications;
+using System.Collections.Generic;
 
 namespace RoiFormulaMaker.ViewModels
 {
@@ -31,7 +32,7 @@ namespace RoiFormulaMaker.ViewModels
             notification.StructureType = null;
             notification.Margin = 0;
             notification.BaseStructureName = null;
-            notification.SubtractedRoiName = null;
+            notification.SubtractedRoiNames = null;
             notification.Confirmed = false;
             FinishInteraction?.Invoke();
         }
@@ -39,20 +40,39 @@ namespace RoiFormulaMaker.ViewModels
         private void AcceptMakingRoiSubtractedRoi()
         {
             notification.BaseStructureName = SelectedBaseStructureName;
-            notification.SubtractedRoiName = SelectedSubtractedRoiName;
+
+            var subtractedRoiNames = new List<string>();
+            foreach (var c in notification.ContouredStructureList)
+            {
+                if (c.IsSelected)
+                {
+                    subtractedRoiNames.Add(c.Name);
+                }
+            }
+
+            notification.SubtractedRoiNames = subtractedRoiNames;
 
             notification.StructureName = SelectedStructureName;
             notification.StructureType = SelectedStructureType;
 
             if (string.IsNullOrEmpty(notification.StructureName))
             {
-                if (notification.Margin == 0)
+                string subtracted = string.Empty;
+                if (notification.SubtractedRoiNames.Count == 1)
                 {
-                    notification.StructureName = $"z{notification.BaseStructureName}-{notification.SubtractedRoiName}";
+                    subtracted = notification.SubtractedRoiNames[0];
                 }
                 else
                 {
-                    notification.StructureName = $"z{notification.BaseStructureName}-{notification.SubtractedRoiName}_{notification.Margin}";
+                    subtracted = "ROIs";
+                }
+                if (notification.Margin == 0)
+                {
+                    notification.StructureName = $"z{notification.BaseStructureName}-{subtracted}";
+                }
+                else
+                {
+                    notification.StructureName = $"z{notification.BaseStructureName}-{subtracted}_{notification.Margin}";
                 }
             }
 

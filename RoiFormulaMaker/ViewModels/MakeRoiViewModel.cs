@@ -109,26 +109,26 @@ namespace RoiFormulaMaker.ViewModels
         {
             MainWindowViewModel.MakeRoiSubtractedRoiRequest.Raise(new MakeRoiSubtractedRoiNotification
             {
-                Title = "Make ROI Subtracted ROI",
+                Title = "Make ROIs Subtracted ROI",
                 StructureNames = MainWindowViewModel.StructureNames,
                 ContouredStructureNames = MainWindowViewModel.ContouredStructureNames,
                 StructureTypes = MainWindowViewModel.StructureTypes,
                 StructureName = ((RoiSubtractedRoiParameters)StructureFormula).StructureName,
                 StructureType = ((RoiSubtractedRoiParameters)StructureFormula).StructureType,
                 BaseStructureName = ((RoiSubtractedRoiParameters)StructureFormula).BaseStructureName,
-                SubtractedRoiName = ((RoiSubtractedRoiParameters)StructureFormula).SubtractedRoiName,
+                SubtractedRoiNames = ((RoiSubtractedRoiParameters)StructureFormula).SubtractedRoiNames,
                 Margin = ((RoiSubtractedRoiParameters)StructureFormula).Margin
             },
             r =>
             {
-                if (r.Confirmed && r.BaseStructureName != null && r.SubtractedRoiName != null)
+                if (r.Confirmed && r.BaseStructureName != null && r.SubtractedRoiNames != null)
                 {
-                    MainWindowViewModel.Message = $"User selected: Base => { r.BaseStructureName}, Subtracted ROI => {r.SubtractedRoiName}";
+                    MainWindowViewModel.Message = $"User selected: Base => { r.BaseStructureName}, Subtracted ROIs => {string.Join(", ",r.SubtractedRoiNames)}";
 
                     ((RoiSubtractedRoiParameters)StructureFormula).StructureName = r.StructureName;
                     ((RoiSubtractedRoiParameters)StructureFormula).StructureType = r.StructureType;
                     ((RoiSubtractedRoiParameters)StructureFormula).BaseStructureName = r.BaseStructureName;
-                    ((RoiSubtractedRoiParameters)StructureFormula).SubtractedRoiName = r.SubtractedRoiName;
+                    ((RoiSubtractedRoiParameters)StructureFormula).SubtractedRoiNames = r.SubtractedRoiNames;
                     ((RoiSubtractedRoiParameters)StructureFormula).Margin = r.Margin;
 
                     StructureDescription = ((RoiSubtractedRoiParameters)StructureFormula).ToString();
