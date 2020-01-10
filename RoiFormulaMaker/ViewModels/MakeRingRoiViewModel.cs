@@ -47,11 +47,11 @@ namespace RoiFormulaMaker.ViewModels
             {
                 if (notification.InnerMargin == 0)
                 {
-                    notification.StructureName = $"zRing_{notification.OuterMargin}";
+                    notification.StructureName = $"zRing{notification.BaseStructureName}_{notification.OuterMargin}";
                 }
                 else
                 {
-                    notification.StructureName = $"zRing_{notification.OuterMargin}_{notification.InnerMargin}";
+                    notification.StructureName = $"zRing{notification.BaseStructureName}_{notification.OuterMargin}_{notification.InnerMargin}";
                 }
             }
             

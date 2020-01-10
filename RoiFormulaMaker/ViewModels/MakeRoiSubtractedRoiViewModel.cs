@@ -57,22 +57,13 @@ namespace RoiFormulaMaker.ViewModels
 
             if (string.IsNullOrEmpty(notification.StructureName))
             {
-                string subtracted = string.Empty;
-                if (notification.SubtractedRoiNames.Count == 1)
-                {
-                    subtracted = notification.SubtractedRoiNames[0];
-                }
-                else
-                {
-                    subtracted = "ROIs";
-                }
                 if (notification.Margin == 0)
                 {
-                    notification.StructureName = $"z{notification.BaseStructureName}-{subtracted}";
+                    notification.StructureName = $"z{notification.BaseStructureName}-{string.Join("-", notification.SubtractedRoiNames)}";
                 }
                 else
                 {
-                    notification.StructureName = $"z{notification.BaseStructureName}-{subtracted}_{notification.Margin}";
+                    notification.StructureName = $"z{notification.BaseStructureName}-{string.Join("-", notification.SubtractedRoiNames)}_{notification.Margin}";
                 }
             }
 

@@ -49,7 +49,7 @@ namespace RoiFormulaMaker.ViewModels
             
             if (string.IsNullOrEmpty(notification.StructureName))
             {
-                notification.StructureName = $"z{notification.BaseStructureNames[0]}_{notification.Margin}";
+                notification.StructureName = $"zOL_{string.Join("_",notification.BaseStructureNames)}_{notification.Margin}";
             }
 
             notification.Confirmed = true;
