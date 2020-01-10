@@ -57,6 +57,10 @@ namespace RoiFormulaMaker.Models
                             formula = formulaJObject.ToObject<RingRoiParameters>();
                             Formulas.Add(formula);
                             break;
+                        case "WallRoi":
+                            formula = formulaJObject.ToObject<WallRoiParameters>();
+                            Formulas.Add(formula);
+                            break;
                         case "MarginAddedRoi":
                             formula = formulaJObject.ToObject<MarginAddedRoiParameters>();
                             Formulas.Add(formula);

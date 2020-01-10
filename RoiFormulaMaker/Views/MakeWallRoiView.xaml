@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="RoiFormulaMaker.Views.MakeWallRoiView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:prism="http://prismlibrary.com/"             
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:local="clr-namespace:RoiFormulaMaker.Views"
+             xmlns:vm="clr-namespace:RoiFormulaMaker.ViewModels"    
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance vm:MakeWallRoiViewModel}"
+             d:DesignHeight="450" d:DesignWidth="1100" FontSize="24">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="6"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="3"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="3"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin" Value="3"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock  TextWrapping="Wrap" Text="Base Structure"/>
+        <ComboBox ItemsSource="{Binding Notification.ContouredStructureNames}" Grid.Row="1" SelectedItem="{Binding SelectedBaseStructureName, Mode=TwoWay}"/>
+        <TextBlock  TextWrapping="Wrap" Text="Outer Margin [mm]" Grid.Column="1"/>
+        <TextBox Text="{Binding Notification.OuterMargin}" Grid.Row="1" Grid.Column="1"/>
+        <TextBlock  TextWrapping="Wrap" Text="Inner Margin [mm]" Grid.Column="2"/>
+        <TextBox Text="{Binding Notification.InnerMargin}" Grid.Row="1" Grid.Column="2"/>
+        <TextBlock  TextWrapping="Wrap" Text="Structure Name" Grid.Column="3"/>
+        <ComboBox ItemsSource="{Binding Notification.StructureNames}" Grid.Row="1" Grid.Column="3" Text="{Binding SelectedStructureName, Mode=TwoWay}" IsEditable="True"/>
+        <TextBlock  TextWrapping="Wrap" Text="Structure Type" Grid.Column="4"/>
+        <ComboBox ItemsSource="{Binding Notification.StructureTypes}" Grid.Row="1" Grid.Column="4" SelectedItem="{Binding SelectedStructureType, Mode=TwoWay}"/>
+        <Button Grid.Row="2" Content="OK" Command="{Binding MakeWallRoiCommand}"/>
+        <Button Grid.Row="2" Content="Cancel" Grid.Column="1" Command="{Binding CancelCommand}"/>
+    </Grid>
+</UserControl>

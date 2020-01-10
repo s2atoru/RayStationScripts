@@ -123,6 +123,9 @@ namespace RoiFormulaMaker.ViewModels
         public InteractionRequest<MakeRingRoiNotification> MakeRingRoiRequest { get; set; }
         public DelegateCommand MakeRingRoiCommand { get; set; }
 
+        public InteractionRequest<MakeWallRoiNotification> MakeWallRoiRequest { get; set; }
+        public DelegateCommand MakeWallRoiCommand { get; set; }
+
         public InteractionRequest<MakeRoiSubtractedRoiNotification> MakeRoiSubtractedRoiRequest { get; set; }
         public DelegateCommand MakeRoiSubtractedRoiCommand { get; set; }
 
@@ -188,6 +191,9 @@ namespace RoiFormulaMaker.ViewModels
 
             MakeRingRoiRequest = new InteractionRequest<MakeRingRoiNotification>();
             MakeRingRoiCommand = new DelegateCommand(RaiseMakeRingRoiInteraction);
+
+            MakeWallRoiRequest = new InteractionRequest<MakeWallRoiNotification>();
+            MakeWallRoiCommand = new DelegateCommand(RaiseMakeWallRoiInteraction);
 
             MakeRoiSubtractedRoiRequest = new InteractionRequest<MakeRoiSubtractedRoiNotification>();
             MakeRoiSubtractedRoiCommand = new DelegateCommand(RaiseMakeRoiSubtractedRoiInteraction);
@@ -258,6 +264,48 @@ namespace RoiFormulaMaker.ViewModels
                     UpdateStructureDescriptions();
 
                     MakeRoiViewModels.Add(new MakeRoiViewModel(ringRoiParameters, this));
+                }
+                else
+                    Message = "User canceled or didn't select structure";
+            });
+        }
+
+        private void RaiseMakeWallRoiInteraction()
+        {
+            MakeWallRoiRequest.Raise(new MakeWallRoiNotification
+            {
+                Title = "Make Wall ROI",
+                OuterMargin = 0,
+                InnerMargin = 3,
+                StructureNames = this.StructureNames,
+                ContouredStructureNames = this.ContouredStructureNames,
+                StructureTypes = this.StructureTypes
+            },
+            r =>
+            {
+                if (r.Confirmed && r.BaseStructureName != null)
+                {
+                    Message = $"User selected: { r.BaseStructureName}";
+                    var wallRoiParameters = new WallRoiParameters
+                    {
+                        StructureName = r.StructureName,
+                        StructureType = r.StructureType,
+                        BaseStructureName = r.BaseStructureName,
+                        OuterMargin = r.OuterMargin,
+                        InnerMargin = r.InnerMargin
+                    };
+                    if (StructureFormulas.Contains(wallRoiParameters))
+                    {
+                        Message = "The same wall is already in the list";
+                        return;
+                    }
+
+                    UpdateStructureNames(r.StructureName);
+
+                    StructureFormulas.Add(wallRoiParameters);
+                    UpdateStructureDescriptions();
+
+                    MakeRoiViewModels.Add(new MakeRoiViewModel(wallRoiParameters, this));
                 }
                 else
                     Message = "User canceled or didn't select structure";
