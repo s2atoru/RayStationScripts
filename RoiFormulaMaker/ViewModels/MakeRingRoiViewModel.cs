@@ -9,12 +9,6 @@ namespace RoiFormulaMaker.ViewModels
 {
     public class MakeRingRoiViewModel : BindableBase, IInteractionRequestAware
     {
-        public string SelectedStructureName { get; set; }
-
-        public string SelectedStructureType { get; set; } = "Control";
-
-        public string SelectedBaseStructureName { get; set; }
-
         public DelegateCommand MakeRingRoiCommand { get; private set; }
 
         public DelegateCommand CancelCommand { get; private set; }
@@ -38,11 +32,6 @@ namespace RoiFormulaMaker.ViewModels
 
         private void AcceptMakingRingRoi()
         {
-            notification.BaseStructureName = SelectedBaseStructureName;
-
-            notification.StructureName = SelectedStructureName;
-            notification.StructureType = SelectedStructureType;
-
             if (string.IsNullOrEmpty(notification.StructureName))
             {
                 if (notification.InnerMargin == 0)

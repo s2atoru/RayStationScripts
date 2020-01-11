@@ -9,9 +9,6 @@ namespace RoiFormulaMaker.ViewModels
 {
     class MakeMarginAddedRoiViewModel : BindableBase, IInteractionRequestAware
     {
-        public string SelectedStructureName { get; set; }
-        public string SelectedStructureType { get; set; } = "Control";
-
         public DelegateCommand MakeMarginAddedRoiCommand { get; private set; }
 
         public DelegateCommand CancelCommand { get; private set; }
@@ -43,13 +40,10 @@ namespace RoiFormulaMaker.ViewModels
                 }
             }
             notification.BaseStructureNames = baseStructureNames;
-
-            notification.StructureName = SelectedStructureName;
-            notification.StructureType = SelectedStructureType;
             
             if (string.IsNullOrEmpty(notification.StructureName))
             {
-                notification.StructureName = $"z{notification.BaseStructureNames[0]}_{notification.Margin}";
+                notification.StructureName = $"z{string.Join("_",notification.BaseStructureNames)}_{notification.Margin}";
             }
 
             notification.Confirmed = true;

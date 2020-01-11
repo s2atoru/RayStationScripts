@@ -74,17 +74,19 @@ namespace RoiFormulaMaker.ViewModels
 
         private void RaiseMakeRingRoiInteraction()
         {
+            var structureFormula = (RingRoiParameters)StructureFormula;
+
             MainWindowViewModel.MakeRingRoiRequest.Raise(new MakeRingRoiNotification
             {
                 Title = "Make Ring ROI",
                 StructureNames = MainWindowViewModel.StructureNames,
                 ContouredStructureNames = MainWindowViewModel.ContouredStructureNames,
                 StructureTypes = MainWindowViewModel.StructureTypes,
-                StructureName = ((RingRoiParameters)StructureFormula).StructureName,
-                StructureType = ((RingRoiParameters)StructureFormula).StructureType,
-                BaseStructureName = ((RingRoiParameters)StructureFormula).BaseStructureName,
-                OuterMargin = ((RingRoiParameters)StructureFormula).OuterMargin,
-                InnerMargin = ((RingRoiParameters)StructureFormula).InnerMargin
+                StructureName = structureFormula.StructureName,
+                StructureType = structureFormula.StructureType,
+                BaseStructureName = structureFormula.BaseStructureName,
+                OuterMargin = structureFormula.OuterMargin,
+                InnerMargin = structureFormula.InnerMargin
             },
             r =>
             {
@@ -92,13 +94,13 @@ namespace RoiFormulaMaker.ViewModels
                 {
                     MainWindowViewModel.Message = $"User selected: { r.BaseStructureName}";
 
-                    ((RingRoiParameters)StructureFormula).StructureName = r.StructureName;
-                    ((RingRoiParameters)StructureFormula).StructureType = r.StructureType;
-                    ((RingRoiParameters)StructureFormula).BaseStructureName = r.BaseStructureName;
-                    ((RingRoiParameters)StructureFormula).OuterMargin = r.OuterMargin;
-                    ((RingRoiParameters)StructureFormula).InnerMargin = r.InnerMargin;
+                    structureFormula.StructureName = r.StructureName;
+                    structureFormula.StructureType = r.StructureType;
+                    structureFormula.BaseStructureName = r.BaseStructureName;
+                    structureFormula.OuterMargin = r.OuterMargin;
+                    structureFormula.InnerMargin = r.InnerMargin;
 
-                    StructureDescription = ((RingRoiParameters)StructureFormula).ToString();
+                    StructureDescription = structureFormula.ToString();
 
                     MainWindowViewModel.UpdateStructureNames(r.StructureName);
                     MainWindowViewModel.UpdateStructureDescriptions();
@@ -110,17 +112,19 @@ namespace RoiFormulaMaker.ViewModels
 
         private void RaiseMakeWallRoiInteraction()
         {
-            MainWindowViewModel.MakeRingRoiRequest.Raise(new MakeRingRoiNotification
+            var structureFormula = (WallRoiParameters)StructureFormula;
+
+            MainWindowViewModel.MakeWallRoiRequest.Raise(new MakeWallRoiNotification
             {
                 Title = "Make Wall ROI",
                 StructureNames = MainWindowViewModel.StructureNames,
                 ContouredStructureNames = MainWindowViewModel.ContouredStructureNames,
                 StructureTypes = MainWindowViewModel.StructureTypes,
-                StructureName = ((WallRoiParameters)StructureFormula).StructureName,
-                StructureType = ((WallRoiParameters)StructureFormula).StructureType,
-                BaseStructureName = ((WallRoiParameters)StructureFormula).BaseStructureName,
-                OuterMargin = ((WallRoiParameters)StructureFormula).OuterMargin,
-                InnerMargin = ((WallRoiParameters)StructureFormula).InnerMargin
+                StructureName = structureFormula.StructureName,
+                StructureType = structureFormula.StructureType,
+                BaseStructureName = structureFormula.BaseStructureName,
+                OuterMargin = structureFormula.OuterMargin,
+                InnerMargin = structureFormula.InnerMargin
             },
             r =>
             {
@@ -128,13 +132,13 @@ namespace RoiFormulaMaker.ViewModels
                 {
                     MainWindowViewModel.Message = $"User selected: { r.BaseStructureName}";
 
-                    ((WallRoiParameters)StructureFormula).StructureName = r.StructureName;
-                    ((WallRoiParameters)StructureFormula).StructureType = r.StructureType;
-                    ((WallRoiParameters)StructureFormula).BaseStructureName = r.BaseStructureName;
-                    ((WallRoiParameters)StructureFormula).OuterMargin = r.OuterMargin;
-                    ((WallRoiParameters)StructureFormula).InnerMargin = r.InnerMargin;
+                    structureFormula.StructureName = r.StructureName;
+                    structureFormula.StructureType = r.StructureType;
+                    structureFormula.BaseStructureName = r.BaseStructureName;
+                    structureFormula.OuterMargin = r.OuterMargin;
+                    structureFormula.InnerMargin = r.InnerMargin;
 
-                    StructureDescription = ((WallRoiParameters)StructureFormula).ToString();
+                    StructureDescription = structureFormula.ToString();
 
                     MainWindowViewModel.UpdateStructureNames(r.StructureName);
                     MainWindowViewModel.UpdateStructureDescriptions();
@@ -146,17 +150,27 @@ namespace RoiFormulaMaker.ViewModels
 
         private void RaiseMakeRoiSubtractedRoiInteraction()
         {
+            var structureFormula = (RoiSubtractedRoiParameters)StructureFormula;
+            var contouredStructureList = new ObservableCollection<ListBoxItemViewModel>();
+
+            foreach (var c in MainWindowViewModel.ContouredStructureNames)
+            {
+                bool isSelected = structureFormula.SubtractedRoiNames.Contains(c);
+                contouredStructureList.Add(new ListBoxItemViewModel { Name = c, IsSelected = isSelected });
+            }
+
             MainWindowViewModel.MakeRoiSubtractedRoiRequest.Raise(new MakeRoiSubtractedRoiNotification
             {
                 Title = "Make ROIs Subtracted ROI",
                 StructureNames = MainWindowViewModel.StructureNames,
                 ContouredStructureNames = MainWindowViewModel.ContouredStructureNames,
                 StructureTypes = MainWindowViewModel.StructureTypes,
-                StructureName = ((RoiSubtractedRoiParameters)StructureFormula).StructureName,
-                StructureType = ((RoiSubtractedRoiParameters)StructureFormula).StructureType,
-                BaseStructureName = ((RoiSubtractedRoiParameters)StructureFormula).BaseStructureName,
-                SubtractedRoiNames = ((RoiSubtractedRoiParameters)StructureFormula).SubtractedRoiNames,
-                Margin = ((RoiSubtractedRoiParameters)StructureFormula).Margin
+                StructureName = StructureFormula.StructureName,
+                StructureType = StructureFormula.StructureType,
+                BaseStructureName = StructureFormula.BaseStructureName,
+                ContouredStructureList = contouredStructureList,
+                SubtractedRoiNames = StructureFormula.SubtractedRoiNames,
+                Margin = StructureFormula.Margin
             },
             r =>
             {
@@ -164,13 +178,13 @@ namespace RoiFormulaMaker.ViewModels
                 {
                     MainWindowViewModel.Message = $"User selected: Base => { r.BaseStructureName}, Subtracted ROIs => {string.Join(", ", r.SubtractedRoiNames)}";
 
-                    ((RoiSubtractedRoiParameters)StructureFormula).StructureName = r.StructureName;
-                    ((RoiSubtractedRoiParameters)StructureFormula).StructureType = r.StructureType;
-                    ((RoiSubtractedRoiParameters)StructureFormula).BaseStructureName = r.BaseStructureName;
-                    ((RoiSubtractedRoiParameters)StructureFormula).SubtractedRoiNames = r.SubtractedRoiNames;
-                    ((RoiSubtractedRoiParameters)StructureFormula).Margin = r.Margin;
+                    structureFormula.StructureName = r.StructureName;
+                    structureFormula.StructureType = r.StructureType;
+                    structureFormula.BaseStructureName = r.BaseStructureName;
+                    structureFormula.SubtractedRoiNames = r.SubtractedRoiNames;
+                    structureFormula.Margin = r.Margin;
 
-                    StructureDescription = ((RoiSubtractedRoiParameters)StructureFormula).ToString();
+                    StructureDescription = structureFormula.ToString();
 
                     MainWindowViewModel.UpdateStructureNames(r.StructureName);
                     MainWindowViewModel.UpdateStructureDescriptions();
@@ -182,16 +196,12 @@ namespace RoiFormulaMaker.ViewModels
 
         private void RaiseMakeMarginAddedRoiInteraction()
         {
-
+            var structureFormula = (MarginAddedRoiParameters)StructureFormula;
             var contouredStructureList = new ObservableCollection<ListBoxItemViewModel>();
 
             foreach (var c in MainWindowViewModel.ContouredStructureNames)
             {
-                bool isSelected = false;
-                if (((MarginAddedRoiParameters)StructureFormula).BaseStructureNames.Contains(c))
-                {
-                    isSelected = true;
-                }
+                bool isSelected = structureFormula.BaseStructureNames.Contains(c);
                 contouredStructureList.Add(new ListBoxItemViewModel { Name = c, IsSelected = isSelected });
             }
 
@@ -201,10 +211,10 @@ namespace RoiFormulaMaker.ViewModels
                 StructureNames = MainWindowViewModel.StructureNames,
                 ContouredStructureList = contouredStructureList,
                 StructureTypes = MainWindowViewModel.StructureTypes,
-                StructureName = ((MarginAddedRoiParameters)StructureFormula).StructureName,
-                StructureType = ((MarginAddedRoiParameters)StructureFormula).StructureType,
-                BaseStructureNames = ((MarginAddedRoiParameters)StructureFormula).BaseStructureNames,
-                Margin = ((MarginAddedRoiParameters)StructureFormula).Margin
+                StructureName = structureFormula.StructureName,
+                StructureType = structureFormula.StructureType,
+                BaseStructureNames = structureFormula.BaseStructureNames,
+                Margin = structureFormula.Margin
             },
             r =>
             {
@@ -212,12 +222,12 @@ namespace RoiFormulaMaker.ViewModels
                 {
                     MainWindowViewModel.Message = $"User selected: Base => { string.Join(", ", r.BaseStructureNames) }";
 
-                    ((MarginAddedRoiParameters)StructureFormula).StructureName = r.StructureName;
-                    ((MarginAddedRoiParameters)StructureFormula).StructureType = r.StructureType;
-                    ((MarginAddedRoiParameters)StructureFormula).BaseStructureNames = r.BaseStructureNames;
-                    ((MarginAddedRoiParameters)StructureFormula).Margin = r.Margin;
+                    structureFormula.StructureName = r.StructureName;
+                    structureFormula.StructureType = r.StructureType;
+                    structureFormula.BaseStructureNames = r.BaseStructureNames;
+                    structureFormula.Margin = r.Margin;
 
-                    StructureDescription = ((MarginAddedRoiParameters)StructureFormula).ToString();
+                    StructureDescription = structureFormula.ToString();
 
                     MainWindowViewModel.UpdateStructureNames(r.StructureName);
                     MainWindowViewModel.UpdateStructureDescriptions();
@@ -229,16 +239,13 @@ namespace RoiFormulaMaker.ViewModels
 
         private void RaiseMakeOverlappedRoiInteraction()
         {
+            var structureFormula = (OverlappedRoiParameters)StructureFormula;
 
             var contouredStructureList = new ObservableCollection<ListBoxItemViewModel>();
 
             foreach (var c in MainWindowViewModel.ContouredStructureNames)
             {
-                bool isSelected = false;
-                if (((OverlappedRoiParameters)StructureFormula).BaseStructureNames.Contains(c))
-                {
-                    isSelected = true;
-                }
+                bool isSelected = structureFormula.BaseStructureNames.Contains(c);
                 contouredStructureList.Add(new ListBoxItemViewModel { Name = c, IsSelected = isSelected });
             }
 
@@ -248,10 +255,10 @@ namespace RoiFormulaMaker.ViewModels
                 StructureNames = MainWindowViewModel.StructureNames,
                 ContouredStructureList = contouredStructureList,
                 StructureTypes = MainWindowViewModel.StructureTypes,
-                StructureName = ((OverlappedRoiParameters)StructureFormula).StructureName,
-                StructureType = ((OverlappedRoiParameters)StructureFormula).StructureType,
-                BaseStructureNames = ((OverlappedRoiParameters)StructureFormula).BaseStructureNames,
-                Margin = ((OverlappedRoiParameters)StructureFormula).Margin
+                StructureName = structureFormula.StructureName,
+                StructureType = structureFormula.StructureType,
+                BaseStructureNames = structureFormula.BaseStructureNames,
+                Margin = structureFormula.Margin
             },
             r =>
             {
@@ -259,12 +266,12 @@ namespace RoiFormulaMaker.ViewModels
                 {
                     MainWindowViewModel.Message = $"User selected: Base => { string.Join(", ", r.BaseStructureNames) }";
 
-                    ((OverlappedRoiParameters)StructureFormula).StructureName = r.StructureName;
-                    ((OverlappedRoiParameters)StructureFormula).StructureType = r.StructureType;
-                    ((OverlappedRoiParameters)StructureFormula).BaseStructureNames = r.BaseStructureNames;
-                    ((OverlappedRoiParameters)StructureFormula).Margin = r.Margin;
+                    structureFormula.StructureName = r.StructureName;
+                    structureFormula.StructureType = r.StructureType;
+                    structureFormula.BaseStructureNames = r.BaseStructureNames;
+                    structureFormula.Margin = r.Margin;
 
-                    StructureDescription = ((OverlappedRoiParameters)StructureFormula).ToString();
+                    StructureDescription = structureFormula.ToString();
 
                     MainWindowViewModel.UpdateStructureNames(r.StructureName);
                     MainWindowViewModel.UpdateStructureDescriptions();

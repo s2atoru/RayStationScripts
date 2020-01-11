@@ -235,6 +235,7 @@ namespace RoiFormulaMaker.ViewModels
                 Title = "Make Ring ROI",
                 OuterMargin = 15,
                 InnerMargin = 0,
+                StructureType = "Control",
                 StructureNames = this.StructureNames,
                 ContouredStructureNames = this.ContouredStructureNames,
                 StructureTypes = this.StructureTypes
@@ -277,7 +278,7 @@ namespace RoiFormulaMaker.ViewModels
                 Title = "Make Wall ROI",
                 OuterMargin = 0,
                 InnerMargin = 3,
-                StructureNames = this.StructureNames,
+                StructureType = "Control",
                 ContouredStructureNames = this.ContouredStructureNames,
                 StructureTypes = this.StructureTypes
             },
@@ -325,6 +326,7 @@ namespace RoiFormulaMaker.ViewModels
             {
                 Title = "Make ROIs Subtracted ROI",
                 Margin = 0,
+                StructureType = "Control",
                 StructureNames = this.StructureNames,
                 ContouredStructureNames = this.ContouredStructureNames,
                 ContouredStructureList = contouredStructureList,
@@ -364,7 +366,6 @@ namespace RoiFormulaMaker.ViewModels
 
         private void RaiseMakeMarginAddedRoiInteraction()
         {
-
             var contouredStructureList = new ObservableCollection<ListBoxItemViewModel>();
 
             foreach (var c in ContouredStructureNames)
@@ -376,6 +377,7 @@ namespace RoiFormulaMaker.ViewModels
             {
                 Title = "Make Margin Added ROI",
                 Margin = 0,
+                StructureType = "Control",
                 StructureNames = this.StructureNames,
                 ContouredStructureList = contouredStructureList,
                 StructureTypes = this.StructureTypes
@@ -424,6 +426,7 @@ namespace RoiFormulaMaker.ViewModels
             {
                 Title = "Make Overlapped ROI",
                 Margin = 0,
+                StructureType = "Control",
                 StructureNames = this.StructureNames,
                 ContouredStructureList = contouredStructureList,
                 StructureTypes = this.StructureTypes

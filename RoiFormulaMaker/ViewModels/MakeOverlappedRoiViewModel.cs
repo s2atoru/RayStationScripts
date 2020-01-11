@@ -9,9 +9,6 @@ namespace RoiFormulaMaker.ViewModels
 {
     class MakeOverlappedRoiViewModel : BindableBase, IInteractionRequestAware
     {
-        public string SelectedStructureName { get; set; }
-        public string SelectedStructureType { get; set; } = "Control";
-
         public DelegateCommand MakeOverlappedRoiCommand { get; private set; }
 
         public DelegateCommand CancelCommand { get; private set; }
@@ -43,9 +40,6 @@ namespace RoiFormulaMaker.ViewModels
                 }
             }
             notification.BaseStructureNames = baseStructureNames;
-
-            notification.StructureName = SelectedStructureName;
-            notification.StructureType = SelectedStructureType;
             
             if (string.IsNullOrEmpty(notification.StructureName))
             {

@@ -9,13 +9,6 @@ namespace RoiFormulaMaker.ViewModels
 {
     class MakeRoiSubtractedRoiViewModel : BindableBase, IInteractionRequestAware
     {
-        public string SelectedStructureName { get; set; }
-        public string SelectedSubtractedRoiName { get; set; }
-
-        public string SelectedStructureType { get; set; } = "Control";
-
-        public string SelectedBaseStructureName { get; set; }
-
         public DelegateCommand MakeRoiSubtractedRoiCommand { get; private set; }
 
         public DelegateCommand CancelCommand { get; private set; }
@@ -39,7 +32,6 @@ namespace RoiFormulaMaker.ViewModels
 
         private void AcceptMakingRoiSubtractedRoi()
         {
-            notification.BaseStructureName = SelectedBaseStructureName;
 
             var subtractedRoiNames = new List<string>();
             foreach (var c in notification.ContouredStructureList)
@@ -51,9 +43,6 @@ namespace RoiFormulaMaker.ViewModels
             }
 
             notification.SubtractedRoiNames = subtractedRoiNames;
-
-            notification.StructureName = SelectedStructureName;
-            notification.StructureType = SelectedStructureType;
 
             if (string.IsNullOrEmpty(notification.StructureName))
             {

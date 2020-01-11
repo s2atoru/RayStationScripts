@@ -47,9 +47,9 @@
         <TextBlock  TextWrapping="Wrap" Text="Margin [mm]" Grid.Column="1"/>
         <TextBox Text="{Binding Notification.Margin}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Top"/>
         <TextBlock  TextWrapping="Wrap" Text="Structure Name" Grid.Column="2"/>
-        <ComboBox ItemsSource="{Binding Notification.StructureNames}" Grid.Row="1" Grid.Column="2" Text="{Binding SelectedStructureName, Mode=TwoWay}" IsEditable="True" VerticalAlignment="Top"/>
+        <ComboBox ItemsSource="{Binding Notification.StructureNames}" Grid.Row="1" Grid.Column="2" Text="{Binding Notification.StructureName , Mode=TwoWay}" IsEditable="True" VerticalAlignment="Top"/>
         <TextBlock  TextWrapping="Wrap" Text="Structure Type" Grid.Column="3"/>
-        <ComboBox ItemsSource="{Binding Notification.StructureTypes}" Grid.Row="1" Grid.Column="3" SelectedItem="{Binding SelectedStructureType, Mode=TwoWay}" IsEditable="True" VerticalAlignment="Top"/>
+        <ComboBox ItemsSource="{Binding Notification.StructureTypes}" Grid.Row="1" Grid.Column="3" SelectedItem="{Binding Notification.StructureType, Mode=TwoWay}" IsEditable="True" VerticalAlignment="Top"/>
         <Button Grid.Row="2" Content="OK" Command="{Binding MakeOverlappedRoiCommand}"/>
         <Button Grid.Row="2" Content="Cancel" Grid.Column="1" Command="{Binding CancelCommand}"/>
     </Grid>
