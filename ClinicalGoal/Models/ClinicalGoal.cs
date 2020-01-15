@@ -12,6 +12,8 @@ namespace ClinicalGoal.Models
         public bool IsComparativeGoal { get; set; } = false;
         public int Priority { get; set; } = 2147483647;
 
+        public DvhObjective DvhObjective { get; set; }
+
         public override string ToString()
         {
             return $"RoiName: {RoiName}, GoalCriteria: {GoalCriteria}, GoalType: {GoalType}, AcceptanceLevel: {AcceptanceLevel}, "
@@ -26,6 +28,8 @@ namespace ClinicalGoal.Models
         /// <param name="volume"> volume in cc </param>
         public ClinicalGoal(DvhObjective dvhObjective, double prescribedDose = 0, double volume = 0)
         {
+
+            DvhObjective = dvhObjective;
 
             RoiName = dvhObjective.StructureNameTps;
 
@@ -112,6 +116,7 @@ namespace ClinicalGoal.Models
                     }
 
                     break;
+
                 case DvhTargetType.Volume:
 
                     if (dvhObjective.TargetUnit == DvhPresentationType.Rel)
@@ -156,7 +161,7 @@ namespace ClinicalGoal.Models
                             {
                                 AcceptanceLevel = 1 - AcceptanceLevel;
                             }
-                            else if (dvhObjective.TargetUnit == DvhPresentationType.Rel)
+                            else if (dvhObjective.TargetUnit == DvhPresentationType.Abs)
                             {
                                 AcceptanceLevel = volume - AcceptanceLevel;
                                 // 0 if acceptance level is larger than volume
@@ -171,6 +176,7 @@ namespace ClinicalGoal.Models
                     }
 
                     break;
+
                 default:
                     break;
             }
