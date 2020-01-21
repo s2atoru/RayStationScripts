@@ -279,6 +279,7 @@ namespace RoiFormulaMaker.ViewModels
                 OuterMargin = 0,
                 InnerMargin = 3,
                 StructureType = "Control",
+                StructureNames = this.StructureNames,
                 ContouredStructureNames = this.ContouredStructureNames,
                 StructureTypes = this.StructureTypes
             },
