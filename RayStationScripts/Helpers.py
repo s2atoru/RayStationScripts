@@ -392,7 +392,7 @@ def MakeMarginAddedRoi(case, examination, structureName, baseStructureNames, mar
 
         if (len(sourceRoiNames) == 1):
             if(isDerived):
-                roi.SetMarginExpression(SourceRoiName=sourceRoiName[0], MarginSettings=marginSettingsResult)
+                roi.SetMarginExpression(SourceRoiName=sourceRoiNames[0], MarginSettings=marginSettingsResult)
                 if(hasSourceRoiContours):
                     roi.UpdateDerivedGeometry(Examination=examination, Algorithm='Auto')
                     return True
@@ -438,7 +438,7 @@ def MakeOverlappedRois(case, examination, structureName, baseStructureNames, mar
 
         if (len(sourceRoiNames) == 1):
             if(isDerived):
-                roi.SetMarginExpression(SourceRoiName=sourceRoiName[0], MarginSettings=marginSettingsResult)
+                roi.SetMarginExpression(SourceRoiName=sourceRoiNames[0], MarginSettings=marginSettingsResult)
                 if(hasSourceRoiContours):
                     roi.UpdateDerivedGeometry(Examination=examination, Algorithm='Auto')
                     return True
@@ -613,3 +613,4 @@ if __name__ == '__main__':
     #structureName = 'zTestBladder_03_UD'
     #baseStructureName = 'Bladder'
     #MakeMarginAddedRoi(case, examination, structureName, baseStructureName, 0.3, isDerived=False)
+

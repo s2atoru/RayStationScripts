@@ -28,7 +28,7 @@ from RoiFormulaMaker.Models import RoiFormulas
 roiFormulasPath = RayStationScriptsPath + "RoiFormulas"
 
 from Helpers import GetStructureSet, GetRoiDetails
-from Helpers import MakeMarginAddedRoi, MakeRingRoi, MakeRoiSubtractedRoi
+from Helpers import MakeMarginAddedRoi, MakeOverlappedRois, MakeRingRoi, MakeRoiSubtractedRoi
 
 case = get_current("Case")
 examination = get_current("Examination")
@@ -79,10 +79,10 @@ for rf in roiFormulas:
 
         marginInCm = margin/10.
 
-        print formulaType , structureName, baseStructureName, marginInCm, roiType
+        print formulaType , structureName, baseStructureNames, marginInCm, roiType
         MakeMarginAddedRoi(case, examination, structureName, baseStructureNames, marginInCm, isDerived=True, color='Yellow', roiType=roiType)
     
-    if(formulaType  == 'MarginOverlappedRois'):
+    if(formulaType  == 'OverlappedRoi'):
         structureName = rf['StructureName']
         baseStructureNames = rf['BaseStructureNames']
         margin = rf['Margin']
@@ -90,7 +90,7 @@ for rf in roiFormulas:
 
         marginInCm = margin/10.
 
-        print formulaType , structureName, baseStructureName, marginInCm, roiType
+        print formulaType , structureName, baseStructureNames, marginInCm, roiType
         MakeOverlappedRois(case, examination, structureName, baseStructureNames, marginInCm, isDerived=True, color='Yellow', roiType=roiType)
 
     elif(formulaType  == 'RingRoi'):
@@ -106,16 +106,30 @@ for rf in roiFormulas:
         print formulaType , structureName, baseStructureName, outerMarginInCm, innerMarginInCm, roiType
         MakeRingRoi(case, examination, structureName, baseStructureName, outerMarginInCm, innerMarginInCm, isDerived=True, color='Yellow', roiType=roiType)
 
+    elif(formulaType  == 'WallRoi'):
+        structureName = rf['StructureName']
+        baseStructureName = rf['BaseStructureName']
+        innerMargin = rf['InnerMargin']
+        outerMargin = rf['OuterMargin']
+        roiType = rf['StructureType']
+
+        innerMarginInCm =  innerMargin/10.
+        outerMarginInCm = outerMargin/10.
+
+        print formulaType , structureName, baseStructureName, outerMarginInCm, innerMarginInCm, roiType
+        MakeWallRoi(case, examination, structureName, baseStructureName, outerMarginInCm, innerMarginInCm, isDerived=True, color='Yellow', roiType=roiType)
+
     elif(formulaType  == 'RoiSubtractedRoi'):
         structureName = rf['StructureName']
         baseStructureName = rf['BaseStructureName']
-        subtractedRoiName = rf['SubtractedRoiName']
+        subtractedRoiNames = rf['SubtractedRoiNames']
         margin = rf['Margin']
         roiType = rf['StructureType']
 
         marginInCm = margin/10.  
 
-        print formulaType , structureName, baseStructureName, subtractedRoiName, marginInCm, roiType
-        MakeRoiSubtractedRoi(case, examination, structureName, baseStructureName, subtractedRoiName, marginInCm, isDerived=True, color='Yellow', roiType=roiType)
+        print formulaType , structureName, baseStructureName, subtractedRoiNames, marginInCm, roiType
+        MakeRoisSubtractedRoi(case, examination, structureName, baseStructureName, subtractedRoiNames, outerMargins = [0] * 6, innerMargins=[marginInCm] * 6, resultMargins=[0] * 6, isDerived=True, color='Yellow', roiType=roiType)
 pass
+
 
