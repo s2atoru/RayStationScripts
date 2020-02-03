@@ -9,6 +9,7 @@ clr.AddReference("PresentationCore")
 from System.Windows import MessageBox
 
 import json
+import math
 
 def SizeOfIterator(iterator):
     return sum(1 for _ in iterator)
@@ -563,10 +564,129 @@ def SetMaxArcMu(beamSetting, maxArcMu):
     finalGantrySpacing = properties.FinalArcGantrySpacing
     maxArcDeliveryTime = properties.MaxArcDeliveryTime
     burstGantrySpacing = None
-    #maxArcMU = properties.MaxArcMU
+    presentMaxArcMU = properties.MaxArcMU
+
+    if IsEqualNone(maxArcMu, presentMaxArcMU):
+        return
 
     beamSetting.ArcConversionPropertiesPerBeam.EditArcBasedBeamOptimizationSettings(ConformalArcStyle=conformalArcStyle, CreateDualArcs=createDualArcs, FinalGantrySpacing=finalGantrySpacing, MaxArcDeliveryTime=maxArcDeliveryTime, BurstGantrySpacing=burstGantrySpacing, MaxArcMU=maxArcMu)
-    
+
+def ClearAllClinicalGoals(plan):
+    for cg in plan.TreatmentCourse.EvaluationSetup.EvaluationFunctions:
+        plan.TreatmentCourse.EvaluationSetup.DeleteClinicalGoal(FunctionToRemove=cg)
+
+# gridResolution should be in mm
+def SetDoseGridResolution(plan, gridResolution):
+
+    doseGrid = plan.GetDoseGrid()
+
+    cornerX = doseGrid.Corner.x
+    cornerY = doseGrid.Corner.y
+    cornerZ = doseGrid.Corner.z
+
+    voxelSizeX = doseGrid.VoxelSize.x
+    voxelSizeY = doseGrid.VoxelSize.y
+    voxelSizeZ = doseGrid.VoxelSize.z
+
+    nrVoxelX = doseGrid.NrVoxels.x
+    nrVoxelY = doseGrid.NrVoxels.y
+    nrVoxelZ = doseGrid.NrVoxels.z
+
+    print cornerX, cornerY, cornerZ, voxelSizeX, voxelSizeY, voxelSizeZ, nrVoxelX, nrVoxelY, nrVoxelY
+    print gridResolution
+
+    # mm to cm for gridResolution
+    if not (gridResolution/10. == voxelSizeX and gridResolution/10. == voxelSizeY and gridResolution/10. == voxelSizeZ):
+
+        nrVoxelX = int(math.ceil(float(nrVoxelX-1)*(10.*float(voxelSizeX))/float(gridResolution))) + 1
+        nrVoxelY = int(math.ceil(float(nrVoxelY-1)*(10.*float(voxelSizeY))/float(gridResolution))) + 1
+        nrVoxelZ = int(math.ceil(float(nrVoxelZ-1)*(10.*float(voxelSizeZ))/float(gridResolution))) + 1
+
+        plan.UpdateDoseGrid(Corner={ 'x': cornerX, 'y': cornerY, 'z': cornerZ }, VoxelSize={ 'x': gridResolution/10., 'y': gridResolution/10., 'z': gridResolution/10. }, NumberOfVoxels={ 'x': nrVoxelX, 'y': nrVoxelY, 'z': nrVoxelZ })
+        plan.TreatmentCourse.TotalDose.UpdateDoseGridStructures()
+
+# x, y, z should be given in the DICOM coordinate system and cm
+def GetDoseValueDCM(x, y, z, doseGrid, doseData):
+
+    cornerX = doseGrid.Corner.x
+    cornerY = doseGrid.Corner.y
+    cornerZ = doseGrid.Corner.z
+
+    voxelSizeX = doseGrid.VoxelSize.x
+    voxelSizeY = doseGrid.VoxelSize.y
+    voxelSizeZ = doseGrid.VoxelSize.z
+
+    nrVoxelX = doseGrid.NrVoxels.x
+    nrVoxelY = doseGrid.NrVoxels.y
+    nrVoxelZ = doseGrid.NrVoxels.z
+
+    nx1 = int((x - cornerX)/voxelSizeX)
+    if(nx1 < 0):
+        nx1 = 0
+    if(nx1 >= nrVoxelX-1):
+        nx1 = nrVoxelX - 2
+    nx2 = nx1+1
+
+    ny1 = int((y - cornerY)/voxelSizeY)
+    if(ny1 < 0):
+        ny1 = 0
+    if(ny1 >= nrVoxelY-1):
+        ny1 = nrVoxelY - 2
+    ny2 = ny1+1
+
+    nz1 = int((z - cornerZ)/voxelSizeZ)
+    if(nz1 < 0):
+        nz1 = 0
+    if(nz1 >= nrVoxelZ-1):
+        nz1 = nrVoxelZ - 2
+    nz2 = nz1+1
+
+    f111 = doseData[nx1, ny1, nz1]
+    f112 = doseData[nx1, ny1, nz2]
+    f121 = doseData[nx1, ny2, nz1]
+    f122 = doseData[nx1, ny2, nz2]
+    f211 = doseData[nx2, ny1, nz1]
+    f212 = doseData[nx2, ny1, nz2]
+    f221 = doseData[nx2, ny2, nz1]
+    f222 = doseData[nx2, ny2, nz2]
+
+    x1 = GetCoordinate1d(nx1, cornerX, voxelSizeX)
+    x2 = GetCoordinate1d(nx2, cornerX, voxelSizeX)
+    y1 = GetCoordinate1d(ny1, cornerY, voxelSizeY)
+    y2 = GetCoordinate1d(ny2, cornerY, voxelSizeY)
+    z1 = GetCoordinate1d(nz1, cornerZ, voxelSizeZ)
+    z2 = GetCoordinate1d(nz2, cornerZ, voxelSizeZ)
+
+    denominator = (x2-x1)*(y2-y1)*(z2-z1)
+    denominator = 1.0/denominator
+
+    value = f111*(x2-x)*(y2-y)*(z2-z)
+    value += f112*(x2-x)*(y2-y)*(z-z1)
+    value += f121*(x2-x)*(y-y1)*(z2-z)
+    value += f122*(x2-x)*(y-y1)*(z-z1)
+    value += f211*(x-x1)*(y2-y)*(z2-z)
+    value += f212*(x-x1)*(y2-y)*(z-z1)
+    value += f221*(x-x1)*(y-y1)*(z2-z)
+    value += f222*(x-x1)*(y-y1)*(z-z1)
+
+    return value*denominator
+
+def GetGridCoordinate1d(n, x0, size):
+    return x0+float(n)*float(size)
+
+def IsEqualNone(a1, a2):
+    if a1 is None:
+        if a2 is None:
+            return True
+        else:
+            return False
+    else:
+        if a2 is None:
+            return False
+        elif a1 == a2:
+            return True
+        else:
+            return False
 
 if __name__ == '__main__':
 
