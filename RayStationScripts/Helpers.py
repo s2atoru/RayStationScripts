@@ -11,6 +11,14 @@ from System.Windows import MessageBox
 import json
 import math
 
+clr.AddReference("DvhChecker")
+from Juntendo.MedPhys import DvhObjectiveType
+from Juntendo.MedPhys import DvhTargetType
+from Juntendo.MedPhys import DvhPresentationType
+from Juntendo.MedPhys import DvhDoseUnit
+from Juntendo.MedPhys import DvhVolumeUnit
+from Juntendo.MedPhys import DvhEvalResult
+
 def SizeOfIterator(iterator):
     return sum(1 for _ in iterator)
 
@@ -687,6 +695,180 @@ def IsEqualNone(a1, a2):
             return True
         else:
             return False
+
+def CheckDvhIndex(objective, prescribedDose=0, roiDetails=None, planDose=None):
+    """DVH index for objective.
+
+    Calculates DVH index and set objective.Value and objective.EvalResut
+
+    Args:
+        objective (DvhObjective): DvhObjective.
+        prescribedDose (float): Prescribed dose in cGy.
+        roiDetails (dictionary); Dictionary of ROIs. roiDetails['roiName']['Volume'] should give the volume of the ROI.
+        planDose (plan dose RayStation); Plan dose in RayStation
+
+    Returns:
+        float: DVH index. -1 if ROI is not available.
+
+    """
+
+    roiName = objective.StructureNameTps
+    roiVolume = roiDetails[roiName]['Volume']
+    objective.EvalResult = DvhEvalResult.Na
+
+    if roiVolume == 0:
+        message = '{0} has no volume'.format(roiName)
+        MessageBox.Show(message)
+        objective.Value = -1.0
+        objective.EvalResult = DvhEvalResult.Na
+        return
+
+    objective.Volume = roiVolume
+
+    objectiveType = objective.ObjectiveType
+    targetType = objective.TargetType
+    targetUnit = objective.TargetUnit
+    argumentUnit = objective.ArgumentUnit
+    if(targetType == DvhTargetType.Dose):
+        if(objectiveType == DvhObjectiveType.Upper or objectiveType == DvhObjectiveType.Lower):
+            if(argumentUnit == DvhPresentationType.Rel):
+                # Volume in % to relative
+                relativeVolume = objective.ArgumentValue / 100.0
+            elif(argumentUnit == DvhPresentationType.Abs):
+                # Volume in cc to relative
+                relativeVolume = objective.ArgumentValue / roiVolume
+            
+            value = planDose.GetDoseAtRelativeVolumes(RoiName=roiName, RelativeVolumes=[relatvieVolume])[0]
+        elif(objectiveType == DvhObjectvieType.Max):
+            value = planDose.GetDoseAtRelativeVolumes(RoiName=roiName, RelativeVolumes=[0.0])[0]
+        elif(objectiveType == DvhObjectvieType.Min):
+            value = planDose.GetDoseAtRelativeVolumes(RoiName=roiName, RelativeVolumes=[1.0])[0]
+        elif(objectiveType == DvhObjectiveType.MeanUpper or objectiveType == DvhObjectiveType.MeanLower):
+            value = planDose.GetDoseStatistic(RoiName=roiName, DoseType='Average')
+        else:
+            message = "No implementation for ObjectiveType:" + str(objectiveType)
+            MessageBox.Show(message)
+            objective.Value = -1.0
+            objective.EvalResult = DvhEvalResult.Na
+            return
+
+        if(targetUnit == DvhPresentationType.Rel):
+            # cGy to %
+            value = (value/prescribedDose) * 100.0
+        elif(targetUnit == DvhPresentationType.Abs):
+            # cGy to Gy
+            value = value/100.0
+
+    elif(targetType == DvhTargetType.Volume):
+        if(argumentUnit == DvhPresentationType.Rel):
+            # % to cGy
+            absoluteDose = prescribedDose*objective.ArgumentValue/100.0
+        elif(argumentUnit == DvhPresentationType.Abs):
+            # Gy to cGy
+            absoluteDose = objective.ArgumentValue*100.0
+
+        if(objectiveType == DvhObjectiveType.Upper or objectiveType == DvhObjectiveType.Lower):
+            value = planDose.GetRelativeVolumeAtDoseValues(RoiName=roiName, DoseValues=[absoluteDose])[0]
+        elif(objectiveType == DvhObjectiveType,Spare):
+            value = planDose.GetRelativeVolumeAtDoseValues(RoiName=roiName, DoseValues=[absoluteDose])[0]
+            value = 1 - value
+        else:
+            message = "No implementation for ObjectiveType:" + str(objectiveType)
+            MessageBox.Show(message)
+            objective.Value = -1.0
+            objective.EvalResult = DvhEvalResult.Na
+            return
+
+        if(targetUnit == DvhPresentationType.Rel):
+            # relative to %
+            value = value * 100.0
+        elif(targetUnit == DvhPresentationType.Abs):
+            # relative to cc
+            value = value * roiVolume
+        
+    objective.Value = value
+
+    normalization = 1.0
+    if(targetType == DvhTargetType.Dose):
+        if(targetUnit == DvhPresentationType.Rel):
+            normalization = 100.0
+        elif(targetUnit == DvhPresentationType.Abs):
+            normalization = prescribedDose
+    elif(targetType == DvhTargetType.Volume):
+        if(targetUnit == DvhPresentationType.Rel):
+            normalization = 100.0
+        elif(targetUnit == DvhPresentationType.Abs):
+            normalization = roiVolume
+        
+    target = objective.TargetValue
+    acceptableLimit = objective.AcceptableLimitValue
+    isPass = False
+    isAcceptable = False
+    slack = 1.e-4
+    if(objectiveType == DvhObjectiveType.Upper 
+       or objectiveType == DvhObjectiveType.Max
+       or objectiveType == DvhObjectiveType.MeanUpper):
+        isPass = CheckUpperLimitWithNormalization(value, target, normalization, slack)
+        if(not isPass) and (acceptableLimit > 0):
+            isAcceptable = CheckUpperLimitWithNormalization(value, acceptableLimit, normalization, slack)
+    elif(objectiveType == DvhObjectiveType.Lower 
+       or objectiveType == DvhObjectiveType.Min
+       or objectiveType == DvhObjectiveType.MeanLower
+       or objectiveType == DvhObjectiveType.Spare):
+        isPass = CheckLowerLimitWithNormalization(value, target, normalization, slack)
+        if(not isPass) and (acceptableLimit > 0):
+            isAcceptable = CheckLowrLimitWithNormalization(value, acceptableLimit, normalization, slack)
+
+    objective.IsPass = isPass
+    objective.IsAcceptable = isAcceptable
+    if(isPass):
+        objective.EvalResult = DvhEvalResult.Pass
+    elif(isAcceptable):
+        objective.EvalResult = DvhEvalResult.Acceptable
+    else:
+        objective.EvalResult = DvhEvalResult.Fail
+
+    return value
+
+def CheckUpperLimitWithNormalization(value, upperLimit, normalization=1, slack=1.e-3):
+    """Upper limit check with slack.
+
+    Check if value is less than upperLimit with slack.
+    Args:
+        value (float): Number to be checked.
+        upperLimit (float): Upper limit.
+        normalization (float): normalization value
+        slack (float); Slack for check.
+      
+    Returns:
+        bool: True if value is less than upperLimit with slack
+
+    """
+
+    if(value - upplerLimit < normalization*slack):
+        return True
+    else:
+        return False
+
+def CheckLowerLimitWithNormalization(value, lowerLimit, normalization=1, slack=1.e-3):
+    """Lower limit check with slack.
+
+    Check if value is more than lowerLimit with slack.
+    Args:
+        value (float): Number to be checked.
+        lowerLimit (float): Lower limit.
+        normalization (float): normalization value
+        slack (float); Slack for check.
+      
+    Returns:
+        bool: True if value is more than lowerLimit with slack
+
+    """
+
+    if(lowerLimit - value < normalization*slack):
+        return True
+    else:
+        return False
 
 if __name__ == '__main__':
 
