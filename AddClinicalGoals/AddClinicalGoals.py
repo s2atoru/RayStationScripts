@@ -59,14 +59,14 @@ if not clinicalGoalViewModel.CanExecute:
     sys.exit()
 
 dvhObjectives = clinicalGoalViewModel.DvhObjectives;
-prscrivedDose = clinicalGoalViewModel.PrescribedDose;
+prescrivedDose = clinicalGoalViewModel.PrescribedDose;
 
 from Helpers import AddClinicalGoal
 
 with CompositeAction('Add Clinical Goals'):
     for dvhObjective in dvhObjectives:
         if len(dvhObjective.StructureNameTps) > 0 and dvhObjective.InUse:
-            clinicalGoal = ClinicalGoal(dvhObjective, prescribedDose=prscrivedDose)
+            clinicalGoal = ClinicalGoal(dvhObjective, prescribedDose=prescrivedDose)
             print clinicalGoal
             AddClinicalGoal(plan, clinicalGoal)
   # CompositeAction ends   
