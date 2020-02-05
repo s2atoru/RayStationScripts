@@ -10,36 +10,41 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"         
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="1200" d:DataContext="{d:DesignInstance {x:Type ViewModels:ClinicalGoalViewModel}}"
-              FontSize="24">
+             d:DesignHeight="700" d:DesignWidth="1200" d:DataContext="{d:DesignInstance {x:Type ViewModels:ClinicalGoalViewModel}}">
     <UserControl.Resources>
         <Style TargetType="{x:Type Button}">
-            <Setter Property="Margin" Value="6"/>
+            <Setter Property="Margin" Value="3"/>
             <Setter Property="Padding" Value="3"/>
         </Style>
         <Style TargetType="{x:Type TextBlock}">
-            <Setter Property="Margin" Value="6"/>
+            <Setter Property="Margin" Value="3"/>
         </Style>
         <Style TargetType="{x:Type TextBox}">
-            <Setter Property="Margin" Value="6"/>
+            <Setter Property="Margin" Value="3"/>
         </Style>
         <Style TargetType="{x:Type Label}">
-            <Setter Property="Margin" Value="6"/>
+            <Setter Property="Margin" Value="3"/>
             <Setter Property="Padding" Value="3"/>
         </Style>
     </UserControl.Resources>
     <Grid>
         <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Patient ID:"/>
+                <TextBlock Text="{Binding PatientId}" VerticalAlignment="Center"/>
+                <Label Content="Patient Name:"/>
+                <TextBlock Text="{Binding PatientName}" VerticalAlignment="Center"/>
+            </StackPanel>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
                 <Button Command="{Binding ChooseFileCommand}" Content="Choose File" Width="140"/>
                 <Label Content="Chosen file:" />
-                <TextBlock Text="{Binding ProtocolFilePath}"/>
+                <TextBlock Text="{Binding ProtocolFilePath}" VerticalAlignment="Center"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Message:"/>
                 <TextBlock Text="{Binding Message}"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Grid.Row="4">
+            <StackPanel Orientation="Horizontal">
                 <Button Content="OK" Width="120">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
@@ -59,7 +64,13 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Protocol ID:"/>
-                <TextBlock Text="{Binding ProtocolId}"/>
+                <TextBlock Text="{Binding ProtocolId}" VerticalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Course ID:"/>
+                <TextBox Text="{Binding CourseId}" MinWidth="96"/>
+                <Label Content="Plan ID:"/>
+                <TextBox Text="{Binding PlanId}" MinWidth="96"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Prescribed Dose [cGy]:"/>
@@ -68,11 +79,10 @@
             <StackPanel Orientation="Horizontal">
                 <Label Content="Clear all clinical goals:"/>
                 <CheckBox IsChecked="{Binding ClearAllExistingClinicalGoals, Mode=TwoWay}" VerticalAlignment="Center">
-                    <CheckBox.RenderTransform>
-                        <ScaleTransform ScaleX="2.0" ScaleY="2.0"/>
-                    </CheckBox.RenderTransform>
                 </CheckBox>
             </StackPanel>
+            <Button Content="Save DVH indices" Width="200" HorizontalAlignment="Left" Command="{Binding SaveDvhIndicesCommand}">
+            </Button>
             <DataGrid ItemsSource="{Binding DvhObjectives}" AutoGenerateColumns="False" CanUserAddRows="False" FontSize="12" MaxHeight="700">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn IsReadOnly="True" Header="In Use">
@@ -83,6 +93,28 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
+                    <DataGridTextColumn
+                    Header="Result"
+                    Binding="{Binding EvalResult, Mode=OneTime}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding EvalResult}" 
+                                         Value="Pass">
+                                        <Setter Property="Background" Value="GreenYellow"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding EvalResult}" 
+                                         Value="Fail">
+                                        <Setter Property="Foreground" Value="Red"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding EvalResult}" 
+                                         Value="Na">
+                                        <Setter Property="Foreground" Value="Black"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn
                     Header="Title"
                     Binding="{Binding Title, Mode=OneTime}" IsReadOnly="True">
@@ -98,13 +130,13 @@
                     IsReadOnly="True">
                     </DataGridTextColumn>-->
                     <DataGridTemplateColumn IsReadOnly="True" Header="Structure (TPS)">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox ItemsSource="{Binding Path=DataContext.StructureNames, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Mode=OneWay}"
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox ItemsSource="{Binding Path=DataContext.StructureNames, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Mode=OneWay}"
                                           SelectedValue="{Binding StructureNameTps, UpdateSourceTrigger=PropertyChanged}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn
                     Header="D or V"
                     Binding="{Binding TargetType, Mode=OneTime}"
@@ -130,6 +162,19 @@
                     Binding="{Binding ActualTargetUnit, Mode=OneTime}"
                     IsReadOnly="True">
                     </DataGridTextColumn>
+                    <DataGridTextColumn
+                    Header="Acceptable Lmit"
+                    Binding="{Binding AcceptableLimitValue, Mode=OneTime}"
+                    IsReadOnly="True">
+                    </DataGridTextColumn>
+                    <DataGridTextColumn
+                    Header="Value"
+                    Binding="{Binding Value, StringFormat={}{0:0.00}, Mode=OneTime}"
+                    IsReadOnly="True">
+                    </DataGridTextColumn>
+                    <DataGridTextColumn
+                    Header="Remarks"
+                    Binding="{Binding Remarks, Mode=TwoWay}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>

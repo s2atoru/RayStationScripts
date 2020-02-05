@@ -4,11 +4,38 @@ using System.IO;
 using Juntendo.MedPhys;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
 
 namespace ClinicalGoal.ViewModels
 {
     public class ClinicalGoalViewModel : BindableBaseWithErrorsContainer
     {
+        public string PatientId { get; set; }
+        public string PatientName { get; set; }
+
+        private string planId;
+        public string PlanId
+        {
+            get { return planId; }
+            set { SetProperty(ref planId, value); }
+        }
+
+        private string courseId;
+        public string CourseId
+        {
+            get { return courseId; }
+            set { SetProperty(ref courseId, value); }
+        }
+
+        private double maxDose;
+        public double MaxDose
+        {
+            get { return maxDose; }
+            set { SetProperty(ref maxDose, value); }
+        }
+
+        public string PlanCheckerDirectoryPath { get; set; } = string.Empty;
 
         public string DvhCheckerDirectoryPath { get; set; } = string.Empty;
 
@@ -51,7 +78,7 @@ namespace ClinicalGoal.ViewModels
             set { SetProperty(ref dvhObjectives, value); }
         }
 
-        private ObservableCollection<string> structureNames = new ObservableCollection<string>{"PTV", "CTV", "Rectal wall", "Bladder wall"};
+        private ObservableCollection<string> structureNames = new ObservableCollection<string> { "PTV", "CTV", "Rectal wall", "Bladder wall" };
         public ObservableCollection<string> StructureNames
         {
             get { return structureNames; }
@@ -63,11 +90,52 @@ namespace ClinicalGoal.ViewModels
         public DelegateCommand OkCommand { get; private set; }
         public DelegateCommand CancelCommand { get; private set; }
 
+        public DelegateCommand SaveDvhIndicesCommand { get; private set; }
+
         public ClinicalGoalViewModel()
         {
             ChooseFileCommand = new DelegateCommand(ChooseFile);
-            OkCommand = new DelegateCommand(() => { CanExecute = true; });
+            OkCommand = new DelegateCommand(() => { CanExecute = true; PickUpDvhObjectivesInUse(); });
             CancelCommand = new DelegateCommand(() => { CanExecute = false; });
+            SaveDvhIndicesCommand = new DelegateCommand(() => { SaveDvhIndices(); });
+        }
+
+        private void SaveDvhIndices()
+        {
+            var planInfo = new PlanInfo
+            {
+                PatientId = PatientId,
+                PatientName = PatientName,
+                CourseId = CourseId,
+                PlanId = PlanId,
+                // cGy to Gy
+                PrescribedDose = PrescribedDose / 100,
+                MaxDose = MaxDose
+            };
+
+            string planFolderPath = Path.Combine(PlanCheckerDirectoryPath, Path.Combine(PatientId, Path.Combine(PlanId, "PlanCheckData")));
+            if (!Directory.Exists(planFolderPath))
+            {
+                Directory.CreateDirectory(planFolderPath);
+            }
+
+            if (DvhObjectives.Count > 0)
+            {
+                var originalProtocolId = DvhObjectives[0].OriginalProtocolId;
+                DvhObjective.WriteObjectivesToFile(DvhObjectives.ToList(), originalProtocolId, Path.Combine(planFolderPath, "DvhInfo_sjis.csv"), planInfo);
+            }
+            else
+            {
+                MessageBox.Show("No Objective");
+            }
+
+            return;
+        }
+
+        private void PickUpDvhObjectivesInUse()
+        {
+            var dvhObjectivesInUse = DvhObjectives.Where(o => (o.InUse && o.StructureNameTps.Length > 0));
+            DvhObjectives = new ObservableCollection<DvhObjective>(dvhObjectivesInUse);
         }
 
         private void ChooseFile()
