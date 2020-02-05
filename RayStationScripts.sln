@@ -41,6 +41,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MlcShifter", "MlcShifter\Ml
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "ShiftMlcs", "ShiftMlcs\ShiftMlcs.pyproj", "{41F422A7-F822-45CE-ADA7-C8B80F1750BB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoiCenterOfMass", "RoiCenterOfMass\RoiCenterOfMass.csproj", "{D51DCCFC-5CB5-456A-B22B-F7335BB64DEE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B0EBA3B6-E0C4-4D33-BF03-E408F60D19A0}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "CheckClinicalGoals", "CheckClinicalGoals\CheckClinicalGoals.pyproj", "{C2B6907C-BC5C-4036-AA64-05C05E827AB7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -169,6 +178,18 @@ Global
 		{41F422A7-F822-45CE-ADA7-C8B80F1750BB}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{41F422A7-F822-45CE-ADA7-C8B80F1750BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41F422A7-F822-45CE-ADA7-C8B80F1750BB}.Release|x64.ActiveCfg = Release|Any CPU
+		{D51DCCFC-5CB5-456A-B22B-F7335BB64DEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D51DCCFC-5CB5-456A-B22B-F7335BB64DEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D51DCCFC-5CB5-456A-B22B-F7335BB64DEE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D51DCCFC-5CB5-456A-B22B-F7335BB64DEE}.Debug|x64.Build.0 = Debug|Any CPU
+		{D51DCCFC-5CB5-456A-B22B-F7335BB64DEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D51DCCFC-5CB5-456A-B22B-F7335BB64DEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D51DCCFC-5CB5-456A-B22B-F7335BB64DEE}.Release|x64.ActiveCfg = Release|Any CPU
+		{D51DCCFC-5CB5-456A-B22B-F7335BB64DEE}.Release|x64.Build.0 = Release|Any CPU
+		{C2B6907C-BC5C-4036-AA64-05C05E827AB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2B6907C-BC5C-4036-AA64-05C05E827AB7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C2B6907C-BC5C-4036-AA64-05C05E827AB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2B6907C-BC5C-4036-AA64-05C05E827AB7}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
