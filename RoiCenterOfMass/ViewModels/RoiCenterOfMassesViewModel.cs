@@ -18,7 +18,7 @@ namespace RoiCenterOfMass.ViewModels
             get { return roiCenterOfMasses; }
         }
 
-        RoiCenterOfMassesViewModel(IEnumerable<Models.RoiCenterOfMass> roiCenterOfMasses)
+        public RoiCenterOfMassesViewModel(IEnumerable<Models.RoiCenterOfMass> roiCenterOfMasses)
         {
             this.roiCenterOfMasses = (ObservableCollection<Models.RoiCenterOfMass>)roiCenterOfMasses;
             UpdateCenterOfMass();
