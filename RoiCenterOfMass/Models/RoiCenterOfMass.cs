@@ -24,6 +24,13 @@ namespace RoiCenterOfMass.Models
             set { SetProperty(ref inUse, value); }
         }
 
+        private bool isVisible = true;
+        public bool IsVisible
+        {
+            get { return isVisible; }
+            set { SetProperty(ref isVisible, value); }
+        }
+
         private Point3D coordinates = new Point3D();
         public Point3D Coordinates
         {
@@ -40,6 +47,14 @@ namespace RoiCenterOfMass.Models
                 SetProperty(ref isocenterCoordinates, value);
                 DistanceFromIsocenter = GetDistanceFromPoint(isocenterCoordinates);
             }
+        }
+
+        public RoiCenterOfMass(string id, double x, double y, double z, bool inUse = true, bool isVisible = true)
+        {
+            Id = id;
+            Coordinates = new Point3D(x, y, z);
+            InUse = inUse;
+            IsVisible = isVisible;
         }
 
         private double distanceFromIsocenter;

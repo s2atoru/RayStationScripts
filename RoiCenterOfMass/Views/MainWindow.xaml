@@ -9,7 +9,7 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:prism="http://prismlibrary.com/"
         mc:Ignorable="d"
-        Title="PTV ROIs' center of masses" Height="450" Width="800"
+        Title="PTV ROIs' center of masses" Height="450"
         d:DataContext="{d:DesignInstance {x:Type ViewModels:RoiCenterOfMassesViewModel}}">
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
@@ -52,63 +52,90 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Center of mass:"></TextBlock>
                 <TextBlock Text="RL:"></TextBlock>
-                <TextBlock Text="{Binding CenterOfMass.X, StringFormat={}{0:0.0}}"></TextBlock>
+                <TextBlock Text="{Binding CenterOfMass.X, StringFormat={}{0:0.00}}"></TextBlock>
                 <TextBlock Text="SI:"></TextBlock>
-                <TextBlock Text="{Binding CenterOfMass.Z, StringFormat={}{0:0.0}}"></TextBlock>
+                <TextBlock Text="{Binding CenterOfMass.Z, StringFormat={}{0:0.00}}"></TextBlock>
                 <TextBlock Text="PA:"></TextBlock>
-                <TextBlock Text="{Binding CenterOfMass.Y, StringFormat={}{0:0.0}}"></TextBlock>
+                <TextBlock Text="{Binding CenterOfMass.Y, StringFormat={}{0:0.00}}"></TextBlock>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Optimized Isocenter:"></TextBlock>
+                <TextBlock Text="Optimized isocenter:"></TextBlock>
                 <TextBlock Text="RL:"></TextBlock>
-                <TextBox Text="{Binding OptimizedIsocenterX, StringFormat={}{0:0.0}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <TextBox Text="{Binding OptimizedIsocenterX, StringFormat={}{0:0.00}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                 <TextBlock Text="SI:"></TextBlock>
-                <TextBox Text="{Binding OptimizedIsocenterZ, StringFormat={}{0:0.0}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <TextBox Text="{Binding OptimizedIsocenterZ, StringFormat={}{0:0.00}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                 <TextBlock Text="PA:"></TextBlock>
-                <TextBox Text="{Binding OptimizedIsocenterY, StringFormat={}{0:0.0}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <TextBox Text="{Binding OptimizedIsocenterY, StringFormat={}{0:0.00}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
             </StackPanel>
-            <DataGrid ItemsSource="{Binding DvhObjectives}" AutoGenerateColumns="False" CanUserAddRows="False" FontSize="12" MaxHeight="700">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Maximum distance [cm]:"></TextBlock>
+                <TextBlock Text="{Binding MaximumDistance, StringFormat={}{0:0.00}}"></TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Maximum iterations:"></TextBlock>
+                <TextBox Text="{Binding MaximumIterations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Convergence torelance:"></TextBlock>
+                <TextBox Text="{Binding ConvergenceTorelance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Minimization result:"></TextBlock>
+                <TextBlock Text="Reason for exit:"></TextBlock>
+                <TextBlock Text="{Binding MinimizationResult.ReasonForExit}"></TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Number of iterations:"></TextBlock>
+                <TextBlock Text="{Binding MinimizationResult.Iterations}"></TextBlock>
+            </StackPanel>
+            <CheckBox IsChecked="{Binding IsAllVisible, Mode=TwoWay}" Content="Show all" Command="{Binding SetVisibilityCommand}"/>
+            <DataGrid ItemsSource="{Binding RoiCenterOfMasses}" AutoGenerateColumns="False" CanUserAddRows="False" FontSize="12" MaxHeight="700">
+                <DataGrid.ItemContainerStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsVisible}" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.ItemContainerStyle>
                 <DataGrid.Columns>
                     <DataGridTemplateColumn IsReadOnly="True" Header="In Use">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <CheckBox IsChecked="{Binding InUse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                      HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding DataContext.ChangeInUseCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}">
+                                </CheckBox>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn
                     Header="ID"
-                    Binding="{Binding Title, Mode=OneTime}" IsReadOnly="True">
-                    </DataGridTextColumn>
-                    <DataGridTextColumn
-                    Header="D or V"
-                    Binding="{Binding TargetType, Mode=OneTime}"
-                    IsReadOnly="True">
+                    Binding="{Binding Id, Mode=OneTime}" IsReadOnly="True">
                     </DataGridTextColumn>
                     <DataGridTextColumn
                     Header="RL [cm]"
-                    Binding="{Binding Coordinates.X, Mode=OneTime}"
+                    Binding="{Binding Coordinates.X, StringFormat={}{0:0.00}, Mode=OneTime}"
                     IsReadOnly="True">
                     </DataGridTextColumn>
                     <DataGridTextColumn
                     Header="SI [cm]"
-                    Binding="{Binding Coordinates.Z, Mode=OneTime}"
+                    Binding="{Binding Coordinates.Z, StringFormat={}{0:0.00}, Mode=OneTime}"
                     IsReadOnly="True">
                     </DataGridTextColumn>
                     <DataGridTextColumn
                     Header="PA [cm]"
-                    Binding="{Binding Coordinates.Y, Mode=OneTime}"
+                    Binding="{Binding Coordinates.Y, StringFormat={}{0:0.00}, Mode=OneTime}"
                     IsReadOnly="True">
                     </DataGridTextColumn>
                     <DataGridTextColumn
                     Header="D(COM) [cm]"
-                    Binding="{Binding DistanceFromCenterOfMass, Mode=OneWay}"
+                    Binding="{Binding DistanceFromCenterOfMass, StringFormat={}{0:0.00}, Mode=OneWay}"
                     IsReadOnly="True">
                     </DataGridTextColumn>
                     <DataGridTextColumn
                     Header="D(Optimized) [cm]"
-                    Binding="{Binding DistanceFromIsocenter, Mode=OneWay}"
+                    Binding="{Binding DistanceFromIsocenter, StringFormat={}{0:0.00}, Mode=OneWay}"
                     IsReadOnly="True">
                     </DataGridTextColumn>
                 </DataGrid.Columns>

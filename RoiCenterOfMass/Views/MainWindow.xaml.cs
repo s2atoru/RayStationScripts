@@ -15,14 +15,14 @@ namespace RoiCenterOfMass.Views
 
             var roiCenterofMasses = new List<Models.RoiCenterOfMass>();
 
-            roiCenterofMasses.Add(new Models.RoiCenterOfMass { Id = "PTV1", Coordinates = new Point3D(1.0, 1.0, 1.0) });
-            roiCenterofMasses.Add(new Models.RoiCenterOfMass { Id = "PTV2", Coordinates = new Point3D(1.0, 1.0, -1.0) });
-            roiCenterofMasses.Add(new Models.RoiCenterOfMass { Id = "PTV3", Coordinates = new Point3D(1.0, -1.0, 1.0) });
-            roiCenterofMasses.Add(new Models.RoiCenterOfMass { Id = "PTV4", Coordinates = new Point3D(1.0, -1.0, -1.0) });
-            roiCenterofMasses.Add(new Models.RoiCenterOfMass { Id = "PTV5", Coordinates = new Point3D(-1.0, 1.0, 1.0) });
-            roiCenterofMasses.Add(new Models.RoiCenterOfMass { Id = "PTV6", Coordinates = new Point3D(-1.0, 1.0, -1.0) });
-            roiCenterofMasses.Add(new Models.RoiCenterOfMass { Id = "PTV7", Coordinates = new Point3D(-1.0, -1.0, 1.0) });
-            roiCenterofMasses.Add(new Models.RoiCenterOfMass { Id = "PTV8", Coordinates = new Point3D(-1.0, -1.0, -1.0) });
+            roiCenterofMasses.Add(new Models.RoiCenterOfMass("PTV1", 1.0, 1.0, 1.0));
+            roiCenterofMasses.Add(new Models.RoiCenterOfMass("PTV2", 1.0, 1.0, -1.0));
+            roiCenterofMasses.Add(new Models.RoiCenterOfMass("PTV3", 1.0, -1.0, 1.0));
+            roiCenterofMasses.Add(new Models.RoiCenterOfMass("PTV4", 1.0, -1.0, -1.0));
+            roiCenterofMasses.Add(new Models.RoiCenterOfMass("PTV5", -1.0, 1.0, 1.0));
+            roiCenterofMasses.Add(new Models.RoiCenterOfMass("PTV6", -1.0, 1.0, -1.0));
+            roiCenterofMasses.Add(new Models.RoiCenterOfMass("PTV7", -1.0, -1.0, 1.0));
+            //roiCenterofMasses.Add(new Models.RoiCenterOfMass("PTV8", -1.0, -1.0, -1.0));
 
             var roiCenterOfMassesViewModel = new ViewModels.RoiCenterOfMassesViewModel(roiCenterofMasses);
 

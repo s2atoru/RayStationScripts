@@ -12,28 +12,28 @@ namespace RoiCenterOfMass.ViewModels
 {
     public class RoiCenterOfMassesViewModel : BindableBaseWithErrorsContainer
     {
-        private readonly ObservableCollection<Models.RoiCenterOfMass> roiCenterOfMasses;
-        public ObservableCollection<Models.RoiCenterOfMass> RoiCenterOfMasses
-        {
-            get { return roiCenterOfMasses; }
-        }
+        public ObservableCollection<Models.RoiCenterOfMass> RoiCenterOfMasses { get; }
 
         public RoiCenterOfMassesViewModel(IEnumerable<Models.RoiCenterOfMass> roiCenterOfMasses)
         {
-            this.roiCenterOfMasses = (ObservableCollection<Models.RoiCenterOfMass>)roiCenterOfMasses;
+            RoiCenterOfMasses = new ObservableCollection<Models.RoiCenterOfMass>(roiCenterOfMasses);
+
             UpdateCenterOfMass();
-            MaximumDistanceForCenterOfMass = MaximumDistanceFromRoiCenterOfMasses(new double[3] { CenterOfMass.X, CenterOfMass.Y, CenterOfMass.Z });
-            foreach (var p in RoiCenterOfMasses)
-            {
-                if(p.InUse)
-                {
-                    p.IsocenterCoordinates = CenterOfMass;
-                }
-            }
-            MaximumDistance = MaximumDistanceForCenterOfMass;
+
+            SetOptimizedIsocenterToCenterOfMass();
+
             OptimizeCommand = new DelegateCommand(() => OptimizeIsocenterPosition());
             OkCommand = new DelegateCommand(() => { CanExecute = true; });
             CancelCommand = new DelegateCommand(() => { CanExecute = false; });
+            ChangeInUseCommand = new DelegateCommand(() => { UpdateCenterOfMass(); SetOptimizedIsocenterToCenterOfMass(); SetVisibility(); });
+            SetVisibilityCommand = new DelegateCommand(() => { SetVisibility(); });
+        }
+
+        private bool isAllVisible = false;
+        public bool IsAllVisible
+        {
+            get { return isAllVisible; }
+            set { SetProperty(ref isAllVisible, value); }
         }
 
         private bool canExecute = false;
@@ -68,24 +68,36 @@ namespace RoiCenterOfMass.ViewModels
         public double OptimizedIsocenterX
         {
             get { return opitimizedIsocenterX; }
-            set { SetProperty(ref opitimizedIsocenterX, value); }
+            set
+            {
+                SetProperty(ref opitimizedIsocenterX, value);
+                UpdateOptimizedIsocenter();
+            }
         }
 
         private double opitimizedIsocenterY;
         public double OptimizedIsocenterY
         {
             get { return opitimizedIsocenterY; }
-            set { SetProperty(ref opitimizedIsocenterY, value); }
+            set
+            {
+                SetProperty(ref opitimizedIsocenterY, value);
+                UpdateOptimizedIsocenter();
+            }
         }
 
         private double opitimizedIsocenterZ;
         public double OptimizedIsocenterZ
         {
             get { return opitimizedIsocenterZ; }
-            set { SetProperty(ref opitimizedIsocenterZ, value); }
+            set
+            {
+                SetProperty(ref opitimizedIsocenterZ, value);
+                UpdateOptimizedIsocenter();
+            }
         }
 
-        private double convergenceTolerance = 1.0e-3;
+        private double convergenceTolerance = 1.0e-5;
         public double ConvergenceTorelance
         {
             get { return convergenceTolerance; }
@@ -106,9 +118,14 @@ namespace RoiCenterOfMass.ViewModels
             set { SetProperty(ref minimizationResult, value); }
         }
 
+        public int MinimizationResultNumberOfIterations { get; private set; }
+        public string MinimizationResultReasonForExit { get; private set; }
+
         public DelegateCommand OptimizeCommand { get; private set; }
         public DelegateCommand OkCommand { get; private set; }
         public DelegateCommand CancelCommand { get; private set; }
+        public DelegateCommand ChangeInUseCommand { get; private set; }
+        public DelegateCommand SetVisibilityCommand { get; private set; }
 
         private void UpdateCenterOfMass()
         {
@@ -128,6 +145,8 @@ namespace RoiCenterOfMass.ViewModels
             c.Y /= n;
             c.Z /= n;
 
+            CenterOfMass = c;
+
             foreach (var p in RoiCenterOfMasses)
             {
                 if (p.InUse)
@@ -135,6 +154,39 @@ namespace RoiCenterOfMass.ViewModels
                     p.CenterOfMassCoordinates = c;
                 }
             }
+
+            MaximumDistanceForCenterOfMass = MaximumDistanceFromRoiCenterOfMasses(CenterOfMass);
+        }
+
+        private void UpdateOptimizedIsocenter()
+        {
+            var optimizedIsocenter = new Point3D(OptimizedIsocenterX, OptimizedIsocenterY, OptimizedIsocenterZ);
+            foreach (var p in RoiCenterOfMasses)
+            {
+                if (p.InUse)
+                {
+                    p.IsocenterCoordinates = optimizedIsocenter;
+                }
+            }
+
+            MaximumDistance = MaximumDistanceFromRoiCenterOfMasses(optimizedIsocenter);
+        }
+
+        private void SetOptimizedIsocenterToCenterOfMass()
+        {
+            OptimizedIsocenterX = CenterOfMass.X;
+            OptimizedIsocenterY = CenterOfMass.Y;
+            OptimizedIsocenterZ = CenterOfMass.Z;
+
+            foreach (var p in RoiCenterOfMasses)
+            {
+                if (p.InUse)
+                {
+                    p.IsocenterCoordinates = CenterOfMass;
+                }
+            }
+
+            MaximumDistance = MaximumDistanceForCenterOfMass;
         }
 
         public void OptimizeIsocenterPosition()
@@ -150,21 +202,15 @@ namespace RoiCenterOfMass.ViewModels
             var solver = new NelderMeadSimplex(ConvergenceTorelance, MaximumIterations);
 
             MinimizationResult = solver.FindMinimum(objectiveFunction, x0Vec);
-            var minPoint = MinimizationResult.MinimizingPoint;
 
+            MinimizationResultNumberOfIterations = MinimizationResult.Iterations;
+            MinimizationResultReasonForExit = MinimizationResult.ReasonForExit.ToString();
+
+            var minPoint = MinimizationResult.MinimizingPoint;
             MaximumDistance = MaximumDistanceFromRoiCenterOfMasses(minPoint);
             OptimizedIsocenterX = minPoint[0];
             OptimizedIsocenterY = minPoint[1];
             OptimizedIsocenterZ = minPoint[2];
-
-            var optimizedIsocenter = new Point3D(OptimizedIsocenterX, OptimizedIsocenterY, OptimizedIsocenterZ);
-            foreach (var p in RoiCenterOfMasses)
-            {
-                if (p.InUse)
-                {
-                    p.IsocenterCoordinates = optimizedIsocenter;
-                }
-            }
         }
 
         public double MaximumDistanceFromRoiCenterOfMasses(double[] x)
@@ -181,7 +227,7 @@ namespace RoiCenterOfMass.ViewModels
             {
                 var p = RoiCenterOfMasses[i];
                 if (!p.InUse) continue;
-                
+
                 double d = 0.0;
                 d += Math.Pow(x[0] - p.Coordinates.X, 2);
                 d += Math.Pow(x[1] - p.Coordinates.Y, 2);
@@ -203,7 +249,7 @@ namespace RoiCenterOfMass.ViewModels
                 throw new ArgumentNullException(nameof(x));
             }
 
-            if(x.Count != 3)
+            if (x.Count != 3)
             {
                 throw new InvalidOperationException($"Dim of x ({x.Count}) should be 3");
             }
@@ -216,6 +262,26 @@ namespace RoiCenterOfMass.ViewModels
             }
 
             return MaximumDistanceFromRoiCenterOfMasses(point);
+        }
+
+        public double MaximumDistanceFromRoiCenterOfMasses(Point3D p)
+        {
+            if (p == null)
+            {
+                throw new ArgumentNullException(nameof(p));
+            }
+
+            double[] point = new double[3] { p.X, p.Y, p.Z };
+
+            return MaximumDistanceFromRoiCenterOfMasses(point);
+        }
+
+        private void SetVisibility()
+        {
+            foreach (var r in RoiCenterOfMasses)
+            {
+                r.IsVisible = r.InUse | IsAllVisible;
+            }
         }
     }
 }
