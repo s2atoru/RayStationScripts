@@ -833,7 +833,7 @@ def CheckDvhIndex(objective, prescribedDose=0, roiDetails=None, planDose=None):
 def CheckUpperLimitWithNormalization(value, upperLimit, normalization=1, slack=1.e-3):
     """Upper limit check with slack.
 
-    Check if value is less than upperLimit with slack.
+    Check if value is no more than upperLimit with slack.
     Args:
         value (float): Number to be checked.
         upperLimit (float): Upper limit.
@@ -841,11 +841,11 @@ def CheckUpperLimitWithNormalization(value, upperLimit, normalization=1, slack=1
         slack (float); Slack for check.
       
     Returns:
-        bool: True if value is less than upperLimit with slack
+        bool: True if value is no more than upperLimit with slack
 
     """
 
-    if(value - upplerLimit < normalization*slack):
+    if(value - upplerLimit <= normalization*slack):
         return True
     else:
         return False
@@ -853,7 +853,7 @@ def CheckUpperLimitWithNormalization(value, upperLimit, normalization=1, slack=1
 def CheckLowerLimitWithNormalization(value, lowerLimit, normalization=1, slack=1.e-3):
     """Lower limit check with slack.
 
-    Check if value is more than lowerLimit with slack.
+    Check if value is no less than lowerLimit with slack.
     Args:
         value (float): Number to be checked.
         lowerLimit (float): Lower limit.
@@ -861,11 +861,11 @@ def CheckLowerLimitWithNormalization(value, lowerLimit, normalization=1, slack=1
         slack (float); Slack for check.
       
     Returns:
-        bool: True if value is more than lowerLimit with slack
+        bool: True if value is no less than lowerLimit with slack
 
     """
 
-    if(lowerLimit - value < normalization*slack):
+    if(lowerLimit - value <= normalization*slack):
         return True
     else:
         return False
