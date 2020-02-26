@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace OptimizatoinSettings.ViewModels
+namespace MvvmCommon.ViewModels
 {
     public abstract class BindableBaseWithErrorsContainer : BindableBase, INotifyDataErrorInfo
     {

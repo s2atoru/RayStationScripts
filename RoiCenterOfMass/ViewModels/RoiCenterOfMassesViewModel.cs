@@ -1,6 +1,6 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.Optimization;
-using OptimizatoinSettings.ViewModels;
+using MvvmCommon.ViewModels;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
