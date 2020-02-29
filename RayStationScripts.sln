@@ -54,6 +54,8 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "CopyOptimizationFunctions",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptimizationFunctionCopyManager", "OptimizationFunctionCopyManager\OptimizationFunctionCopyManager.csproj", "{F4929B91-7C42-44B3-8BFC-54C97E62F28A}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "OptimizeIsocenterForBrainSrt", "OptimizeIsocenterForBrainSrt\OptimizeIsocenterForBrainSrt.pyproj", "{E867606A-4EE0-40D0-A4D9-3782C03C0AB6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -206,6 +208,10 @@ Global
 		{F4929B91-7C42-44B3-8BFC-54C97E62F28A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F4929B91-7C42-44B3-8BFC-54C97E62F28A}.Release|x64.ActiveCfg = Release|Any CPU
 		{F4929B91-7C42-44B3-8BFC-54C97E62F28A}.Release|x64.Build.0 = Release|Any CPU
+		{E867606A-4EE0-40D0-A4D9-3782C03C0AB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E867606A-4EE0-40D0-A4D9-3782C03C0AB6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E867606A-4EE0-40D0-A4D9-3782C03C0AB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E867606A-4EE0-40D0-A4D9-3782C03C0AB6}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
