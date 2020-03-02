@@ -9,7 +9,7 @@ namespace RoiFormulaMaker.Notifications
     {
         public string StructureName { get; set; }
         public List<string> BaseStructureNames { get; set; }
-        public int Margin { get; set; }
+        public double Margin { get; set; }
 
         public ObservableCollection<string> StructureNames { get; set; }
         public ObservableCollection<ListBoxItemViewModel> ContouredStructureList { get; set; }

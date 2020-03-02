@@ -20,14 +20,14 @@ namespace RoiFormulaMaker.Models
         [DataMember()]
         public List<string> SubtractedRoiNames { get; set; }
         [DataMember()]
-        public int Margin { get; set; }
+        public double Margin { get; set; }
 
         [DataMember()]
         public string Description { get; set; } = string.Empty;
 
         public override string ToString()
         {
-            return $"ROI Subtracted ROI: {StructureName} ({StructureType}), Base Structure: {BaseStructureName}, Subtracted ROIs = {string.Join(", ", SubtractedRoiNames)}, Margin = {Margin} mm";
+            return $"ROI Subtracted ROI: {StructureName} ({StructureType}), Base Structure: {BaseStructureName}, Subtracted ROIs = {string.Join(", ", SubtractedRoiNames)}, Margin = {Margin:F1} mm";
         }
 
         public string ToJson()
@@ -59,7 +59,7 @@ namespace RoiFormulaMaker.Models
         public override int GetHashCode()
         {
             //XOR
-            return this.BaseStructureName.GetHashCode() ^ this.SubtractedRoiNames.GetHashCode() ^ this.Margin;
+            return this.BaseStructureName.GetHashCode() ^ this.SubtractedRoiNames.GetHashCode() ^ this.Margin.GetHashCode();
         }
 
         //Overload of equality operators, == and !=

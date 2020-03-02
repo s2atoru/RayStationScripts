@@ -10,7 +10,7 @@ namespace RoiFormulaMaker.Notifications
         public string StructureName { get; set; }
         public string BaseStructureName { get; set; }
         public List<string> SubtractedRoiNames { get; set; }
-        public int Margin { get; set; }
+        public double Margin { get; set; }
 
         public ObservableCollection<string> StructureNames { get; set; }
         public ObservableCollection<string> ContouredStructureNames { get; set; }

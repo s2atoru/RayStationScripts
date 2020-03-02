@@ -18,14 +18,14 @@ namespace RoiFormulaMaker.Models
         [DataMember()]
         public List<string> BaseStructureNames { get; set; } = new List<string>();
         [DataMember()]
-        public int Margin { get; set; }
+        public double Margin { get; set; }
 
         [DataMember()]
         public string Description { get; set; } = string.Empty;
 
         public override string ToString()
         {
-            return $"Margin Added ROI: {StructureName} ({StructureType}), Base Structures: {string.Join(", ",BaseStructureNames)}, Margin = {Margin} mm";
+            return $"Margin Added ROI: {StructureName} ({StructureType}), Base Structures: {string.Join(", ",BaseStructureNames)}, Margin = {Margin:F1} mm";
         }
 
         public string ToJson()
@@ -57,7 +57,7 @@ namespace RoiFormulaMaker.Models
         public override int GetHashCode()
         {
             //XOR
-            return this.BaseStructureNames.GetHashCode() ^ this.Margin;
+            return this.BaseStructureNames.GetHashCode() ^ Margin.GetHashCode();
         }
 
         //Overload of equality operators, == and !=

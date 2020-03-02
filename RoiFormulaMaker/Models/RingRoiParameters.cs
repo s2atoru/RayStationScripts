@@ -17,16 +17,16 @@ namespace RoiFormulaMaker.Models
         [DataMember()]
         public string BaseStructureName { get; set; }
         [DataMember()]
-        public int InnerMargin { get; set; }
+        public double InnerMargin { get; set; }
         [DataMember()]
-        public int OuterMargin { get; set; }
+        public double OuterMargin { get; set; }
 
         [DataMember()]
         public string Description { get; set; } = string.Empty;
 
         public override string ToString()
         {
-            return $"Ring ROI: {StructureName} ({StructureType}), Base Structure: {BaseStructureName}, Outer Margin = {OuterMargin} mm, Inner Margin = {InnerMargin} mm";
+            return $"Ring ROI: {StructureName} ({StructureType}), Base Structure: {BaseStructureName}, Outer Margin = {OuterMargin:F1} mm, Inner Margin = {InnerMargin:F1} mm";
         }
 
         public string ToJson()
@@ -55,7 +55,7 @@ namespace RoiFormulaMaker.Models
         public override int GetHashCode()
         {
             //XOR
-            return this.BaseStructureName.GetHashCode() ^ this.OuterMargin ^ this.InnerMargin;
+            return this.BaseStructureName.GetHashCode() ^ this.OuterMargin.GetHashCode() ^ this.InnerMargin.GetHashCode();
         }
 
         //Overload of equality operators, == and !=
