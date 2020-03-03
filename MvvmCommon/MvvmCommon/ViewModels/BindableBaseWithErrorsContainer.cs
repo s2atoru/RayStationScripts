@@ -9,6 +9,12 @@ using System.Runtime.CompilerServices;
 
 namespace MvvmCommon.ViewModels
 {
+    /// <summary>
+    /// BindableBase with ErrorsContainer
+    /// </summary>
+    /// <remarks>
+    /// Adopted from https://github.com/runceel/PrismEdu/tree/master/04.MVVMBasic
+    /// </remarks>
     public abstract class BindableBaseWithErrorsContainer : BindableBase, INotifyDataErrorInfo
     {
 
