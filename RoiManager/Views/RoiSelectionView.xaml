@@ -136,7 +136,7 @@
                     <DataGridTemplateColumn IsReadOnly="True" Header="Type">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <ComboBox ItemsSource="{Binding DataContext.RoiTypeList, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}, Mode=FindAncestor}}"
+                                <ComboBox ItemsSource="{Binding DataContext.RoiTypeList, RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}}"
                                           SelectedValue="{Binding RoiType.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
