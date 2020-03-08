@@ -1,11 +1,12 @@
-﻿using MvvmCommon.ViewModels;
+﻿using OptimizationFunctionCopyManager.Models;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace OptimizationFunctionCopyManager.ViewModels
 {
-    public class OptimizationFunctionCopyManagerViewModel : BindableBaseWithErrorsContainer
+    public class OptimizationFunctionCopyManagerViewModel
     {
         List<string> RoiNamesInObjectiveFunctions = new List<string>();
-        List<string> ContouredRoiNames = new List<string>();
+        ObservableCollection<Roi> ContouredRoi = new ObservableCollection<Roi>();
     }
 }

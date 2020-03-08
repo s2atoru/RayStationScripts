@@ -1,0 +1,134 @@
+﻿<Window x:Class="OptimizationFunctionCopyManager.Views.LoadWindow"
+        xmlns:Views="clr-namespace:OptimizationFunctionCopyManager.Views"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:prism="http://prismlibrary.com/"
+        xmlns:ac="clr-namespace:MvvmCommon.Actions;assembly=MvvmCommon"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        xmlns:ViewModels="clr-namespace:OptimizationFunctionCopyManager.ViewModels"
+        d:DataContext="{d:DesignInstance {x:Type ViewModels:LoadObjectiveFunctionsViewModel}}"
+        Title="Load objective functions" SizeToContent="WidthAndHeight">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="6"/>
+            <Setter Property="Padding" Value="3"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="6"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="6"/>
+        </Style>
+        <Style TargetType="DataGrid">
+            <Setter Property="Margin" Value="6"/>
+        </Style>
+        <Style TargetType="CheckBox">
+            <Setter Property="Margin" Value="6"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
+                <Button Command="{Binding ChooseFileCommand}" Content="Choose File" Width="120"/>
+                <Label Content="Chosen file:" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding FilePath}" VerticalAlignment="Center" MinWidth="120"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="OK" Width="120">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <prism:InvokeCommandAction Command="{Binding OkCommand}"/>
+                            <ac:CloseWindowAction/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button Content="Cancel" Width="120">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <prism:InvokeCommandAction Command="{Binding CancelCommand}"/>
+                            <ac:CloseWindowAction/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </StackPanel>
+            <TextBlock>Plan label</TextBlock>
+            <DataGrid ItemsSource="{Binding PlanLabels}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="200">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn IsReadOnly="True" Header="In Use">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding InUse, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn
+                    Header="Label"
+                    Binding="{Binding Label, Mode=OneTime}" IsReadOnly="True">
+                    </DataGridTextColumn>
+                    <DataGridTemplateColumn IsReadOnly="True" Header="Label in Objective function">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox ItemsSource="{Binding DataContext.PlanLabelsInObjectiveFuntions, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
+                                          SelectedValue="{Binding LabelInObjectiveFuntion, Mode=OneWay}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <TextBlock>ROIs in Plan</TextBlock>
+            <DataGrid ItemsSource="{Binding Rois}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="400">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn IsReadOnly="True" Header="In Use">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding InUse, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn
+                    Header="Name"
+                    Binding="{Binding Name, Mode=OneTime}" IsReadOnly="True">
+                    </DataGridTextColumn>
+                    <DataGridTemplateColumn IsReadOnly="True" Header="Name in Objective function">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox ItemsSource="{Binding DataContext.RoiNamesInObjectiveFunctions, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
+                                          SelectedValue="{Binding NameInObjectiveFunction, Mode=OneWAy}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding DoesRescaleDose}" VerticalAlignment="Center"> Rescale dose?</CheckBox>
+                <TextBlock> Prescribed dose:</TextBlock>
+                <TextBox Text="{Binding PrescribedDose, Mode=OneWay}"></TextBox>
+                <TextBlock> Prescribed dose in Objective functions:</TextBlock>
+                <TextBox Text="{Binding OriginalPrescribedDose, Mode=OneWay}"></TextBox>
+            </StackPanel>
+            <TextBlock>Objective functions</TextBlock>
+            <DataGrid ItemsSource="{Binding ObjectiveFunctions}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="400">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn IsReadOnly="True" Header="In Use">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding InUse, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Plan label" Binding="{Binding PlanLabel}" IsReadOnly="True">
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Weight" Binding="{Binding Weight}"></DataGridTextColumn>
+                    <DataGridTextColumn
+                    Header="ROI"
+                    Binding="{Binding RoiName, Mode=OneTime}" IsReadOnly="True">
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Description" Binding="{Binding Description}" IsReadOnly="True"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </Grid>
+</Window>
