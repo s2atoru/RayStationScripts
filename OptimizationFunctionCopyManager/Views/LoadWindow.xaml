@@ -55,12 +55,12 @@
                 </Button>
             </StackPanel>
             <TextBlock>Plan label</TextBlock>
-            <DataGrid ItemsSource="{Binding PlanLabels}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="200">
+            <DataGrid ItemsSource="{Binding PlanLabels}" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn IsReadOnly="True" Header="In Use">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding InUse, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <CheckBox IsChecked="{Binding InUse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -72,19 +72,19 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ComboBox ItemsSource="{Binding DataContext.PlanLabelsInObjectiveFuntions, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
-                                          SelectedValue="{Binding LabelInObjectiveFuntion, Mode=OneWay}"/>
+                                          SelectedValue="{Binding LabelInObjectiveFunction, Mode=TwoWay}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
             <TextBlock>ROIs in Plan</TextBlock>
-            <DataGrid ItemsSource="{Binding Rois}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="400">
+            <DataGrid ItemsSource="{Binding Rois}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="200">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn IsReadOnly="True" Header="In Use">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding InUse, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <CheckBox IsChecked="{Binding InUse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -96,7 +96,7 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ComboBox ItemsSource="{Binding DataContext.RoiNamesInObjectiveFunctions, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
-                                          SelectedValue="{Binding NameInObjectiveFunction, Mode=OneWAy}"/>
+                                          SelectedValue="{Binding NameInObjectiveFunction, Mode=TwoWay}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -105,23 +105,23 @@
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="{Binding DoesRescaleDose}" VerticalAlignment="Center"> Rescale dose?</CheckBox>
                 <TextBlock> Prescribed dose:</TextBlock>
-                <TextBox Text="{Binding PrescribedDose, Mode=OneWay}"></TextBox>
+                <TextBox Text="{Binding PrescribedDose, Mode=TwoWay}"></TextBox>
                 <TextBlock> Prescribed dose in Objective functions:</TextBlock>
-                <TextBox Text="{Binding OriginalPrescribedDose, Mode=OneWay}"></TextBox>
+                <TextBox Text="{Binding OriginalPrescribedDose, Mode=TwoWay}"></TextBox>
             </StackPanel>
             <TextBlock>Objective functions</TextBlock>
-            <DataGrid ItemsSource="{Binding ObjectiveFunctions}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="400">
+            <DataGrid ItemsSource="{Binding ObjectiveFunctions}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="200">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn IsReadOnly="True" Header="In Use">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding InUse, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <CheckBox IsChecked="{Binding InUse, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Plan label" Binding="{Binding PlanLabel}" IsReadOnly="True">
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Weight" Binding="{Binding Weight}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Weight" Binding="{Binding Weight, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
                     <DataGridTextColumn
                     Header="ROI"
                     Binding="{Binding RoiName, Mode=OneTime}" IsReadOnly="True">

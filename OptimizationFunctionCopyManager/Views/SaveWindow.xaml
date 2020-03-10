@@ -32,9 +32,9 @@
     <Grid>
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
-                <Button Command="{Binding SaveFileCommand}" Content="Save to File" Width="140"/>
+                <Button Command="{Binding SaveFileCommand}" Content="Save to File" Width="120"/>
                 <Label Content="Description: " VerticalAlignment="Center"/>
-                <TextBox Text="{Binding Description}" MinWidth="480" VerticalAlignment="Center">
+                <TextBox Text="{Binding Description, Mode=TwoWay}" MinWidth="480" VerticalAlignment="Center">
                 </TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
@@ -57,7 +57,7 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBlock> Prescribed dose:</TextBlock>
-                <TextBox Text="{Binding PrescribedDose, Mode=OneWay}"></TextBox>
+                <TextBox Text="{Binding PrescribedDose, Mode=TwoWay}"></TextBox>
             </StackPanel>
             <TextBlock>Objective functions</TextBlock>
             <DataGrid ItemsSource="{Binding ObjectiveFunctions}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="400">
@@ -65,16 +65,16 @@
                     <DataGridTemplateColumn IsReadOnly="True" Header="In Use">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding InUse, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <CheckBox IsChecked="{Binding InUse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Plan label" Binding="{Binding PlanLabel}" IsReadOnly="True">
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Weight" Binding="{Binding Weight}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Weight" Binding="{Binding Weight, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
                     <DataGridTextColumn
                     Header="ROI"
-                    Binding="{Binding RoiName, Mode=OneTime}" IsReadOnly="True">
+                    Binding="{Binding RoiName}" IsReadOnly="True">
                     </DataGridTextColumn>
                     <DataGridTextColumn Header="Description" Binding="{Binding Description}" IsReadOnly="True"></DataGridTextColumn>
                 </DataGrid.Columns>

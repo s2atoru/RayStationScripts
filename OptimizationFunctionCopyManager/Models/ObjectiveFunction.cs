@@ -1,13 +1,20 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using MvvmCommon.ViewModels;
+using Newtonsoft.Json.Linq;
 
 namespace OptimizationFunctionCopyManager.Models
 {
-    public class ObjectiveFunction
+    public class ObjectiveFunction : BindableBaseWithErrorsContainer
     {
         public bool InUse { get; set; } = true;
         public string RoiName { get; private set; }
         public string Description { get; private set; }
-        public double Weight { get; set; } = 0.0;
+        private double weight = 0.0;
+        public double Weight
+        {
+            get { return weight; }
+            set { SetProperty(ref weight, value); }
+        }
+
         public JObject Arguments { get; private set ; }
 
         public string PlanLabel { get; private set; }
@@ -57,6 +64,16 @@ namespace OptimizationFunctionCopyManager.Models
                     eudParameterA = Arguments["EudParameterA"].ToObject<double>();
                     description = $"Min EUD {doseLevel:F0} cGy, Parameter A {eudParameterA}";
                     break;
+                case "MaxDvh":
+                    doseLevel = Arguments["DoseLevel"].ToObject<double>();
+                    var percentVolume = Arguments["PercentVolume"].ToObject<double>();
+                    description = $"Max DVH {doseLevel:F0} cGy to {percentVolume:F0}% volume";
+                    break;
+                case "MinDvh":
+                    doseLevel = Arguments["DoseLevel"].ToObject<double>();
+                    percentVolume = Arguments["PercentVolume"].ToObject<double>();
+                    description = $"Min DVH {doseLevel:F0} cGy to {percentVolume:F0}% volume";
+                    break;
                 case "UniformEud":
                     doseLevel = Arguments["DoseLevel"].ToObject<double>();
                     eudParameterA = Arguments["EudParameterA"].ToObject<double>();
@@ -77,6 +94,11 @@ namespace OptimizationFunctionCopyManager.Models
         public void SetRoiNameInArguments(string roiName)
         {
             Arguments["RoiName"] = roiName;
+        }
+
+        public void SetPlanLabelInArguments(string planLabel)
+        {
+            Arguments["PlanLabel"] = planLabel;
         }
     }
 }

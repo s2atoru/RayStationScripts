@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -8,7 +9,7 @@ using System.IO;
 namespace OptimizationFunctionCopyManager.ViewModels
 {
     public class SaveObjectiveFunctionsViewModel : BindableBase
-    { 
+    {
         public bool CanExecute { get; set; } = false;
 
         public string Description { get; set; }
@@ -44,7 +45,7 @@ namespace OptimizationFunctionCopyManager.ViewModels
         public SaveObjectiveFunctionsViewModel()
         {
             PrescribedDose = 7000;
-            OkCommand = new DelegateCommand(() => { CanExecute = true; UpdateWeightInObjectiveFunctions(); });
+            OkCommand = new DelegateCommand(() => { CanExecute = true; });
             CancelCommand = new DelegateCommand(() => { CanExecute = false; });
             SaveFileCommand = new DelegateCommand(SaveFile);
         }
@@ -81,6 +82,25 @@ namespace OptimizationFunctionCopyManager.ViewModels
             if (dialog.ShowDialog() == true)
             {
                 SavedFilePath = dialog.FileName;
+
+                UpdateWeightInObjectiveFunctions();
+                var Arguments = new JArray();
+                foreach (var o in ObjectiveFunctions)
+                {
+                    var a = o.Arguments;
+                    Arguments.Add(JToken.Parse(a.ToString()));
+                }
+
+                var jObject = new JObject();
+                jObject["PrescribedDose"] = PrescribedDose;
+                jObject["Description"] = Description;
+                jObject["Arguments"] = Arguments;
+
+                using (StreamWriter file = File.CreateText(SavedFilePath))
+                using (JsonTextWriter writer = new JsonTextWriter(file))
+                {
+                    jObject.WriteTo(writer);
+                }
             }
             else
             {

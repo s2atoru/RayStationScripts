@@ -40,7 +40,7 @@ namespace OptimizationFunctionCopyManager.ViewModels
             set { SetProperty(ref defaultDirectoryPath, value); }
         }
 
-        public double OriginalPrescribedDose { get; private set; }
+        public double OriginalPrescribedDose { get; set; }
 
         public double PrescribedDose { get; set; }
 
@@ -50,7 +50,7 @@ namespace OptimizationFunctionCopyManager.ViewModels
 
         public JObject ObjectiveFunctionsJObject { get; private set; }
 
-        public ObservableCollection<Models.Roi> Rois { get; private set; } = new ObservableCollection<Models.Roi>();
+        public ObservableCollection<Models.Roi> Rois { get; set; } = new ObservableCollection<Models.Roi>();
 
         public ObservableCollection<string> RoiNamesInObjectiveFunctions { get; private set; } = new ObservableCollection<string>();
 
@@ -68,14 +68,14 @@ namespace OptimizationFunctionCopyManager.ViewModels
             OriginalPrescribedDose = 5000.0;
 
             List<Models.PlanLabel> planLabels0 = new List<Models.PlanLabel>();
-            planLabels0.Add(new Models.PlanLabel("1-1-1"));
-            planLabels0[0].LabelInObjectiveFuntion = PlanLabelNone;
+            planLabels0.Add(new Models.PlanLabel("test"));
+            planLabels0[0].LabelInObjectiveFunction = PlanLabelNone;
             planLabels0.Add(new Models.PlanLabel("1-1-2"));
-            planLabels0[1].LabelInObjectiveFuntion = PlanLabelNone;
+            planLabels0[1].LabelInObjectiveFunction = PlanLabelNone;
             PlanLabels = new ObservableCollection<Models.PlanLabel>(planLabels0);
 
             List<Models.Roi> rois0 = new List<Models.Roi>();
-            rois0.Add(new Models.Roi("PTV"));
+            rois0.Add(new Models.Roi("PTV1"));
             rois0.Add(new Models.Roi("CTV"));
             rois0.Add(new Models.Roi("Rectum"));
             rois0.Add(new Models.Roi("Bladder"));
@@ -100,7 +100,7 @@ namespace OptimizationFunctionCopyManager.ViewModels
             foreach (var p in planLabels)
             {
                 var planLabel = new Models.PlanLabel(p);
-                planLabel.LabelInObjectiveFuntion = PlanLabelNone;
+                planLabel.LabelInObjectiveFunction = PlanLabelNone;
                 PlanLabels.Add(planLabel);
             }
             PlanLabelsInObjectiveFuntions.Add(PlanLabelNone);
@@ -138,10 +138,10 @@ namespace OptimizationFunctionCopyManager.ViewModels
                     ObjectiveFunctionsJObject = (JObject)JToken.ReadFrom(reader);
                 }
 
-                OriginalPrescribedDose = ObjectiveFunctionsJObject["prescribedDose"].ToObject<double>();
+                OriginalPrescribedDose = ObjectiveFunctionsJObject["PrescribedDose"].ToObject<double>();
                 PrescribedDose = OriginalPrescribedDose;
 
-                var arguments = (JArray)ObjectiveFunctionsJObject["arguments"];
+                var arguments = (JArray)ObjectiveFunctionsJObject["Arguments"];
 
                 ObjectiveFunctions.Clear();
                 foreach (var a in arguments)
@@ -174,7 +174,7 @@ namespace OptimizationFunctionCopyManager.ViewModels
                 {
                     if (p.InUse && PlanLabelsInObjectiveFuntions.Contains(p.Label))
                     {
-                        p.LabelInObjectiveFuntion = p.Label;
+                        p.LabelInObjectiveFunction = p.Label;
                     }
                 }
             }
@@ -209,13 +209,32 @@ namespace OptimizationFunctionCopyManager.ViewModels
 
                 foreach (var o in query)
                 {
+                    var planLabelInObjectiveFunction = o.Arguments["PlanLabel"].ToObject<string>();
+
+                    var planLabelQuery = PlanLabels.Where(p => p.LabelInObjectiveFunction == planLabelInObjectiveFunction);
+                    if (planLabelQuery.Count() > 0)
+                    {
+                        var newPlanLabel = planLabelQuery.First();
+                        bool inUse = newPlanLabel.InUse;
+                        if (!inUse) break;
+                        string newLabel = newPlanLabel.Label;
+                        if (planLabelQuery.Count() >= 2)
+                        {
+                            MessageBox.Show($"Multiple plans are assigned to {planLabelInObjectiveFunction}. Use {newLabel}");
+                        }
+                        o.SetPlanLabelInArguments(newLabel);
+                    }
+                    else if (!(planLabelInObjectiveFunction == PlanLabelCombinedDose))
+                    {
+                        break;
+                    }
+
                     o.UpdateWeightInArguments();
                     o.SetRoiNameInArguments(r.Name);
 
                     var functionType = o.Arguments["FunctionType"].ToObject<string>();
                     if (functionType == "DoseFallOff")
                     {
-
                         var highDoseLevel = scale * o.Arguments["HighDoseLevel"].ToObject<double>();
                         var lowDoseLevel = scale * o.Arguments["LowDoseLevel"].ToObject<double>();
                         o.Arguments["HighDoseLevel"] = highDoseLevel;
@@ -231,22 +250,6 @@ namespace OptimizationFunctionCopyManager.ViewModels
                     }
 
                     r.ObjectiveFuntionArguments.Add(o.Arguments.ToString());
-                }
-            }
-        }
-
-        private void SetPlanLabels()
-        {
-            foreach (var p in PlanLabels)
-            {
-                if (!p.InUse || p.Label == p.LabelInObjectiveFuntion || p.LabelInObjectiveFuntion == PlanLabelNone) continue;
-
-                var query = ObjectiveFunctions.Where(o => (o.InUse && o.PlanLabel == p.LabelInObjectiveFuntion));
-                if (query.Count() == 0) continue;
-
-                foreach (var o in query)
-                {
-                    o.Arguments["PlanLabel"] = p.Label;
                 }
             }
         }
