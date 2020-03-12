@@ -572,13 +572,14 @@ def SetMaxArcMu(beamSetting, maxArcMu):
     finalGantrySpacing = properties.FinalArcGantrySpacing
     maxArcDeliveryTime = properties.MaxArcDeliveryTime
     burstGantrySpacing = None
+    #maxArcMU = properties.MaxArcMU
     presentMaxArcMU = properties.MaxArcMU
 
     if IsEqualNone(maxArcMu, presentMaxArcMU):
         return
 
     beamSetting.ArcConversionPropertiesPerBeam.EditArcBasedBeamOptimizationSettings(ConformalArcStyle=conformalArcStyle, CreateDualArcs=createDualArcs, FinalGantrySpacing=finalGantrySpacing, MaxArcDeliveryTime=maxArcDeliveryTime, BurstGantrySpacing=burstGantrySpacing, MaxArcMU=maxArcMu)
-
+    
 def ClearAllClinicalGoals(plan):
     for cg in plan.TreatmentCourse.EvaluationSetup.EvaluationFunctions:
         plan.TreatmentCourse.EvaluationSetup.DeleteClinicalGoal(FunctionToRemove=cg)
@@ -628,42 +629,54 @@ def GetDoseValueDCM(x, y, z, doseGrid, doseData):
     nrVoxelY = doseGrid.NrVoxels.y
     nrVoxelZ = doseGrid.NrVoxels.z
 
-    nx1 = int((x - cornerX)/voxelSizeX)
+    nx1 = int((x - (cornerX+voxelSizeX/2.0))/voxelSizeX)
     if(nx1 < 0):
         nx1 = 0
     if(nx1 >= nrVoxelX-1):
         nx1 = nrVoxelX - 2
     nx2 = nx1+1
 
-    ny1 = int((y - cornerY)/voxelSizeY)
+    ny1 = int((y - (cornerY+voxelSizeY/2.0))/voxelSizeY)
     if(ny1 < 0):
         ny1 = 0
     if(ny1 >= nrVoxelY-1):
         ny1 = nrVoxelY - 2
     ny2 = ny1+1
 
-    nz1 = int((z - cornerZ)/voxelSizeZ)
+    nz1 = int((z - (cornerZ+voxelSizeZ/2.0))/voxelSizeZ)
     if(nz1 < 0):
         nz1 = 0
     if(nz1 >= nrVoxelZ-1):
         nz1 = nrVoxelZ - 2
     nz2 = nz1+1
 
-    f111 = doseData[nx1, ny1, nz1]
-    f112 = doseData[nx1, ny1, nz2]
-    f121 = doseData[nx1, ny2, nz1]
-    f122 = doseData[nx1, ny2, nz2]
-    f211 = doseData[nx2, ny1, nz1]
-    f212 = doseData[nx2, ny1, nz2]
-    f221 = doseData[nx2, ny2, nz1]
-    f222 = doseData[nx2, ny2, nz2]
+    f111 = doseData[nz1, ny1, nx1]
+    f112 = doseData[nz2, ny1, nx1]
+    f121 = doseData[nz1, ny2, nx1]
+    f122 = doseData[nz2, ny2, nx1]
+    f211 = doseData[nz1, ny1, nx2]
+    f212 = doseData[nz2, ny1, nx2]
+    f221 = doseData[nz1, ny2, nx2]
+    f222 = doseData[nz2, ny2, nx2]
 
-    x1 = GetCoordinate1d(nx1, cornerX, voxelSizeX)
-    x2 = GetCoordinate1d(nx2, cornerX, voxelSizeX)
-    y1 = GetCoordinate1d(ny1, cornerY, voxelSizeY)
-    y2 = GetCoordinate1d(ny2, cornerY, voxelSizeY)
-    z1 = GetCoordinate1d(nz1, cornerZ, voxelSizeZ)
-    z2 = GetCoordinate1d(nz2, cornerZ, voxelSizeZ)
+    #print doseData.GetLength(0), doseData.GetLength(1), doseData.GetLength(2)
+    #print cornerX, cornerY, cornerZ
+    #print cornerX+voxelSizeX/2.0, cornerY+voxelSizeY/2.0, cornerZ+voxelSizeZ/2.0
+    #print voxelSizeX, voxelSizeY, voxelSizeZ
+    #print nrVoxelX, nrVoxelY, nrVoxelZ
+    #print nx1, nx2, ny1, ny2, nz1, nz2
+    #print f111, f112, f121, f122
+    #print f211, f212, f221, f222
+
+    x1 = GetGridCoordinate1d(nx1, cornerX+voxelSizeX/2.0, voxelSizeX)
+    x2 = GetGridCoordinate1d(nx2, cornerX+voxelSizeX/2.0, voxelSizeX)
+    y1 = GetGridCoordinate1d(ny1, cornerY+voxelSizeY/2.0, voxelSizeY)
+    y2 = GetGridCoordinate1d(ny2, cornerY+voxelSizeY/2.0, voxelSizeY)
+    z1 = GetGridCoordinate1d(nz1, cornerZ+voxelSizeZ/2.0, voxelSizeZ)
+    z2 = GetGridCoordinate1d(nz2, cornerZ+voxelSizeZ/2.0, voxelSizeZ)
+
+    #print x1, y1, z1
+    #print x2, y2, z2
 
     denominator = (x2-x1)*(y2-y1)*(z2-z1)
     denominator = 1.0/denominator
@@ -695,6 +708,45 @@ def IsEqualNone(a1, a2):
             return True
         else:
             return False
+
+def ClearObjectiveFunctions(plan):
+    planOptimization = plan.PlanOptimizations[0]
+    for of in planOptimization.Constraints:
+        of.DeleteFunction()
+    if planOptimization.Objective == None:
+        return
+    for of in planOptimization.Objective.ConstituentFunctions:
+        of.DeleteFunction()
+
+def GetObjectiveFunctionDescription(arg_dict):
+    if arg_dict['FunctionType'] == 'DoseFallOff':
+        description = 'Dose Fall-Off [H]{0:.0f} cGy [L]{1:.0f} cGy, Low dose distance {2:.2f} cm'.format(arg_dict['HighDoseLevel'], arg_dict['LowDoseLevel'], arg_dict['LowDoseDistance'])
+    elif arg_dict['FunctionType'] == 'UniformDose':
+        description = 'Uniform Dose {0:.0f} cGy'.format(arg_dict['DoseLevel'])
+    elif arg_dict['FunctionType'] == 'MaxDose':
+        description = 'Max Dose {0:.0f} cGy'.format(arg_dict['DoseLevel'])
+    elif arg_dict['FunctionType'] == 'MinDose':
+        description = 'Min Dose {0:.0f} cGy'.format(arg_dict['DoseLevel'])
+    elif arg_dict['FunctionType'] == 'MaxEud':
+        description = 'Max EUD {0:.0f} cGy, Parameter A {1}'.format(arg_dict['DoseLevel'], arg_dict['EudParameterA'])
+    elif arg_dict['FunctionType'] == 'MinEud':
+        description = 'Min EUD {0:.0f} cGy, Parameter A {1}'.format(arg_dict['DoseLevel'], arg_dict['EudParameterA'])
+    elif arg_dict['FunctionType'] == 'UniformEud':
+        description = 'Target EUD {0:.0f} cGy, Parameter A {1}'.format(arg_dict['DoseLevel'], arg_dict['EudParameterA'])
+    elif arg_dict['FunctionType'] == 'MaxDvh':
+        description = 'Max DVH {0:.0f} cGy to {1:.0f}% volume'.format(arg_dict['DoseLevel'], arg_dict['PercentVolume'])
+    elif arg_dict['FunctionType'] == 'MinDvh':
+        description = 'Min DVH {0:.0f} cGy to {1:.0f}% volume'.format(arg_dict['DoseLevel'], arg_dict['PercentVolume'])
+    else:
+        description = 'Not implemented: {0}'.format(arg_dict['FunctionType'])
+
+    return description
+
+def IsCombinedConstituentFunction(currentBeamSet, planOptimization, constituentFunction):
+    if (SizeOfIterator(planOptimization.OptimizedBeamSets) == 2 and not hasattr(constituentFunction.OfDoseDistribution, 'ForBeamSet')):
+        return True
+    else:
+        return False
 
 def CheckDvhIndex(objective, prescribedDose=0, roiDetails=None, planDose=None):
     """DVH index for objective.
