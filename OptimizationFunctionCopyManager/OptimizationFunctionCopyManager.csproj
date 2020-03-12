@@ -122,10 +122,6 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ClinicalGoal\ClinicalGoal.csproj">
-      <Project>{fb59101c-668e-48c2-896f-2eed19cf725b}</Project>
-      <Name>ClinicalGoal</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MvvmCommon\MvvmCommon\MvvmCommon.csproj">
       <Project>{8faa44f1-7d9d-452c-81d7-33a09e354b92}</Project>
       <Name>MvvmCommon</Name>
