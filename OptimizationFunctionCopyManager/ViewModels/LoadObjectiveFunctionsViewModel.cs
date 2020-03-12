@@ -220,7 +220,7 @@ namespace OptimizationFunctionCopyManager.ViewModels
                         string newLabel = newPlanLabel.Label;
                         if (planLabelQuery.Count() >= 2)
                         {
-                            MessageBox.Show($"Multiple plans are assigned to {planLabelInObjectiveFunction}. Use {newLabel}");
+                            MessageBox.Show($"Multiple plans are assigned to {planLabelInObjectiveFunction}. Use {newLabel}.");
                         }
                         o.SetPlanLabelInArguments(newLabel);
                     }
