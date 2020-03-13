@@ -1,4 +1,4 @@
-#from connect import *
+from connect import *
 
 import clr
 clr.AddReference("PresentationFramework")
@@ -36,32 +36,45 @@ from Helpers import GetStructureSet
 from Helpers import GetRoiDetails
 from Helpers import CheckDvhIndex
 
-#case = get_current("Case")
-#examination = get_current("Examination")
-#plan = get_current("Plan")
-#structureSet = GetStructureSet(case, examination)
-#roiDetails = GetRoiDetails(structureSet)
-#structureNames = List[str]()
-#for roiName in roiDetails.keys():
-#    structureNames.Add(roiName)
+patient = get_current("Patient")
+case = get_current("Case")
+examination = get_current("Examination")
+plan = get_current("Plan")
+structureSet = GetStructureSet(case, examination)
+roiDetails = GetRoiDetails(structureSet)
+structureNames = List[str]()
+for roiName in roiDetails.keys():
+    structureNames.Add(roiName)
 #structureNames = List[str]({'PTV', 'CTV', 'Rectal outline', 'Bladder outline'})
 
-#dvhCheckerDirectoryPath = r"\\10.208.223.10\Eclipse\DvhChecker"
-dvhCheckerDirectoryPath = RayStationScriptsPath + r"DvhChecker"
+dvhCheckerDirectoryPath = r"\\10.208.223.10\Eclipse\DvhChecker"
+#dvhCheckerDirectoryPath = RayStationScriptsPath + r"DvhChecker"
 
 clinicalGoalViewModel = ClinicalGoalViewModel()
 clinicalGoalViewModel.DvhCheckerDirectoryPath = dvhCheckerDirectoryPath
 
 clinicalGoalViewModel.PlanCheckerDirectoryPath = r"\\10.208.223.10\Eclipse"
 
-clinicalGoalViewModel.PatientId = "1234567890"
-clinicalGoalViewModel.PatientName = "JUNTEN Taro"
-clinicalGoalViewModel.CourseId = "C1"
-clinicalGoalViewModel.PlanId = "1-1-1"
+patientId = patient.PatientID
+patientNameDicom = patient.PatientName
+beamSet = get_current("BeamSet")
+planId = beamSet.DicomPlanLabel
+prescribedDose = beamSet.Prescription.DosePrescriptions[0].DoseValue
+numberOfFractions = beamSet.FractionationPattern.NumberOfFractions
 
-#for roiName in roiDetails.keys():
-#    structureNames.Add(roiName)
-structureNames = List[str]({'PTV', 'CTV', 'Rectal outline', 'Bladder outline'})
+planDose = beamSet.FractionDose
+
+dosesAtVolumes = planDose.GetDoseAtRelativeVolumes(RoiName='PTV_Initial', RelativeVolumes=[0.95, 0.99])
+doseMax = planDose.GetDoseStatistic(RoiName='PTV_Initial', DoseType='Max')
+print dosesAtVolumes[0], dosesAtVolumes[1], doseMax
+#sys.exit()
+
+clinicalGoalViewModel.PatientId = patientId
+clinicalGoalViewModel.PatientName = patientNameDicom
+clinicalGoalViewModel.CourseId = "NA"
+clinicalGoalViewModel.PlanId = planId
+clinicalGoalViewModel.PrescribedDose = prescribedDose
+clinicalGoalViewModel.StructureNames = ObservableCollection[str](structureNames)
 
 mainWindow = MainWindow(clinicalGoalViewModel)
 mainWindow.Title = "Check Clinical Goal"
@@ -72,16 +85,33 @@ if not clinicalGoalViewModel.CanExecute:
     print 'Canceled'
     sys.exit()
 
-dvhObjectives = clinicalGoalViewModel.DvhObjectives;
-prescrivedDose = clinicalGoalViewModel.PrescribedDose;
+dvhObjectives = clinicalGoalViewModel.DvhObjectives
+prescrivedDose = clinicalGoalViewModel.PrescribedDose
+
+for o in dvhObjectives:
+    print o.StructureName, o.StructureNameTps, o.TargetType, o.DoseUnit, o.VolumeUnit, o.ObjectiveType
+    print o.ArgumentValue, o.TargetValue
+#    if (o.TargetType == DvhTargetType.Volume):
+#        print "Dose"
+    CheckDvhIndex(o, prescribedDose, roiDetails, planDose, numberOfFractions)
+    print o.Value, o.IsPassed, o.IsAcceptable
+#pass
 
 mainWindow = MainWindow(clinicalGoalViewModel)
 mainWindow.Title = "Save Clinical Goal"
 mainWindow.ShowDialog()
 
-for o in dvhObjectives:
-    print o.TargetType, o.DoseUnit, o.VolumeUnit, o.ObjectiveType
-    if (o.TargetType == DvhTargetType.Volume):
-        print "Dose"
-    CheckDvhIndex(o)
-pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+

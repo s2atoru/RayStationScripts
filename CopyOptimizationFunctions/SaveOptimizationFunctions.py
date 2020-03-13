@@ -11,12 +11,6 @@ import sys, os, codecs
 import json
 from collections import OrderedDict
 
-from Helpers import ClearObjectiveFunctions
-from Helpers import GetObjectiveFunctionDescription
-from Helpers import GetPlanLabelForConstituentFunction
-from Helpers import IsCombinedConstituentFunction
-from Helpers import SizeOfIterator
-
 dllsPath = os.environ["USERPROFILE"]
 dllsPath = dllsPath + r"\Desktop\RayStationScripts\Dlls"
 print(dllsPath)
@@ -27,14 +21,23 @@ scriptsPath = RayStationScriptsPath + "Scripts"
 print(scriptsPath)
 sys.path.append(scriptsPath)
 
+from Helpers import ClearObjectiveFunctions
+from Helpers import GetObjectiveFunctionDescription
+from Helpers import GetPlanLabelForConstituentFunction
+from Helpers import IsCombinedConstituentFunction
+from Helpers import SizeOfIterator
+
+clr.AddReference("OptimizationFunctionCopyManager")
+from OptimizationFunctionCopyManager.Views import SaveWindow
+
+objectiveFunctionsPath = r"\\10.208.223.10\RayStation\RayStationScripts\ObjectiveFunctions"
+
 case = get_current("Case")
 # Get handles to "Original plan" and "Copy plan".
-original_plan = case.TreatmentPlans["test"]
+original_plan = get_current('Plan')
 original_beamSet = original_plan.BeamSets[0]
-new_plan = case.TreatmentPlans["test3"]
+new_plan = get_current('Plan')
 new_beamSets = new_plan.BeamSets
-
-ClearObjectiveFunctions(new_plan)
 
 # Define a function that will retrieve the necessary information
 # and put it in a dictionary.
@@ -115,61 +118,50 @@ with CompositeAction('Copy Objective Functions'):
         arg_dict['IsCombined'] = IsCombinedConstituentFunction(original_beamSet, po_original, cf)
         arguments.append(arg_dict)
 
-    prescribedDose = 7000.0
+    prescribedDose = 6500
     objectiveFunctions = OrderedDict()
-    objectiveFunctions['prescribedDose'] = prescribedDose
-    objectiveFunctions['arguments'] = arguments
+    objectiveFunctions['PrescribedDose'] = prescribedDose
+    objectiveFunctions['Arguments'] = arguments
+    
+    from StringIO import StringIO
+    objectiveFunctionsJson = StringIO()
+
+    json.dump(objectiveFunctions, objectiveFunctionsJson)
+
+    filePath = os.path.join(objectiveFunctionsPath,'tmp3.json') 
+    with codecs.open(filePath, 'w', 'utf-8') as fp:
+        json.dump(objectiveFunctions,fp)
+
+    print objectiveFunctionsJson.getvalue()
+    print objectiveFunctionsPath
+
+    saveWindow = SaveWindow(objectiveFunctionsJson.getvalue(), objectiveFunctionsPath)
+    #saveWindow = SaveWindow()
+    saveWindow.ShowDialog()
 
     # Write to a file as json
-    objectiveFunctionsFilePath = RayStationScriptsPath + "ObjectiveFunctions"
-    filePath = os.path.join(objectiveFunctionsFilePath,'tmp.json') 
-    with codecs.open(filePath, 'w', 'utf-8') as fp:
-        json.dump(objectiveFunctions,fp,indent=4)
+    #objectiveFunctionsFilePath = RayStationScriptsPath + "ObjectiveFunctions"
+    #filePath = os.path.join(objectiveFunctionsFilePath,'tmp.json') 
+    #with codecs.open(filePath, 'w', 'utf-8') as fp:
+    #    json.dump(objectiveFunctions,fp,indent=4)
 
-    # Read from a json file
-    with codecs.open(filePath, 'r', 'utf-8') as fp:
-        objectiveFunctionsJson = fp.read()
+    #for arg_dict in objectiveFunctions['arguments']:
+    #    description = GetObjectiveFunctionDescription(arg_dict)
+    #    print arg_dict['IsCombined'], arg_dict['PlanLabel'], arg_dict['FunctionType'], description
 
-    # Read from a json file
-    filePath2 = os.path.join(objectiveFunctionsFilePath,'tmp2.json') 
-    with codecs.open(filePath2, 'w', 'utf-8') as fp:
-        fp.write(objectiveFunctionsJson)
 
-    loadedObjectiveFunctions = json.loads(objectiveFunctionsJson)
 
-    prescribedDose = loadedObjectiveFunctions['prescribedDose']
-    arguments = loadedObjectiveFunctions['arguments']
 
-    for arg_dict in arguments:
-        description = GetObjectiveFunctionDescription(arg_dict)
-        print arg_dict['IsCombined'], arg_dict['PlanLabel'], arg_dict['FunctionType'], description
 
-    # Add optimization functions to the new plan.
-    po_new = new_plan.PlanOptimizations[0]
 
-    if SizeOfIterator(po_new.OptimizedBeamSets) == 2:
-        hasMultipleBeamSets = True
-    else:
-        hasMultipleBeamSets = False 
 
-    for arg_dict in arguments:
-        #with CompositeAction('Add Optimization Function'):
-        if arg_dict['FunctionType'] == 'UniformEud':
-            arg_dict['FunctionType'] = 'TargetEud'
-        if not hasMultipleBeamSets:
-            f = po_new.AddOptimizationFunction(FunctionType=arg_dict['FunctionType'],
-                RoiName=arg_dict['RoiName'], IsConstraint=arg_dict['IsConstraint'],
-                IsRobust=arg_dict['IsRobust'])
-        else:
-            if arg_dict['IsCombined']:
-                restrictToBeamSet = None
-            else:
-                restrictToBeamSet = arg_dict['PlanLabel']
-            f = po_new.AddOptimizationFunction(FunctionType=arg_dict['FunctionType'],
-                RoiName=arg_dict['RoiName'], IsConstraint=arg_dict['IsConstraint'],
-                IsRobust=arg_dict['IsRobust'], RestrictToBeamSet=restrictToBeamSet)
 
-        set_function_arguments(f, arg_dict)
+
+
+
+
+
+
 
 
 

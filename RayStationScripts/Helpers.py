@@ -748,7 +748,7 @@ def IsCombinedConstituentFunction(currentBeamSet, planOptimization, constituentF
     else:
         return False
 
-def CheckDvhIndex(objective, prescribedDose=0, roiDetails=None, planDose=None):
+def CheckDvhIndex(objective, prescribedDose=0, roiDetails=None, planDose=None, numberOfFractions = 1):
     """DVH index for objective.
 
     Calculates DVH index and set objective.Value and objective.EvalResut
@@ -756,8 +756,9 @@ def CheckDvhIndex(objective, prescribedDose=0, roiDetails=None, planDose=None):
     Args:
         objective (DvhObjective): DvhObjective.
         prescribedDose (float): Prescribed dose in cGy.
-        roiDetails (dictionary); Dictionary of ROIs. roiDetails['roiName']['Volume'] should give the volume of the ROI.
-        planDose (plan dose RayStation); Plan dose in RayStation
+        roiDetails (dictionary): Dictionary of ROIs. roiDetails['roiName']['Volume'] should give the volume of the ROI.
+        planDose (plan dose RayStation): Plan dose in RayStation.
+        numberOfFractions: Number of Fractions for evaluation
 
     Returns:
         float: DVH index. -1 if ROI is not available.
@@ -790,10 +791,10 @@ def CheckDvhIndex(objective, prescribedDose=0, roiDetails=None, planDose=None):
                 # Volume in cc to relative
                 relativeVolume = objective.ArgumentValue / roiVolume
             
-            value = planDose.GetDoseAtRelativeVolumes(RoiName=roiName, RelativeVolumes=[relatvieVolume])[0]
-        elif(objectiveType == DvhObjectvieType.Max):
+            value = planDose.GetDoseAtRelativeVolumes(RoiName=roiName, RelativeVolumes=[relativeVolume])[0]
+        elif(objectiveType == DvhObjectiveType.Max):
             value = planDose.GetDoseAtRelativeVolumes(RoiName=roiName, RelativeVolumes=[0.0])[0]
-        elif(objectiveType == DvhObjectvieType.Min):
+        elif(objectiveType == DvhObjectiveType.Min):
             value = planDose.GetDoseAtRelativeVolumes(RoiName=roiName, RelativeVolumes=[1.0])[0]
         elif(objectiveType == DvhObjectiveType.MeanUpper or objectiveType == DvhObjectiveType.MeanLower):
             value = planDose.GetDoseStatistic(RoiName=roiName, DoseType='Average')
@@ -811,6 +812,8 @@ def CheckDvhIndex(objective, prescribedDose=0, roiDetails=None, planDose=None):
             # cGy to Gy
             value = value/100.0
 
+        value = value*numberOfFractions
+
     elif(targetType == DvhTargetType.Volume):
         if(argumentUnit == DvhPresentationType.Rel):
             # % to cGy
@@ -818,6 +821,8 @@ def CheckDvhIndex(objective, prescribedDose=0, roiDetails=None, planDose=None):
         elif(argumentUnit == DvhPresentationType.Abs):
             # Gy to cGy
             absoluteDose = objective.ArgumentValue*100.0
+
+        absoluteDose = absoluteDose/numberOfFractions
 
         if(objectiveType == DvhObjectiveType.Upper or objectiveType == DvhObjectiveType.Lower):
             value = planDose.GetRelativeVolumeAtDoseValues(RoiName=roiName, DoseValues=[absoluteDose])[0]
@@ -856,7 +861,7 @@ def CheckDvhIndex(objective, prescribedDose=0, roiDetails=None, planDose=None):
     acceptableLimit = objective.AcceptableLimitValue
     isPass = False
     isAcceptable = False
-    slack = 1.e-4
+    slack = 1.e-6
     if(objectiveType == DvhObjectiveType.Upper 
        or objectiveType == DvhObjectiveType.Max
        or objectiveType == DvhObjectiveType.MeanUpper):
@@ -871,7 +876,7 @@ def CheckDvhIndex(objective, prescribedDose=0, roiDetails=None, planDose=None):
         if(not isPass) and (acceptableLimit > 0):
             isAcceptable = CheckLowrLimitWithNormalization(value, acceptableLimit, normalization, slack)
 
-    objective.IsPass = isPass
+    objective.IsPassed = isPass
     objective.IsAcceptable = isAcceptable
     if(isPass):
         objective.EvalResult = DvhEvalResult.Pass
@@ -897,7 +902,7 @@ def CheckUpperLimitWithNormalization(value, upperLimit, normalization=1, slack=1
 
     """
 
-    if(value - upplerLimit <= normalization*slack):
+    if(value - upperLimit <= normalization*slack):
         return True
     else:
         return False

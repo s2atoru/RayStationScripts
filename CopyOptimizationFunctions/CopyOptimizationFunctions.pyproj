@@ -28,6 +28,13 @@
   <ItemGroup>
     <InterpreterReference Include="IronPython|2.7-32" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OptimizationFunctionCopyManager\OptimizationFunctionCopyManager.csproj">
+      <Name>OptimizationFunctionCopyManager</Name>
+      <Project>{f4929b91-7c42-44b3-8bfc-54c97e62f28a}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
        Visual Studio and specify your pre- and post-build commands in
