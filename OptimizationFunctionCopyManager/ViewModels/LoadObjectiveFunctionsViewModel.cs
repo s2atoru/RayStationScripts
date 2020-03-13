@@ -58,6 +58,8 @@ namespace OptimizationFunctionCopyManager.ViewModels
 
         public ObservableCollection<string> PlanLabelsInObjectiveFuntions { get; private set; } = new ObservableCollection<string>();
 
+        public bool DoesClearObjectiveFunctions { get; set; } = true;
+
         public DelegateCommand OkCommand { get; private set; }
         public DelegateCommand CancelCommand { get; private set; }
         public DelegateCommand ChooseFileCommand { get; private set; }
@@ -68,7 +70,7 @@ namespace OptimizationFunctionCopyManager.ViewModels
             OriginalPrescribedDose = 5000.0;
 
             List<Models.PlanLabel> planLabels0 = new List<Models.PlanLabel>();
-            planLabels0.Add(new Models.PlanLabel("test"));
+            planLabels0.Add(new Models.PlanLabel("1-1-1"));
             planLabels0[0].LabelInObjectiveFunction = PlanLabelNone;
             planLabels0.Add(new Models.PlanLabel("1-1-2"));
             planLabels0[1].LabelInObjectiveFunction = PlanLabelNone;
@@ -249,7 +251,7 @@ namespace OptimizationFunctionCopyManager.ViewModels
                         o.Arguments["DoseLevel"] = doseLevel;
                     }
 
-                    r.ObjectiveFuntionArguments.Add(o.Arguments.ToString());
+                    r.ObjectiveFunctionArguments.Add(o.Arguments.ToString());
                 }
             }
         }

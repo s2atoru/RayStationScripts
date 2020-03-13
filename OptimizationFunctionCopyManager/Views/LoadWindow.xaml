@@ -72,7 +72,7 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ComboBox ItemsSource="{Binding DataContext.PlanLabelsInObjectiveFuntions, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
-                                          SelectedValue="{Binding LabelInObjectiveFunction, Mode=TwoWay}"/>
+                                          SelectedValue="{Binding LabelInObjectiveFunction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -96,7 +96,7 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ComboBox ItemsSource="{Binding DataContext.RoiNamesInObjectiveFunctions, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
-                                          SelectedValue="{Binding NameInObjectiveFunction, Mode=TwoWay}"/>
+                                          SelectedValue="{Binding NameInObjectiveFunction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -109,6 +109,7 @@
                 <TextBlock> Prescribed dose in Objective functions:</TextBlock>
                 <TextBox Text="{Binding OriginalPrescribedDose, Mode=TwoWay}"></TextBox>
             </StackPanel>
+            <CheckBox IsChecked="{Binding DoesClearObjectiveFunctions}" VerticalAlignment="Center">Clear Objective functions?</CheckBox>
             <TextBlock>Objective functions</TextBlock>
             <DataGrid ItemsSource="{Binding ObjectiveFunctions}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="200">
                 <DataGrid.Columns>
