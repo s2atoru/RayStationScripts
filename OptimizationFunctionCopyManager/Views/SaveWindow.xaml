@@ -79,6 +79,10 @@
                     <DataGridTextColumn Header="Description" Binding="{Binding Description}" IsReadOnly="True"></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Message:</TextBlock>
+                <TextBlock Text="{Binding Message}"></TextBlock>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

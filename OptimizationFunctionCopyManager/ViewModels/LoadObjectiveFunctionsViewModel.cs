@@ -210,7 +210,8 @@ namespace OptimizationFunctionCopyManager.ViewModels
             {
                 if (OriginalPrescribedDose == 0)
                 {
-                    MessageBox.Show($"No rescale because OriginalPrescribedDose = 0");
+                    //MessageBox.Show($"No rescale because OriginalPrescribedDose = 0");
+                    Message = $"No rescale because OriginalPrescribedDose = 0";
                     scale = 1.0;
                 }
                 else
