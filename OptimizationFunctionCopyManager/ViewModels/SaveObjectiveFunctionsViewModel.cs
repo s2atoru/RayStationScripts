@@ -89,6 +89,7 @@ namespace OptimizationFunctionCopyManager.ViewModels
                 var Arguments = new JArray();
                 foreach (var o in ObjectiveFunctions)
                 {
+                    if (!o.InUse) continue;
                     var a = o.Arguments;
                     Arguments.Add(JToken.Parse(a.ToString()));
                 }
