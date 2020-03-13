@@ -103,7 +103,7 @@
                 </DataGrid.Columns>
             </DataGrid>
             <StackPanel Orientation="Horizontal">
-                <CheckBox IsChecked="{Binding DoesRescaleDose}" VerticalAlignment="Center"> Rescale dose?</CheckBox>
+                <CheckBox IsChecked="{Binding DoesRescaleDose}" VerticalAlignment="Center">Rescale dose?</CheckBox>
                 <TextBlock> Prescribed dose:</TextBlock>
                 <TextBox Text="{Binding PrescribedDose, Mode=TwoWay}"></TextBox>
                 <TextBlock> Prescribed dose in Objective functions:</TextBlock>
@@ -111,6 +111,10 @@
             </StackPanel>
             <CheckBox IsChecked="{Binding DoesClearObjectiveFunctions}" VerticalAlignment="Center">Clear Objective functions?</CheckBox>
             <TextBlock>Objective functions</TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Description:</TextBlock>
+                <TextBlock Text="{Binding Description}"></TextBlock>
+            </StackPanel>
             <DataGrid ItemsSource="{Binding ObjectiveFunctions}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="200">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn IsReadOnly="True" Header="In Use">

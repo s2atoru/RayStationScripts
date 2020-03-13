@@ -60,6 +60,13 @@ namespace OptimizationFunctionCopyManager.ViewModels
 
         public bool DoesClearObjectiveFunctions { get; set; } = true;
 
+        private string description;
+        public string Description
+        {
+            get { return description; }
+            set { SetProperty(ref description, value); }
+        }
+
         public DelegateCommand OkCommand { get; private set; }
         public DelegateCommand CancelCommand { get; private set; }
         public DelegateCommand ChooseFileCommand { get; private set; }
@@ -144,6 +151,16 @@ namespace OptimizationFunctionCopyManager.ViewModels
                 PrescribedDose = OriginalPrescribedDose;
 
                 var arguments = (JArray)ObjectiveFunctionsJObject["Arguments"];
+
+                var descriptionJObject = ObjectiveFunctionsJObject["Description"];
+                if (descriptionJObject != null)
+                {
+                    Description = descriptionJObject.ToObject<string>();
+                }
+                else
+                {
+                    Description = string.Empty;
+                }
 
                 ObjectiveFunctions.Clear();
                 foreach (var a in arguments)
