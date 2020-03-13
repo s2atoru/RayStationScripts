@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         xmlns:ViewModels="clr-namespace:OptimizationFunctionCopyManager.ViewModels"
         d:DataContext="{d:DesignInstance {x:Type ViewModels:SaveObjectiveFunctionsViewModel}}"
-        Title="Load objective functions" SizeToContent="WidthAndHeight">
+        Title="Save objective functions" SizeToContent="WidthAndHeight">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Margin" Value="6"/>

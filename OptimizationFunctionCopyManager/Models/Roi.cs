@@ -13,7 +13,7 @@ namespace OptimizationFunctionCopyManager.Models
             get { return nameInObjectiveFunction; }
             set { SetProperty(ref nameInObjectiveFunction, value); }
         }
-        public List<string> ObjectiveFuntionArguments { get; set; } = new List<string>();
+        public List<string> ObjectiveFunctionArguments { get; set; } = new List<string>();
 
         public Roi(string name)
         {

@@ -36,7 +36,7 @@ namespace OptimizationFunctionCopyManager.ViewModels
         }
         public double PrescribedDose { get; set; }
 
-        public ObservableCollection<Models.ObjectiveFunction> ObjectiveFunctions = new ObservableCollection<Models.ObjectiveFunction>();
+        public ObservableCollection<Models.ObjectiveFunction> ObjectiveFunctions { get; private set; } = new ObservableCollection<Models.ObjectiveFunction>();
 
         public DelegateCommand OkCommand { get; private set; }
         public DelegateCommand CancelCommand { get; private set; }
@@ -54,7 +54,9 @@ namespace OptimizationFunctionCopyManager.ViewModels
             DefaultDirectoryPath = defaultDirectoryPath;
 
             var objectiveFunctionsJObject = JObject.Parse(objectiveFunctionsJson);
-            var objectiveFunctionArguments = (JArray)objectiveFunctionsJson;
+            var objectiveFunctionArguments = (JArray)objectiveFunctionsJObject["Arguments"];
+
+            PrescribedDose = objectiveFunctionsJObject["PrescribedDose"].ToObject<double>();
 
             ObjectiveFunctions.Clear();
             foreach (var a in objectiveFunctionArguments)
@@ -63,7 +65,7 @@ namespace OptimizationFunctionCopyManager.ViewModels
                 ObjectiveFunctions.Add(new Models.ObjectiveFunction(jObject));
             }
 
-            OkCommand = new DelegateCommand(() => { CanExecute = true; UpdateWeightInObjectiveFunctions(); });
+            OkCommand = new DelegateCommand(() => { CanExecute = true; });
             CancelCommand = new DelegateCommand(() => { CanExecute = false; });
             SaveFileCommand = new DelegateCommand(SaveFile);
         }
