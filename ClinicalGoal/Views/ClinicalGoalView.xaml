@@ -29,12 +29,6 @@
     </UserControl.Resources>
     <Grid>
         <StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Patient ID:"/>
-                <TextBlock Text="{Binding PatientId}" VerticalAlignment="Center"/>
-                <Label Content="Patient Name:"/>
-                <TextBlock Text="{Binding PatientName}" VerticalAlignment="Center"/>
-            </StackPanel>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
                 <Button Command="{Binding ChooseFileCommand}" Content="Choose File" Width="140"/>
                 <Label Content="Chosen file:" />
@@ -43,24 +37,6 @@
             <StackPanel Orientation="Horizontal">
                 <Label Content="Message:"/>
                 <TextBlock Text="{Binding Message}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Button Content="OK" Width="120">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <prism:InvokeCommandAction Command="{Binding OkCommand}"/>
-                            <ac:CloseWindowAction/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Button>
-                <Button Content="Cancel" Width="120">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <prism:InvokeCommandAction Command="{Binding CancelCommand}"/>
-                            <ac:CloseWindowAction/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Protocol ID:"/>
