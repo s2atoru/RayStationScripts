@@ -174,8 +174,6 @@ namespace ClinicalGoal.ViewModels
                 {
                     sw.Write(json);
                 }
-
-                var test = JsonConvert.DeserializeObject<List<DvhObjective>>(json);
             }
         }
         private void ChooseFile(DvhObjectivesViewModel dvhObjectivesViewModel)
