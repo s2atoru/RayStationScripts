@@ -26,7 +26,7 @@
     <Grid>
         <StackPanel>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
-                <Button Command="{Binding ChooseFileCommand}" CommandParameter="{Binding}" Content="Choose File" Width="140"/>
+                <Button Command="{Binding ChooseFileCommand}" CommandParameter="{Binding}" Content="Choose File" Width="120"/>
                 <Label Content="Chosen file:" />
                 <TextBlock Text="{Binding ProtocolFilePath}" VerticalAlignment="Center"/>
             </StackPanel>

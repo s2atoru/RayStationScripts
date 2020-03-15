@@ -56,7 +56,7 @@
                     </i:Interaction.Triggers>
                 </Button>
             </StackPanel>
-            <Views:ClinicalGoalView DataContext="{Binding ClinicalGoalViewModel}"/>
+            <Views:ClinicalGoalView DataContext="{Binding ClinicalGoalViewModel.SelectedDvhObjectivesViewModel}"/>
         </StackPanel>
     </Grid>
 </Window>

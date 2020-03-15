@@ -52,10 +52,7 @@
                     </i:Interaction.Triggers>
                 </Button>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Selected Plan ID:"></TextBlock>
-                <TextBlock Text="{Binding ClinicalGoalViewModel.SelectedDvhObjectivesViewModel.PlanId, Mode=TwoWay}"></TextBlock>
-            </StackPanel>
+            <Button Command="{Binding ClinicalGoalViewModel.SaveDvhIndicesCommand}" Content="Save DVH indices" Width="120" HorizontalAlignment="Left"/>
             <TabControl ItemsSource="{Binding ClinicalGoalViewModel.DvhObjectivesViewModels}" SelectedValue="{Binding ClinicalGoalViewModel.SelectedDvhObjectivesViewModel}" SelectedValuePath="PlanId" SelectedItem="{Binding ClinicalGoalViewModel.SelectedDvhObjectivesViewModel}">
                 <TabControl.ItemTemplate>
                     <DataTemplate>

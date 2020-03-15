@@ -15,6 +15,13 @@ namespace ClinicalGoal.ViewModels
     public class ClinicalGoalViewModel : BindableBase
     {
         private static readonly string StructureNameNone = "(none)";
+
+        private bool isSaving = false;
+        public bool IsSaving
+        {
+            get { return isSaving; }
+            set { SetProperty(ref isSaving, value); }
+        }
         public string PatientId { get; set; }
         public string PatientName { get; set; }
         public List<string> PlanIds { get; private set; }
@@ -89,13 +96,35 @@ namespace ClinicalGoal.ViewModels
 
             OkCommand = new DelegateCommand(() => { CanExecute = true; PickUpDvhObjectivesInUse(); });
             CancelCommand = new DelegateCommand(() => { CanExecute = false; });
-            SaveDvhIndicesCommand = new DelegateCommand(() => { SaveDvhIndices(); });
+            SaveDvhIndicesCommand = new DelegateCommand(() => { SaveDvhIndices(); }).ObservesCanExecute(() => IsSaving);
 
             var planPrescriptions = new List<Models.PlanPrescription>();
             planPrescriptions.Add(new Models.PlanPrescription { PlanId = "1-1-1", PrescribedDose = 4600, NumberOfFractions = 23 });
             planPrescriptions.Add(new Models.PlanPrescription { PlanId = "1-1-2", PrescribedDose = 3000, NumberOfFractions = 15 });
             planPrescriptions.Add(new Models.PlanPrescription { PlanId = "Plan Sum", PrescribedDose = 7600, NumberOfFractions = 38 });
 
+            SetDvhObjectivesViewModels(planPrescriptions);
+        }
+
+        public ClinicalGoalViewModel(string patientId, string patientName,
+            List<Models.PlanPrescription> planPrescriptions,
+            string dvhCheckerDirectoryPath = @"\\10.208.223.10\Eclipse\DvhChecker",
+            string planCheckerDirectoryPath = @"\\10.208.223.10\Eclipse")
+        {
+            PatientId = patientId;
+            PatientName = patientName;
+            DvhCheckerDirectoryPath = dvhCheckerDirectoryPath;
+            PlanCheckerDirectoryPath = planCheckerDirectoryPath;
+
+            SetDvhObjectivesViewModels(planPrescriptions);
+
+            OkCommand = new DelegateCommand(() => { CanExecute = true; PickUpDvhObjectivesInUse(); });
+            CancelCommand = new DelegateCommand(() => { CanExecute = false; });
+            SaveDvhIndicesCommand = new DelegateCommand(() => { SaveDvhIndices(); });
+        }
+
+        private void SetDvhObjectivesViewModels(List<Models.PlanPrescription> planPrescriptions)
+        {
             foreach (var p in planPrescriptions)
             {
                 var dvhObjectivesViewModel = new DvhObjectivesViewModel
@@ -108,11 +137,28 @@ namespace ClinicalGoal.ViewModels
                 dvhObjectivesViewModel.ChooseFileCommand = new DelegateCommand<DvhObjectivesViewModel>(ChooseFile);
                 dvhObjectivesViewModel.StructureNames = StructureNames;
 
+                string planFolderPath = Path.Combine(PlanCheckerDirectoryPath, Path.Combine(PatientId, Path.Combine(p.PlanId, "PlanCheckData")));
+                string filePath = Path.Combine(planFolderPath, "DvhObjectives.json");
+
+                if (File.Exists(filePath))
+                {
+                    string json;
+                    using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    using (StreamReader sr = new StreamReader(fs, Encoding.GetEncoding("shift_jis")))
+                    {
+                        json = sr.ReadToEnd();
+                    }
+
+                    var dvhObjectives = JsonConvert.DeserializeObject<List<DvhObjective>>(json);
+
+                    dvhObjectivesViewModel.DvhObjectives = new ObservableCollection<DvhObjective>(dvhObjectives);
+                }
+
                 DvhObjectivesViewModels.Add(dvhObjectivesViewModel);
             }
 
 
-            if(DvhObjectivesViewModels.Count > 0)
+            if (DvhObjectivesViewModels.Count > 0)
             {
                 SelectedDvhObjectivesViewModel = DvhObjectivesViewModels.First();
             }
@@ -158,8 +204,10 @@ namespace ClinicalGoal.ViewModels
         {
             foreach (var dvhObjectivesViewModel in DvhObjectivesViewModels)
             {
-                var dvhObjectivesInUse = dvhObjectivesViewModel.DvhObjectives.Where(o => (o.InUse && o.StructureNameTps.Length > 0));
+                var dvhObjectivesInUse = dvhObjectivesViewModel.DvhObjectives.Where(o => (o.InUse && (o.StructureNameTps != StructureNameNone)));
                 dvhObjectivesViewModel.DvhObjectives = new ObservableCollection<DvhObjective>(dvhObjectivesInUse);
+
+                if (dvhObjectivesViewModel.DvhObjectives.Count == 0) continue;
 
                 var planId = dvhObjectivesViewModel.PlanId;
                 string planFolderPath = Path.Combine(PlanCheckerDirectoryPath, Path.Combine(PatientId, Path.Combine(planId, "PlanCheckData")));
