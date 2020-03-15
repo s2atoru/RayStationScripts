@@ -72,13 +72,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Actions\CloseWindowAction.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\ClinicalGoal.cs" />
-    <Compile Include="ViewModels\BindableBaseWithErrorsContainer.cs" />
     <Compile Include="ViewModels\ClinicalGoalViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\ClinicalGoalView.xaml.cs">
@@ -134,6 +132,10 @@
     <ProjectReference Include="..\DvhChecker\DvhChecker\DvhChecker.csproj">
       <Project>{210b4ff8-d390-477e-9a12-72ee29cb5374}</Project>
       <Name>DvhChecker</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MvvmCommon\MvvmCommon\MvvmCommon.csproj">
+      <Project>{8faa44f1-7d9d-452c-81d7-33a09e354b92}</Project>
+      <Name>MvvmCommon</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
