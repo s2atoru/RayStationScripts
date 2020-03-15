@@ -1,4 +1,5 @@
 ﻿using CsvHelper;
+using Newtonsoft.Json;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -19,12 +20,14 @@ namespace Juntendo.MedPhys
 
     public class DvhObjective : BindableBase
     {
-
+        [JsonProperty]
         public string ProtocolId { get; private set; }
 
+        [JsonProperty]
         public string OriginalProtocolId { get; private set; } = String.Empty;
 
         private string title;
+        [JsonProperty]
         public string Title
         {
             get { return title; }
@@ -35,6 +38,7 @@ namespace Juntendo.MedPhys
         }
 
         private bool inUse;
+        [JsonProperty]
         public bool InUse
         {
             get { return inUse; }
@@ -45,6 +49,7 @@ namespace Juntendo.MedPhys
         }
 
         private string structureName;
+        [JsonProperty]
         public string StructureName
         {
             get { return structureName; }
@@ -55,6 +60,7 @@ namespace Juntendo.MedPhys
         }
 
         private string structureNameTps;
+        [JsonProperty]
         public string StructureNameTps
         {
             get { return structureNameTps; }
@@ -65,6 +71,7 @@ namespace Juntendo.MedPhys
         }
 
         private DvhObjectiveType objectiveType;
+        [JsonProperty]
         public DvhObjectiveType ObjectiveType
         {
             get { return objectiveType; }
@@ -75,6 +82,7 @@ namespace Juntendo.MedPhys
         }
 
         private DvhTargetType targetType;
+        [JsonProperty]
         public DvhTargetType TargetType
         {
             get { return targetType; }
@@ -85,6 +93,7 @@ namespace Juntendo.MedPhys
         }
 
         private DvhPresentationType targetUnit;
+        [JsonProperty]
         public DvhPresentationType TargetUnit
         {
             get { return targetUnit; }
@@ -95,6 +104,7 @@ namespace Juntendo.MedPhys
         }
 
         private double targetValue;
+        [JsonProperty]
         public double TargetValue
         {
             get { return targetValue; }
@@ -105,6 +115,7 @@ namespace Juntendo.MedPhys
         }
 
         private DvhPresentationType argumentUnit;
+        [JsonProperty]
         public DvhPresentationType ArgumentUnit
         {
             get { return argumentUnit; }
@@ -115,6 +126,7 @@ namespace Juntendo.MedPhys
         }
 
         private double argumentValue;
+        [JsonProperty]
         public double ArgumentValue
         {
             get { return argumentValue; }
@@ -125,6 +137,7 @@ namespace Juntendo.MedPhys
         }
 
         private DvhDoseUnit doseUnit;
+        [JsonProperty]
         public DvhDoseUnit DoseUnit
         {
             get { return doseUnit; }
@@ -135,6 +148,7 @@ namespace Juntendo.MedPhys
         }
 
         private double value;
+        [JsonProperty]
         public double Value
         {
             get { return value; }
@@ -145,6 +159,7 @@ namespace Juntendo.MedPhys
         }
 
         private DvhVolumeUnit volumeUnit;
+        [JsonProperty]
         public DvhVolumeUnit VolumeUnit
         {
             get { return volumeUnit; }
@@ -156,6 +171,7 @@ namespace Juntendo.MedPhys
 
         // If Acceptable Limit is not given, set to -1
         private double acceptableLimitValue;
+        [JsonProperty]
         public double AcceptableLimitValue
         {
             get { return acceptableLimitValue; }
@@ -166,6 +182,7 @@ namespace Juntendo.MedPhys
         }
 
         private string remarks;
+        [JsonProperty]
         public string Remarks
         {
             get { return remarks; }
@@ -176,6 +193,7 @@ namespace Juntendo.MedPhys
         }
 
         private bool isPassed;
+        [JsonProperty]
         public bool IsPassed
         {
             get { return isPassed; }
@@ -186,6 +204,7 @@ namespace Juntendo.MedPhys
         }
 
         private bool isAcceptable;
+        [JsonProperty]
         public bool IsAcceptable
         {
             get { return isAcceptable; }
@@ -196,6 +215,7 @@ namespace Juntendo.MedPhys
         }
 
         private double volume;
+        [JsonProperty]
         public double Volume
         {
             get { return volume; }
@@ -205,10 +225,13 @@ namespace Juntendo.MedPhys
             }
         }
 
+        [JsonIgnore]
         public string ActualTargetUnit { get { return getTargetUnit(TargetType, TargetUnit); } }
+        [JsonIgnore]
         public string ActualArgumentUnit { get { return getArgumentUnit(TargetType, ArgumentUnit); } }
 
         private DvhEvalResult evalResult = DvhEvalResult.Na;
+        [JsonProperty]
         public DvhEvalResult EvalResult
         {
             get { return evalResult; }
@@ -217,6 +240,10 @@ namespace Juntendo.MedPhys
                 this.SetProperty(ref this.evalResult, value);
             }
         }
+
+        [JsonConstructor]
+        public DvhObjective(){}
+
         public DvhObjective(ObjectiveCsv objectiveCsv)
         {
             ProtocolId = objectiveCsv.ProtocolId;
