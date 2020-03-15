@@ -2,15 +2,11 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:ac="clr-namespace:ClinicalGoal.Actions"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:ViewModels="clr-namespace:ClinicalGoal.ViewModels"
              x:Class="ClinicalGoal.Views.ClinicalGoalView"
-             xmlns:prism="http://prismlibrary.com/"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"         
-             prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="1200" d:DataContext="{d:DesignInstance {x:Type ViewModels:ClinicalGoalViewModel}}">
+             d:DesignHeight="700" d:DesignWidth="1200" d:DataContext="{d:DesignInstance {x:Type ViewModels:DvhObjectivesViewModel}}">
     <UserControl.Resources>
         <Style TargetType="{x:Type Button}">
             <Setter Property="Margin" Value="3"/>
@@ -30,7 +26,7 @@
     <Grid>
         <StackPanel>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
-                <Button Command="{Binding ChooseFileCommand}" Content="Choose File" Width="140"/>
+                <Button Command="{Binding ChooseFileCommand}" CommandParameter="{Binding}" Content="Choose File" Width="140"/>
                 <Label Content="Chosen file:" />
                 <TextBlock Text="{Binding ProtocolFilePath}" VerticalAlignment="Center"/>
             </StackPanel>
@@ -52,13 +48,6 @@
                 <Label Content="Prescribed Dose [cGy]:"/>
                 <TextBox Text="{Binding PrescribedDose}" MinWidth="96"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Clear all clinical goals:"/>
-                <CheckBox IsChecked="{Binding ClearAllExistingClinicalGoals, Mode=TwoWay}" VerticalAlignment="Center">
-                </CheckBox>
-            </StackPanel>
-            <Button Content="Save DVH indices" Width="200" HorizontalAlignment="Left" Command="{Binding SaveDvhIndicesCommand}">
-            </Button>
             <DataGrid ItemsSource="{Binding DvhObjectives}" AutoGenerateColumns="False" CanUserAddRows="False" FontSize="12" MaxHeight="700">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn IsReadOnly="True" Header="In Use">
@@ -100,11 +89,6 @@
                     Binding="{Binding StructureName, Mode=OneTime}"
                     IsReadOnly="True">
                     </DataGridTextColumn>
-                    <!--<DataGridTextColumn
-                    Header="Structure (TPS)"
-                    Binding="{Binding StructureNameTps, Mode=OneTime}"
-                    IsReadOnly="True">
-                    </DataGridTextColumn>-->
                     <DataGridTemplateColumn IsReadOnly="True" Header="Structure (TPS)">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

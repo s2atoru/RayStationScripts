@@ -1,9 +1,10 @@
-﻿<Window xmlns:Views="clr-namespace:ClinicalGoal.Views"
+﻿<Window x:Class="ClinicalGoal.Views.MultiplePlansWindow"
+        xmlns:Views="clr-namespace:ClinicalGoal.Views"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:ViewModels="clr-namespace:ClinicalGoal.ViewModels"  x:Class="ClinicalGoal.Views.MainWindow"
+        xmlns:ViewModels="clr-namespace:ClinicalGoal.ViewModels"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:ac="clr-namespace:ClinicalGoal.Actions"
@@ -36,11 +37,6 @@
                 <TextBlock Text="{Binding ClinicalGoalViewModel.PatientName}" VerticalAlignment="Center"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Label Content="Clear all clinical goals:"/>
-                <CheckBox IsChecked="{Binding ClearAllExistingClinicalGoals, Mode=TwoWay}" VerticalAlignment="Center">
-                </CheckBox>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
                 <Button Content="OK" Width="120" Command="{Binding ClinicalGoalViewModel.OkCommand}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
@@ -58,7 +54,22 @@
                     </i:Interaction.Triggers>
                 </Button>
             </StackPanel>
-            <Views:ClinicalGoalView DataContext="{Binding ClinicalGoalViewModel}"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Selected Plan ID:"></TextBlock>
+                <TextBlock Text="{Binding ClinicalGoalViewModel.SelectedDvhObjectivesViewModel.PlanId, Mode=TwoWay}"></TextBlock>
+            </StackPanel>
+            <TabControl ItemsSource="{Binding ClinicalGoalViewModel.DvhObjectivesViewModels}" SelectedValue="{Binding ClinicalGoalViewModel.SelectedDvhObjectivesViewModel}" SelectedValuePath="PlanId" SelectedItem="{Binding ClinicalGoalViewModel.SelectedDvhObjectivesViewModel}">
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding PlanId}" />
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <Views:ClinicalGoalView/>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
         </StackPanel>
     </Grid>
 </Window>

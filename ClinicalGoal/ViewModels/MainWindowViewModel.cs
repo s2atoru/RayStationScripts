@@ -1,9 +1,8 @@
-﻿using Prism.Commands;
-
+﻿using Prism.Mvvm;
 
 namespace ClinicalGoal.ViewModels
 {
-    class MainWindowViewModel : BindableBaseWithErrorsContainer
+    public class MainWindowViewModel : BindableBase
     {
         private string title = "Clinical Goal";
         public string Title
