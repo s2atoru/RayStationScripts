@@ -1,6 +1,7 @@
 ﻿using Juntendo.MedPhys;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Prism.Commands;
 using Prism.Mvvm;
 using System.Collections.Generic;
@@ -149,9 +150,17 @@ namespace ClinicalGoal.ViewModels
                         json = sr.ReadToEnd();
                     }
 
-                    var dvhObjectives = JsonConvert.DeserializeObject<List<DvhObjective>>(json);
+                    var jObject = JObject.Parse(json);
+                    var dvhObjectivesJarray = (JArray)jObject["DvhObjectives"];
+                    var dvhObjectives = dvhObjectivesJarray.ToObject<ObservableCollection<DvhObjective>>();
+                    dvhObjectivesViewModel.DvhObjectives = dvhObjectives;
 
-                    dvhObjectivesViewModel.DvhObjectives = new ObservableCollection<DvhObjective>(dvhObjectives);
+                    dvhObjectivesViewModel.PrescribedDose = jObject["PrescribedDose"].ToObject<double>();
+                    dvhObjectivesViewModel.CourseId = jObject["CourseId"].ToObject<string>();
+                    dvhObjectivesViewModel.ProtocolId = jObject["ProtocolId"].ToObject<string>();
+
+                    //var dvhObjectives = JsonConvert.DeserializeObject<List<DvhObjective>>(json);
+                    //dvhObjectivesViewModel.DvhObjectives = new ObservableCollection<DvhObjective>(dvhObjectives);
                 }
 
                 DvhObjectivesViewModels.Add(dvhObjectivesViewModel);
@@ -215,9 +224,21 @@ namespace ClinicalGoal.ViewModels
                 {
                     Directory.CreateDirectory(planFolderPath);
                 }
-                var filePath = Path.Combine(planFolderPath, "DvhObjectives.json");
 
-                string json = JsonConvert.SerializeObject(dvhObjectivesInUse.ToList(), Formatting.Indented);
+                var filePath = Path.Combine(planFolderPath, "DvhObjectives.json");
+                JArray dvhObjectivesJArray = (JArray)JToken.FromObject(dvhObjectivesInUse);
+                var jObject = new JObject();
+                jObject["PatientId"] = PatientId;
+                jObject["CourseId"] = dvhObjectivesViewModel.CourseId;
+                jObject["PlanId"] = dvhObjectivesViewModel.PlanId;
+                jObject["PrescribedDose"] = dvhObjectivesViewModel.PrescribedDose;
+                jObject["ProtocolId"] = dvhObjectivesViewModel.ProtocolId;
+                jObject["DvhObjectives"] = dvhObjectivesJArray;
+                jObject["MaxDose"] = dvhObjectivesViewModel.MaxDose;
+                jObject[" NumberOfFractions"] = dvhObjectivesViewModel.NumberOfFractions;
+
+                string json = jObject.ToString(Formatting.Indented);
+                //string json = JsonConvert.SerializeObject(dvhObjectivesInUse.ToList(), Formatting.Indented);
                 using (StreamWriter sw = new StreamWriter(filePath, false, Encoding.GetEncoding("shift_jis")))
                 {
                     sw.Write(json);
