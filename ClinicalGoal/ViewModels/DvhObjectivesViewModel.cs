@@ -2,6 +2,7 @@
 using Prism.Commands;
 using Prism.Mvvm;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace ClinicalGoal.ViewModels
 {
@@ -9,6 +10,13 @@ namespace ClinicalGoal.ViewModels
     {
         static readonly string PlanIdPlanSum = "Plan Sum";
         static readonly string CourseIdNone = "NA";
+
+        private bool isStructureNameTpsSynchronized = true;
+        public bool IsStructureNameTpsSynchronized
+        {
+            get { return isStructureNameTpsSynchronized; }
+            set { SetProperty(ref isStructureNameTpsSynchronized, value); }
+        }
 
         private string message;
         public string Message
@@ -63,6 +71,24 @@ namespace ClinicalGoal.ViewModels
             set { SetProperty(ref dvhObjectives, value); }
         }
 
+        public DelegateCommand<DvhObjective> SynchronizedStructureNameTpsCommand { get; private set; }
+
         public DelegateCommand<DvhObjectivesViewModel> ChooseFileCommand { get; set; }
+
+        public DvhObjectivesViewModel()
+        {
+            SynchronizedStructureNameTpsCommand = new DelegateCommand<DvhObjective>(SynchronizedStructureNameTps);
+        }
+
+        private void SynchronizedStructureNameTps(DvhObjective dvhObjective)
+        {
+            if (!IsStructureNameTpsSynchronized) return;
+
+            var dvhObjectivesWithSameStructureName = DvhObjectives.Where(d => ((d.StructureName == dvhObjective.StructureName) && (d.StructureNameTps != dvhObjective.StructureNameTps)));
+            foreach (var d in dvhObjectivesWithSameStructureName)
+            {
+                 d.StructureNameTps = dvhObjective.StructureNameTps;
+            }
+        }
     }
 }

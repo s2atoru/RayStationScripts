@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:ViewModels="clr-namespace:ClinicalGoal.ViewModels"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              x:Class="ClinicalGoal.Views.ClinicalGoalView"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="1200" d:DataContext="{d:DesignInstance {x:Type ViewModels:DvhObjectivesViewModel}}">
@@ -48,13 +49,14 @@
                 <Label Content="Prescribed Dose [cGy]:"/>
                 <TextBox Text="{Binding PrescribedDose}" MinWidth="96"/>
             </StackPanel>
+            <CheckBox Content="Synchronize Structure Name (TPS)" IsChecked="{Binding IsStructureNameTpsSynchronized}"/>
             <DataGrid ItemsSource="{Binding DvhObjectives}" AutoGenerateColumns="False" CanUserAddRows="False" FontSize="12" MaxHeight="700">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn IsReadOnly="True" Header="In Use">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <CheckBox IsChecked="{Binding InUse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -92,8 +94,14 @@
                     <DataGridTemplateColumn IsReadOnly="True" Header="Structure (TPS)">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <ComboBox ItemsSource="{Binding Path=DataContext.StructureNames, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Mode=OneWay}"
-                                          SelectedValue="{Binding StructureNameTps, UpdateSourceTrigger=PropertyChanged}"/>
+                                <ComboBox ItemsSource="{Binding Path=DataContext.StructureNames, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Mode=TwoWay}"
+                                          SelectedValue="{Binding StructureNameTps, UpdateSourceTrigger=PropertyChanged}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged">
+                                            <i:InvokeCommandAction Command="{Binding Path=DataContext.SynchronizedStructureNameTpsCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </ComboBox>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
