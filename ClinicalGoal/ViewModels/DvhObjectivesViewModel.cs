@@ -46,9 +46,19 @@ namespace ClinicalGoal.ViewModels
             set { SetProperty(ref maxDose, value); }
         }
 
-        public double PrescribedDose { get; set; } = 0;
+        private double prescribedDose = 0;
+        public double PrescribedDose
+        {
+            get { return prescribedDose; }
+            set { SetProperty(ref prescribedDose, value); }
+        }
 
-        public int NumberOfFractions { get; set; } = 1;
+        private int numberOfFractions = 1;
+        public int NumberOfFractions
+        {
+            get { return numberOfFractions; }
+            set { SetProperty(ref numberOfFractions, value); }
+        }
 
         private string protocolId;
         public string ProtocolId
