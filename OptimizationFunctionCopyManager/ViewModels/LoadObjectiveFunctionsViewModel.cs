@@ -40,9 +40,19 @@ namespace OptimizationFunctionCopyManager.ViewModels
             set { SetProperty(ref defaultDirectoryPath, value); }
         }
 
-        public double OriginalPrescribedDose { get; set; }
+        private double originalPrescribedDose;
+        public double OriginalPrescribedDose
+        {
+            get { return originalPrescribedDose; }
+            set { SetProperty(ref originalPrescribedDose, value); }
+        }
 
-        public double PrescribedDose { get; set; }
+        private double prescribedDose;
+        public double PrescribedDose
+        {
+            get { return prescribedDose; }
+            set { SetProperty(ref prescribedDose, value); }
+        }
 
         public bool DoesRescaleDose { get; set; } = true;
 

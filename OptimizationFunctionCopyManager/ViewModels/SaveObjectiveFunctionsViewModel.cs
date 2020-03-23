@@ -102,6 +102,7 @@ namespace OptimizationFunctionCopyManager.ViewModels
                 using (StreamWriter file = File.CreateText(SavedFilePath))
                 using (JsonTextWriter writer = new JsonTextWriter(file))
                 {
+                    writer.Formatting = Formatting.Indented;
                     jObject.WriteTo(writer);
                 }
             }
