@@ -6,7 +6,12 @@ namespace OptimizationFunctionCopyManager.Models
     public class Roi : BindableBaseWithErrorsContainer
     {
         public string Name { get; private set; } = null;
-        public bool InUse { get; set; } = true;
+        private bool inUse;
+        public bool InUse
+        {
+            get { return inUse; }
+            set { SetProperty(ref inUse, value); }
+        }
         private string nameInObjectiveFunction;
         public string NameInObjectiveFunction
         {

@@ -8,8 +8,13 @@ using System.Threading.Tasks;
 namespace OptimizationFunctionCopyManager.Models
 {
     public class PlanLabel : BindableBaseWithErrorsContainer
-    {
-        public bool InUse { get; set; } = true;
+    { 
+        private bool inUse;
+        public bool InUse
+        {
+            get { return inUse; }
+            set { SetProperty(ref inUse, value); }
+        }
         public string Label { get; private set; }
 
         private string labelInObjectiveFunction;
