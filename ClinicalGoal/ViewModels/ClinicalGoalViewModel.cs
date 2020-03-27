@@ -109,11 +109,13 @@ namespace ClinicalGoal.ViewModels
 
         public ClinicalGoalViewModel(string patientId, string patientName,
             List<Models.PlanPrescription> planPrescriptions,
+            List<string> structureNames,
             string dvhCheckerDirectoryPath = @"\\10.208.223.10\Eclipse\DvhChecker",
             string planCheckerDirectoryPath = @"\\10.208.223.10\Eclipse")
         {
             PatientId = patientId;
             PatientName = patientName;
+            StructureNames = new ObservableCollection<string>(structureNames);
             DvhCheckerDirectoryPath = dvhCheckerDirectoryPath;
             PlanCheckerDirectoryPath = planCheckerDirectoryPath;
 
