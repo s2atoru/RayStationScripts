@@ -47,7 +47,8 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Prescribed Dose [cGy]:"/>
-                <TextBox Text="{Binding PrescribedDose}" MinWidth="96"/>
+                <TextBox Name="PrescribedDose" Text="{Binding PrescribedDose, StringFormat={}{0:0.0}, UpdateSourceTrigger=PropertyChanged}" MinWidth="96"/>
+                <TextBlock Text="{ Binding ElementName=PrescribedDose, Path=(Validation.Errors)[0].ErrorContent}" Foreground ="Red"/>
             </StackPanel>
             <CheckBox Content="Synchronize Structure Name (TPS)" IsChecked="{Binding IsStructureNameTpsSynchronized}"/>
             <DataGrid ItemsSource="{Binding DvhObjectives}" AutoGenerateColumns="False" CanUserAddRows="False" FontSize="12" MaxHeight="700">

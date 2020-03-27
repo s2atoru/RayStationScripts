@@ -1,13 +1,15 @@
 ﻿using Juntendo.MedPhys;
+using MvvmCommon.ViewModels;
 using Prism.Commands;
-using Prism.Mvvm;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace ClinicalGoal.ViewModels
 {
-    public class DvhObjectivesViewModel : BindableBase
+    public class DvhObjectivesViewModel : BindableBaseWithErrorsContainer
     {
+
         static readonly string PlanIdPlanSum = "Plan Sum";
         static readonly string CourseIdNone = "NA";
 
@@ -47,10 +49,20 @@ namespace ClinicalGoal.ViewModels
         }
 
         private double prescribedDose = 0;
+
+        [CustomValidation(typeof(DvhObjectivesViewModel), "IsPositiveDouble", ErrorMessage = "Enter > 0")]
         public double PrescribedDose
         {
             get { return prescribedDose; }
             set { SetProperty(ref prescribedDose, value); }
+        }
+        public static ValidationResult IsPositiveDouble(double value, ValidationContext context)
+        {
+            if (value <= 0)
+            {
+                return new ValidationResult(null);
+            }
+            return ValidationResult.Success;
         }
 
         private int numberOfFractions = 1;
@@ -97,7 +109,7 @@ namespace ClinicalGoal.ViewModels
             var dvhObjectivesWithSameStructureName = DvhObjectives.Where(d => ((d.StructureName == dvhObjective.StructureName) && (d.StructureNameTps != dvhObjective.StructureNameTps)));
             foreach (var d in dvhObjectivesWithSameStructureName)
             {
-                 d.StructureNameTps = dvhObjective.StructureNameTps;
+                d.StructureNameTps = dvhObjective.StructureNameTps;
             }
         }
     }
