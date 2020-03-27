@@ -9,7 +9,7 @@ namespace OptimizationFunctionCopyManager.Models
 {
     public class PlanLabel : BindableBaseWithErrorsContainer
     { 
-        private bool inUse;
+        private bool inUse = true;
         public bool InUse
         {
             get { return inUse; }
@@ -24,9 +24,17 @@ namespace OptimizationFunctionCopyManager.Models
             set { SetProperty(ref labelInObjectiveFunction, value); }
         }
 
-        public PlanLabel(string planLabel)
+        private double prescribedDose;
+        public double PrescribedDose
+        {
+            get { return prescribedDose; }
+            set { SetProperty(ref prescribedDose, value); }
+        }
+
+        public PlanLabel(string planLabel, double prescribedDose)
         {
             Label = planLabel;
+            PrescribedDose = prescribedDose;
         }
     }
 }

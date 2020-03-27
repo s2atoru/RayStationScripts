@@ -34,9 +34,10 @@ namespace OptimizationFunctionCopyManager.ViewModels
             get { return defaultDirectoryPath; }
             set { SetProperty(ref defaultDirectoryPath, value); }
         }
-        public double PrescribedDose { get; set; }
 
         public ObservableCollection<Models.ObjectiveFunction> ObjectiveFunctions { get; private set; } = new ObservableCollection<Models.ObjectiveFunction>();
+
+        public ObservableCollection<Models.Prescription> Prescriptions { get; private set; } = new ObservableCollection<Models.Prescription>();
 
         public DelegateCommand OkCommand { get; private set; }
         public DelegateCommand CancelCommand { get; private set; }
@@ -44,7 +45,9 @@ namespace OptimizationFunctionCopyManager.ViewModels
 
         public SaveObjectiveFunctionsViewModel()
         {
-            PrescribedDose = 7000;
+            Prescriptions.Add(new Models.Prescription { PlanLabel = "1-1-1", PrescribedDose = 4600 });
+            Prescriptions.Add(new Models.Prescription { PlanLabel = "1-1-2", PrescribedDose = 2600 });
+            Prescriptions.Add(new Models.Prescription { PlanLabel = "Combined dose", PrescribedDose = 7200 });
             OkCommand = new DelegateCommand(() => { CanExecute = true; });
             CancelCommand = new DelegateCommand(() => { CanExecute = false; });
             SaveFileCommand = new DelegateCommand(SaveFile);
@@ -56,7 +59,8 @@ namespace OptimizationFunctionCopyManager.ViewModels
             var objectiveFunctionsJObject = JObject.Parse(objectiveFunctionsJson);
             var objectiveFunctionArguments = (JArray)objectiveFunctionsJObject["Arguments"];
 
-            PrescribedDose = objectiveFunctionsJObject["PrescribedDose"].ToObject<double>();
+            var prescriptionsJArray = (JArray)objectiveFunctionsJObject["Prescriptions"];
+            Prescriptions = prescriptionsJArray.ToObject<ObservableCollection<Models.Prescription>>();
 
             ObjectiveFunctions.Clear();
             foreach (var a in objectiveFunctionArguments)
@@ -86,18 +90,24 @@ namespace OptimizationFunctionCopyManager.ViewModels
                 SavedFilePath = dialog.FileName;
 
                 UpdateWeightInObjectiveFunctions();
-                var Arguments = new JArray();
+                var argumentsJArray = new JArray();
                 foreach (var o in ObjectiveFunctions)
                 {
                     if (!o.InUse) continue;
                     var a = o.Arguments;
-                    Arguments.Add(JToken.Parse(a.ToString()));
+                    argumentsJArray.Add(JToken.Parse(a.ToString()));
                 }
 
+                foreach (var p in Prescriptions)
+                {
+                    p.PrescribedDoseInObjectiveFunction = p.PrescribedDose;
+                }
+                var prescriptionsJArray = (JArray)JToken.FromObject(Prescriptions);
+                
                 var jObject = new JObject();
-                jObject["PrescribedDose"] = PrescribedDose;
                 jObject["Description"] = Description;
-                jObject["Arguments"] = Arguments;
+                jObject["Prescriptions"] = prescriptionsJArray;
+                jObject["Arguments"] = argumentsJArray;
 
                 using (StreamWriter file = File.CreateText(SavedFilePath))
                 using (JsonTextWriter writer = new JsonTextWriter(file))

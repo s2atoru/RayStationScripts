@@ -34,7 +34,7 @@
             <StackPanel Orientation="Horizontal">
                 <Button Command="{Binding SaveFileCommand}" Content="Save to File" Width="120"/>
                 <Label Content="Description: " VerticalAlignment="Center"/>
-                <TextBox Text="{Binding Description, Mode=TwoWay}" MinWidth="480" VerticalAlignment="Center">
+                <TextBox Text="{Binding Description, Mode=TwoWay}" MinWidth="240" VerticalAlignment="Center">
                 </TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
@@ -55,12 +55,16 @@
                     </i:Interaction.Triggers>
                 </Button>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock> Prescribed dose:</TextBlock>
-                <TextBox Text="{Binding PrescribedDose, Mode=TwoWay}"></TextBox>
-            </StackPanel>
+            <TextBlock>Prescriptions</TextBlock>
+            <DataGrid ItemsSource="{Binding Prescriptions}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="400" HorizontalAlignment="Left">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Plan label" Binding="{Binding PlanLabel}" IsReadOnly="True">
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Prescribed Dose [cGy]" Binding="{Binding PrescribedDose,StringFormat={}{0:0.0}, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
             <TextBlock>Objective functions</TextBlock>
-            <DataGrid ItemsSource="{Binding ObjectiveFunctions}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="400">
+            <DataGrid ItemsSource="{Binding ObjectiveFunctions}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="400" HorizontalAlignment="Left">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn IsReadOnly="True" Header="In Use">
                         <DataGridTemplateColumn.CellTemplate>

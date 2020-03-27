@@ -40,20 +40,6 @@ namespace OptimizationFunctionCopyManager.ViewModels
             set { SetProperty(ref defaultDirectoryPath, value); }
         }
 
-        private double originalPrescribedDose;
-        public double OriginalPrescribedDose
-        {
-            get { return originalPrescribedDose; }
-            set { SetProperty(ref originalPrescribedDose, value); }
-        }
-
-        private double prescribedDose;
-        public double PrescribedDose
-        {
-            get { return prescribedDose; }
-            set { SetProperty(ref prescribedDose, value); }
-        }
-
         public bool DoesRescaleDose { get; set; } = true;
 
         public ObservableCollection<Models.ObjectiveFunction> ObjectiveFunctions { get; private set; } = new ObservableCollection<Models.ObjectiveFunction>();
@@ -67,6 +53,8 @@ namespace OptimizationFunctionCopyManager.ViewModels
         public ObservableCollection<Models.PlanLabel> PlanLabels { get; private set; } = new ObservableCollection<Models.PlanLabel>();
 
         public ObservableCollection<string> PlanLabelsInObjectiveFuntions { get; private set; } = new ObservableCollection<string>();
+
+        public ObservableCollection<Models.Prescription> Prescriptions { get; private set; } = new ObservableCollection<Models.Prescription>();
 
         public bool DoesClearObjectiveFunctions { get; set; } = true;
 
@@ -83,13 +71,10 @@ namespace OptimizationFunctionCopyManager.ViewModels
 
         public LoadObjectiveFunctionsViewModel()
         {
-            PrescribedDose = 7000.0;
-            OriginalPrescribedDose = 5000.0;
-
             List<Models.PlanLabel> planLabels0 = new List<Models.PlanLabel>();
-            planLabels0.Add(new Models.PlanLabel("1-1-1"));
+            planLabels0.Add(new Models.PlanLabel("1-1-1", 4600));
             planLabels0[0].LabelInObjectiveFunction = PlanLabelNone;
-            planLabels0.Add(new Models.PlanLabel("1-1-2"));
+            planLabels0.Add(new Models.PlanLabel("1-1-2", 2600));
             planLabels0[1].LabelInObjectiveFunction = PlanLabelNone;
             PlanLabels = new ObservableCollection<Models.PlanLabel>(planLabels0);
 
@@ -112,15 +97,14 @@ namespace OptimizationFunctionCopyManager.ViewModels
             ChooseFileCommand = new DelegateCommand(ChooseFile);
         }
 
-        public LoadObjectiveFunctionsViewModel(List<Models.Roi> rois, List<string> planLabels, string defaultDirectoryPath)
+        public LoadObjectiveFunctionsViewModel(List<Models.Roi> rois, List<Models.PlanLabel>  planLabels, string defaultDirectoryPath)
         {
             DefaultDirectoryPath = defaultDirectoryPath;
 
-            foreach (var p in planLabels)
+            PlanLabels = new ObservableCollection<Models.PlanLabel>(planLabels);
+            foreach (var p in PlanLabels)
             {
-                var planLabel = new Models.PlanLabel(p);
-                planLabel.LabelInObjectiveFunction = PlanLabelNone;
-                PlanLabels.Add(planLabel);
+                p.LabelInObjectiveFunction = PlanLabelNone;
             }
             PlanLabelsInObjectiveFuntions.Add(PlanLabelNone);
 
@@ -157,10 +141,8 @@ namespace OptimizationFunctionCopyManager.ViewModels
                     ObjectiveFunctionsJObject = (JObject)JToken.ReadFrom(reader);
                 }
 
-                OriginalPrescribedDose = ObjectiveFunctionsJObject["PrescribedDose"].ToObject<double>();
-                PrescribedDose = OriginalPrescribedDose;
-
-                var arguments = (JArray)ObjectiveFunctionsJObject["Arguments"];
+                var prescriptionsJArray = (JArray)ObjectiveFunctionsJObject["Prescriptions"];
+                Prescriptions = prescriptionsJArray.ToObject<ObservableCollection<Models.Prescription>>();
 
                 var descriptionJObject = ObjectiveFunctionsJObject["Description"];
                 if (descriptionJObject != null)
@@ -172,8 +154,9 @@ namespace OptimizationFunctionCopyManager.ViewModels
                     Description = string.Empty;
                 }
 
+                var argumentsJArray = (JArray)ObjectiveFunctionsJObject["Arguments"];
                 ObjectiveFunctions.Clear();
-                foreach (var a in arguments)
+                foreach (var a in argumentsJArray)
                 {
                     var jObject = JObject.Parse(a.ToString());
                     ObjectiveFunctions.Add(new Models.ObjectiveFunction(jObject));
@@ -206,6 +189,22 @@ namespace OptimizationFunctionCopyManager.ViewModels
                         p.LabelInObjectiveFunction = p.Label;
                     }
                 }
+
+                var planSumDose = PlanLabels.Select(p => p.PrescribedDose).Sum();
+                foreach (var p in Prescriptions)
+                {
+                    var query = PlanLabels.Where(pl => pl.Label == p.PlanLabel);
+                    if (query.Count() > 0)
+                    {
+                        p.PrescribedDose = query.First().PrescribedDose;
+                        continue;
+                    }
+                    
+                    if(p.PlanLabel == PlanLabelCombinedDose)
+                    {
+                        p.PrescribedDose = planSumDose;
+                    }
+                }
             }
             else
             {
@@ -215,21 +214,6 @@ namespace OptimizationFunctionCopyManager.ViewModels
 
         private void SetObjectiveFunctionArguments()
         {
-            double scale = 1.0;
-            if (DoesRescaleDose)
-            {
-                if (OriginalPrescribedDose == 0)
-                {
-                    //MessageBox.Show($"No rescale because OriginalPrescribedDose = 0");
-                    Message = $"No rescale because OriginalPrescribedDose = 0";
-                    scale = 1.0;
-                }
-                else
-                {
-                    scale = PrescribedDose / OriginalPrescribedDose;
-                }
-            }
-
             foreach (var r in Rois)
             {
                 if (!r.InUse || r.NameInObjectiveFunction == RoiNameNone) continue;
@@ -242,15 +226,16 @@ namespace OptimizationFunctionCopyManager.ViewModels
                     var planLabelInObjectiveFunction = o.Arguments["PlanLabel"].ToObject<string>();
 
                     var planLabelQuery = PlanLabels.Where(p => p.LabelInObjectiveFunction == planLabelInObjectiveFunction);
+                    string newLabel = string.Empty;
                     if (planLabelQuery.Count() > 0)
                     {
                         var newPlanLabel = planLabelQuery.First();
                         bool inUse = newPlanLabel.InUse;
                         if (!inUse) break;
-                        string newLabel = newPlanLabel.Label;
+                        newLabel = newPlanLabel.Label;
                         if (planLabelQuery.Count() >= 2)
                         {
-                            MessageBox.Show($"Multiple plans are assigned to {planLabelInObjectiveFunction}. Use {newLabel}.");
+                            Message = $"Multiple plans are assigned to {planLabelInObjectiveFunction}. Use {newLabel}.";
                         }
                         o.SetPlanLabelInArguments(newLabel);
                     }
@@ -262,6 +247,33 @@ namespace OptimizationFunctionCopyManager.ViewModels
                     o.UpdateWeightInArguments();
                     o.SetRoiNameInArguments(r.Name);
 
+                    if (o.PlanLabel == PlanLabelCombinedDose) newLabel = PlanLabelCombinedDose;
+                    var prescriptionQuery = Prescriptions.Where(p => p.PlanLabel == newLabel);
+                    double scale = 0;
+                    if (prescriptionQuery.Count() == 0)
+                    {
+                        scale = 1.0;
+                        Message = $"Prescription does not exist for {newLabel}";
+                    }
+                    else
+                    {
+                        var prescription = prescriptionQuery.First();
+                        var originalPrescribedDose = prescription.PrescribedDoseInObjectiveFunction;
+                        var prescribedDose = prescription.PrescribedDose;
+                        if (DoesRescaleDose)
+                        {
+                            if ( originalPrescribedDose == 0)
+                            {
+                                Message = $"No rescale because the original prescribed dose = 0";
+                                scale = 1.0;
+                            }
+                            else
+                            {
+                                scale = prescribedDose / originalPrescribedDose;
+                            }
+                        }
+                    }
+                    
                     var functionType = o.Arguments["FunctionType"].ToObject<string>();
                     if (functionType == "DoseFallOff")
                     {

@@ -104,11 +104,16 @@
             </DataGrid>
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="{Binding DoesRescaleDose}" VerticalAlignment="Center">Rescale dose?</CheckBox>
-                <TextBlock> Prescribed dose:</TextBlock>
-                <TextBox Text="{Binding PrescribedDose, Mode=TwoWay}"></TextBox>
-                <TextBlock> Prescribed dose in Objective functions:</TextBlock>
-                <TextBox Text="{Binding OriginalPrescribedDose, Mode=TwoWay}"></TextBox>
             </StackPanel>
+            <TextBlock>Prescriptions</TextBlock>
+            <DataGrid ItemsSource="{Binding Prescriptions}" AutoGenerateColumns="False" CanUserAddRows="False" MaxHeight="400" HorizontalAlignment="Left">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Plan label" Binding="{Binding PlanLabel}" IsReadOnly="True">
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Prescribed Dose [cGy]" Binding="{Binding PrescribedDose,StringFormat={}{0:0.0}, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Original Prescribed Dose [cGy]" Binding="{Binding PrescribedDoseInObjectiveFunction,StringFormat={}{0:0.0}, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
             <CheckBox IsChecked="{Binding DoesClearObjectiveFunctions}" VerticalAlignment="Center">Clear Objective functions?</CheckBox>
             <TextBlock>Objective functions</TextBlock>
             <StackPanel Orientation="Horizontal">

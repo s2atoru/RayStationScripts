@@ -28,7 +28,7 @@ namespace OptimizationFunctionCopyManager.Views
             DataContext = saveObjectiveFunctionsViewModel;
         }
 
-        public SaveWindow(string objectiveFunctionsJson, string defaultDirectoryPath)
+        public SaveWindow(string objectiveFunctionsJson, List<Models.Prescription> prescriptions, string defaultDirectoryPath)
         {
             InitializeComponent();
 

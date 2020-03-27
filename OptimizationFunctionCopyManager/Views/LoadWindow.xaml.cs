@@ -30,7 +30,7 @@ namespace OptimizationFunctionCopyManager.Views
             DataContext = loadObjectiveFunctionsViewModel;
         }
 
-        public LoadWindow(List<Models.Roi> rois, List<string> planLabels, string defaultDirectoryPath)
+        public LoadWindow(List<Models.Roi> rois, List<Models.PlanLabel> planLabels, string defaultDirectoryPath)
         {
             InitializeComponent();
 
