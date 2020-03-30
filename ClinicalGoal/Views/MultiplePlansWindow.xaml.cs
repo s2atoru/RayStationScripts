@@ -15,5 +15,15 @@ namespace ClinicalGoal.Views
 
             DataContext = mainWindowViewModel;
         }
+
+        public MultiplePlansWindow(ViewModels.ClinicalGoalViewModel clinicalGoalViewModel)
+        {
+            InitializeComponent();
+
+            var mainWindowViewModel = new ViewModels.MainWindowViewModel();
+            mainWindowViewModel.ClinicalGoalViewModel = clinicalGoalViewModel;
+
+            DataContext = mainWindowViewModel;
+        }
     }
 }
