@@ -115,6 +115,7 @@ namespace ClinicalGoal.ViewModels
         {
             PatientId = patientId;
             PatientName = patientName;
+            structureNames.Sort();
             StructureNames = new ObservableCollection<string>(structureNames);
             DvhCheckerDirectoryPath = dvhCheckerDirectoryPath;
             PlanCheckerDirectoryPath = planCheckerDirectoryPath;
@@ -123,7 +124,7 @@ namespace ClinicalGoal.ViewModels
 
             OkCommand = new DelegateCommand(() => { CanExecute = true; PickUpDvhObjectivesInUse(); });
             CancelCommand = new DelegateCommand(() => { CanExecute = false; });
-            SaveDvhIndicesCommand = new DelegateCommand(() => { SaveDvhIndices(); });
+            SaveDvhIndicesCommand = new DelegateCommand(() => { SaveDvhIndices(); }).ObservesCanExecute(() => IsSaving);
         }
 
         private void SetDvhObjectivesViewModels(List<Models.PlanPrescription> planPrescriptions)
@@ -269,7 +270,7 @@ namespace ClinicalGoal.ViewModels
             dvhObjectivesViewModel.DvhObjectives = new ObservableCollection<DvhObjective>(DvhObjective.ReadObjectivesFromCsv(ProtocolFilePath));
 
             var dvhObjectives = dvhObjectivesViewModel.DvhObjectives;
-            if (!StructureNames.Contains(StructureNameNone)) StructureNames.Add(StructureNameNone);
+            if (!StructureNames.Contains(StructureNameNone)) StructureNames.Insert(0,StructureNameNone);
             foreach (var o in dvhObjectives)
             {
                 if (StructureNames.Contains(o.StructureName))

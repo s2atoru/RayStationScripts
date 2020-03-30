@@ -53,7 +53,7 @@
                 </Button>
             </StackPanel>
             <Button Command="{Binding ClinicalGoalViewModel.SaveDvhIndicesCommand}" Content="Save DVH indices" Width="120" HorizontalAlignment="Left"/>
-            <TabControl ItemsSource="{Binding ClinicalGoalViewModel.DvhObjectivesViewModels}" SelectedValue="{Binding ClinicalGoalViewModel.SelectedDvhObjectivesViewModel}" SelectedValuePath="PlanId" SelectedItem="{Binding ClinicalGoalViewModel.SelectedDvhObjectivesViewModel}">
+            <TabControl ItemsSource="{Binding ClinicalGoalViewModel.DvhObjectivesViewModels}" SelectedItem="{Binding ClinicalGoalViewModel.SelectedDvhObjectivesViewModel, UpdateSourceTrigger=PropertyChanged}">
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding PlanId}" />

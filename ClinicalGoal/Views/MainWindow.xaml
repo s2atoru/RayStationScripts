@@ -37,7 +37,7 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Clear all clinical goals:"/>
-                <CheckBox IsChecked="{Binding ClearAllExistingClinicalGoals, Mode=TwoWay}" VerticalAlignment="Center">
+                <CheckBox IsChecked="{Binding ClinicalGoalViewModel.ClearAllExistingClinicalGoals, Mode=TwoWay}" VerticalAlignment="Center">
                 </CheckBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
