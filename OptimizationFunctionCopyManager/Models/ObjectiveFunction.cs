@@ -5,7 +5,12 @@ namespace OptimizationFunctionCopyManager.Models
 {
     public class ObjectiveFunction : BindableBaseWithErrorsContainer
     {
-        public bool InUse { get; set; } = true;
+        private bool inUse;
+        public bool InUse
+        {
+            get { return inUse; }
+            set { SetProperty(ref inUse, value); }
+        }
         public string RoiName { get; private set; }
         public string Description { get; private set; }
         private double weight = 0.0;
