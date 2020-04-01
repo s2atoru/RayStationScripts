@@ -133,7 +133,7 @@
                     IsReadOnly="True">
                     </DataGridTextColumn>
                     <DataGridTextColumn
-                    Header="Acceptable Lmit"
+                    Header="Acceptable Limit"
                     Binding="{Binding AcceptableLimitValue, Mode=OneTime}"
                     IsReadOnly="True">
                     </DataGridTextColumn>
