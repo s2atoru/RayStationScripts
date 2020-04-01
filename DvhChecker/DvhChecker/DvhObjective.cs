@@ -97,9 +97,10 @@ namespace Juntendo.MedPhys
         public DvhPresentationType TargetUnit
         {
             get { return targetUnit; }
-            private set
+            set
             {
                 this.SetProperty(ref this.targetUnit, value);
+                ActualTargetUnit = getTargetUnit(TargetType, TargetUnit);
             }
         }
 
@@ -108,7 +109,7 @@ namespace Juntendo.MedPhys
         public double TargetValue
         {
             get { return targetValue; }
-            private set
+            set
             {
                 this.SetProperty(ref this.targetValue, value);
             }
@@ -119,9 +120,10 @@ namespace Juntendo.MedPhys
         public DvhPresentationType ArgumentUnit
         {
             get { return argumentUnit; }
-            private set
+            set
             {
                 this.SetProperty(ref this.argumentUnit, value);
+                ActualArgumentUnit = getArgumentUnit(TargetType, ArgumentUnit);
             }
         }
 
@@ -130,7 +132,7 @@ namespace Juntendo.MedPhys
         public double ArgumentValue
         {
             get { return argumentValue; }
-            private set
+            set
             {
                 this.SetProperty(ref this.argumentValue, value);
             }
@@ -141,7 +143,7 @@ namespace Juntendo.MedPhys
         public DvhDoseUnit DoseUnit
         {
             get { return doseUnit; }
-            private set
+            set
             {
                 this.SetProperty(ref this.doseUnit, value);
             }
@@ -163,7 +165,7 @@ namespace Juntendo.MedPhys
         public DvhVolumeUnit VolumeUnit
         {
             get { return volumeUnit; }
-            private set
+            set
             {
                 this.SetProperty(ref this.volumeUnit, value);
             }
@@ -175,7 +177,7 @@ namespace Juntendo.MedPhys
         public double AcceptableLimitValue
         {
             get { return acceptableLimitValue; }
-            private set
+            set
             {
                 this.SetProperty(ref this.acceptableLimitValue, value);
             }
@@ -226,9 +228,21 @@ namespace Juntendo.MedPhys
         }
 
         [JsonIgnore]
-        public string ActualTargetUnit { get { return getTargetUnit(TargetType, TargetUnit); } }
+        private string actualTargetUnit;
+        public string ActualTargetUnit
+        {
+            get { return actualTargetUnit; }
+            private set { SetProperty(ref actualTargetUnit, value); }
+        }
+        //public string ActualTargetUnit { get { return getTargetUnit(TargetType, TargetUnit); } }
         [JsonIgnore]
-        public string ActualArgumentUnit { get { return getArgumentUnit(TargetType, ArgumentUnit); } }
+        private string actualArgumentUnit;
+        public string ActualArgumentUnit
+        {
+            get { return actualArgumentUnit; }
+            private set { SetProperty(ref actualArgumentUnit, value); }
+        }
+        //public string ActualArgumentUnit { get { return getArgumentUnit(TargetType, ArgumentUnit); } }
 
         private DvhEvalResult evalResult = DvhEvalResult.Na;
         [JsonProperty]
