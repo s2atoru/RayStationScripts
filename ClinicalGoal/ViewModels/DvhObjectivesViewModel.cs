@@ -97,9 +97,12 @@ namespace ClinicalGoal.ViewModels
 
         public DelegateCommand<DvhObjectivesViewModel> ChooseFileCommand { get; set; }
 
+        public DelegateCommand SetDoseUnitToAbsCommand { get; private set; }
+
         public DvhObjectivesViewModel()
         {
             SynchronizedStructureNameTpsCommand = new DelegateCommand<DvhObjective>(SynchronizedStructureNameTps);
+            SetDoseUnitToAbsCommand = new DelegateCommand(SetDoseUnitToAbs);
         }
 
         private void SynchronizedStructureNameTps(DvhObjective dvhObjective)
@@ -110,6 +113,34 @@ namespace ClinicalGoal.ViewModels
             foreach (var d in dvhObjectivesWithSameStructureName)
             {
                 d.StructureNameTps = dvhObjective.StructureNameTps;
+            }
+        }
+
+        private void SetDoseUnitToAbs()
+        {
+            foreach (var d in DvhObjectives)
+            {
+                if (d.TargetType == DvhTargetType.Dose && d.TargetUnit == DvhPresentationType.Rel)
+                {
+                    //PrescribedDose in cGy, TargetValue in Gy
+                    double targetDoseValue = (PrescribedDose / 100) * (d.TargetValue / 100);
+                    d.TargetValue = targetDoseValue;
+                    d.TargetUnit = DvhPresentationType.Abs;
+                    if(d.AcceptableLimitValue != -1)
+                    {
+                        d.AcceptableLimitValue = (PrescribedDose / 100) * (d.AcceptableLimitValue / 100);
+                    }
+                    d.DoseUnit = DvhDoseUnit.Gy;
+                }
+
+                if (d.TargetType == DvhTargetType.Volume && d.ArgumentUnit == DvhPresentationType.Rel)
+                {
+                    //PrescribedDose in cGy, ArgumentValue in Gy
+                    double argumentDoseValue = (PrescribedDose / 100) * (d.ArgumentValue / 100);
+                    d.ArgumentValue = argumentDoseValue;
+                    d.ArgumentUnit = DvhPresentationType.Abs;
+                    d.DoseUnit = DvhDoseUnit.Gy;
+                }
             }
         }
     }

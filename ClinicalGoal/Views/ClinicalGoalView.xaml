@@ -51,6 +51,7 @@
                 <TextBlock Text="{ Binding ElementName=PrescribedDose, Path=(Validation.Errors)[0].ErrorContent}" Foreground ="Red"/>
             </StackPanel>
             <CheckBox Content="Synchronize Structure Name (TPS)" IsChecked="{Binding IsStructureNameTpsSynchronized}"/>
+            <Button Command="{Binding SetDoseUnitToAbsCommand}" Content="Set Dose to Abs" Width="120" HorizontalAlignment="Left"/>
             <DataGrid ItemsSource="{Binding DvhObjectives}" AutoGenerateColumns="False" CanUserAddRows="False" FontSize="12" MaxHeight="700">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn IsReadOnly="True" Header="In Use">
@@ -113,22 +114,22 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn
                     Header="x"
-                    Binding="{Binding ArgumentValue, Mode=OneTime}"
+                    Binding="{Binding ArgumentValue, Mode=OneWay}"
                     IsReadOnly="True">
                     </DataGridTextColumn>
                     <DataGridTextColumn
                     Header=""
-                    Binding="{Binding ActualArgumentUnit, Mode=OneTime}"
+                    Binding="{Binding ActualArgumentUnit, Mode=OneWay}"
                     IsReadOnly="True">
                     </DataGridTextColumn>
                     <DataGridTextColumn
                     Header="Goal"
-                    Binding="{Binding TargetValue, Mode=OneTime}"
+                    Binding="{Binding TargetValue, Mode=OneWay}"
                     IsReadOnly="True">
                     </DataGridTextColumn>
                     <DataGridTextColumn
                     Header=""
-                    Binding="{Binding ActualTargetUnit, Mode=OneTime}"
+                    Binding="{Binding ActualTargetUnit, Mode=OneWay}"
                     IsReadOnly="True">
                     </DataGridTextColumn>
                     <DataGridTextColumn
