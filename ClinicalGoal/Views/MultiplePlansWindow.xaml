@@ -52,6 +52,10 @@
                     </i:Interaction.Triggers>
                 </Button>
             </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Slack for DVH Check; </TextBlock>
+                <TextBox Text="{Binding ClinicalGoalViewModel.SlackForDvhCheck}" MinWidth="96"></TextBox>
+            </StackPanel>
             <Button Command="{Binding ClinicalGoalViewModel.SaveDvhIndicesCommand}" Content="Save DVH indices" Width="120" HorizontalAlignment="Left"/>
             <TabControl ItemsSource="{Binding ClinicalGoalViewModel.DvhObjectivesViewModels}" SelectedItem="{Binding ClinicalGoalViewModel.SelectedDvhObjectivesViewModel, UpdateSourceTrigger=PropertyChanged}">
                 <TabControl.ItemTemplate>

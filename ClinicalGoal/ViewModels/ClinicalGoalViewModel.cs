@@ -34,6 +34,13 @@ namespace ClinicalGoal.ViewModels
             set { SetProperty(ref selectedPlanId, value); }
         }
 
+        private double slackForDvhCheck = 0;
+        public double SlackForDvhCheck
+        {
+            get { return slackForDvhCheck; }
+            set { SetProperty(ref slackForDvhCheck, value); }
+        }
+
         public string PlanCheckerDirectoryPath { get; set; } = string.Empty;
 
         public string DvhCheckerDirectoryPath { get; set; } = string.Empty;
