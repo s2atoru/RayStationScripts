@@ -41,6 +41,13 @@ namespace ClinicalGoal.ViewModels
             set { SetProperty(ref slackForDvhCheck, value); }
         }
 
+        private bool doesSetDoseToAbs;
+        public bool DoesSetDoseToAbs
+        {
+            get { return doesSetDoseToAbs; }
+            set { SetProperty(ref doesSetDoseToAbs, value); }
+        }
+
         public string PlanCheckerDirectoryPath { get; set; } = string.Empty;
 
         public string DvhCheckerDirectoryPath { get; set; } = string.Empty;
@@ -223,6 +230,12 @@ namespace ClinicalGoal.ViewModels
         {
             foreach (var dvhObjectivesViewModel in DvhObjectivesViewModels)
             {
+
+                if(DoesSetDoseToAbs == true)
+                {
+                    dvhObjectivesViewModel.SetDoseUnitToAbs();
+                }
+
                 var dvhObjectivesInUse = dvhObjectivesViewModel.DvhObjectives.Where(o => (o.InUse && (o.StructureNameTps != StructureNameNone)));
                 dvhObjectivesViewModel.DvhObjectives = new ObservableCollection<DvhObjective>(dvhObjectivesInUse);
 

@@ -116,7 +116,7 @@ namespace ClinicalGoal.ViewModels
             }
         }
 
-        private void SetDoseUnitToAbs()
+        public void SetDoseUnitToAbs()
         {
             foreach (var d in DvhObjectives)
             {
