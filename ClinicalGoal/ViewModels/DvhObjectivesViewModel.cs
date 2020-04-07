@@ -9,8 +9,6 @@ namespace ClinicalGoal.ViewModels
 {
     public class DvhObjectivesViewModel : BindableBaseWithErrorsContainer
     {
-
-        static readonly string PlanIdPlanSum = "Plan Sum";
         static readonly string CourseIdNone = "NA";
 
         private bool isStructureNameTpsSynchronized = true;

@@ -141,6 +141,15 @@ namespace ClinicalGoal.ViewModels
             SaveDvhIndicesCommand = new DelegateCommand(() => { SaveDvhIndices(); }).ObservesCanExecute(() => IsSaving);
         }
 
+        public void SelectDvhObjectivesViewModel(string planId)
+        {
+            var query = DvhObjectivesViewModels.Where(d => d.PlanId == planId);
+            if(query.Count() == 1)
+            {
+                SelectedDvhObjectivesViewModel = query.Single();
+            }
+        }
+
         private void SetDvhObjectivesViewModels(List<Models.PlanPrescription> planPrescriptions)
         {
             foreach (var p in planPrescriptions)

@@ -56,6 +56,13 @@
                     </i:Interaction.Triggers>
                 </Button>
             </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Plan ID</TextBlock>
+                <ComboBox ItemsSource="{Binding ClinicalGoalViewModel.DvhObjectivesViewModels}"
+                          SelectedItem="{Binding ClinicalGoalViewModel.SelectedDvhObjectivesViewModel, UpdateSourceTrigger=PropertyChanged}"
+                          DisplayMemberPath="PlanId">
+                </ComboBox>
+            </StackPanel>
             <Views:ClinicalGoalView DataContext="{Binding ClinicalGoalViewModel.SelectedDvhObjectivesViewModel}"/>
         </StackPanel>
     </Grid>
