@@ -230,8 +230,7 @@ namespace ClinicalGoal.ViewModels
         {
             foreach (var dvhObjectivesViewModel in DvhObjectivesViewModels)
             {
-
-                if(DoesSetDoseToAbs == true)
+                if (DoesSetDoseToAbs == true && IsSaving == false)
                 {
                     dvhObjectivesViewModel.SetDoseUnitToAbs();
                 }
@@ -290,7 +289,7 @@ namespace ClinicalGoal.ViewModels
             dvhObjectivesViewModel.DvhObjectives = new ObservableCollection<DvhObjective>(DvhObjective.ReadObjectivesFromCsv(ProtocolFilePath));
 
             var dvhObjectives = dvhObjectivesViewModel.DvhObjectives;
-            if (!StructureNames.Contains(StructureNameNone)) StructureNames.Insert(0,StructureNameNone);
+            if (!StructureNames.Contains(StructureNameNone)) StructureNames.Insert(0, StructureNameNone);
             foreach (var o in dvhObjectives)
             {
                 if (StructureNames.Contains(o.StructureName))
