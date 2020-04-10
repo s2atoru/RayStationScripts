@@ -5,7 +5,7 @@ namespace OptimizationFunctionCopyManager.Models
 {
     public class ObjectiveFunction : BindableBaseWithErrorsContainer
     {
-        private bool inUse;
+        private bool inUse = true;
         public bool InUse
         {
             get { return inUse; }

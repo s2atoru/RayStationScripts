@@ -54,7 +54,12 @@ namespace OptimizationFunctionCopyManager.ViewModels
 
         public ObservableCollection<string> PlanLabelsInObjectiveFuntions { get; private set; } = new ObservableCollection<string>();
 
-        public ObservableCollection<Models.Prescription> Prescriptions { get; private set; } = new ObservableCollection<Models.Prescription>();
+        private ObservableCollection<Models.Prescription> prescriptions = new ObservableCollection<Models.Prescription>();
+        public ObservableCollection<Models.Prescription> Prescriptions
+        {
+            get { return prescriptions; }
+            set { SetProperty(ref prescriptions, value); }
+        }
 
         public bool DoesClearObjectiveFunctions { get; set; } = true;
 
@@ -92,12 +97,14 @@ namespace OptimizationFunctionCopyManager.ViewModels
             RoiNamesInObjectiveFunctions.Add(RoiNameNone);
             PlanLabelsInObjectiveFuntions.Add(PlanLabelNone);
 
+            Prescriptions.Add(new Models.Prescription { PlanLabel = "test", PrescribedDose = 300, PrescribedDoseInObjectiveFunction = 400 });
+
             OkCommand = new DelegateCommand(() => { CanExecute = true; SetObjectiveFunctionArguments(); });
             CancelCommand = new DelegateCommand(() => { CanExecute = false; });
             ChooseFileCommand = new DelegateCommand(ChooseFile);
         }
 
-        public LoadObjectiveFunctionsViewModel(List<Models.Roi> rois, List<Models.PlanLabel>  planLabels, string defaultDirectoryPath)
+        public LoadObjectiveFunctionsViewModel(List<Models.Roi> rois, List<Models.PlanLabel> planLabels, string defaultDirectoryPath)
         {
             DefaultDirectoryPath = defaultDirectoryPath;
 
@@ -176,8 +183,9 @@ namespace OptimizationFunctionCopyManager.ViewModels
 
                 foreach (var r in Rois)
                 {
-                    if (r.InUse && RoiNamesInObjectiveFunctions.Contains(r.Name))
+                    if (RoiNamesInObjectiveFunctions.Contains(r.Name))
                     {
+                        r.InUse = true;
                         r.NameInObjectiveFunction = r.Name;
                     }
                 }
@@ -199,8 +207,8 @@ namespace OptimizationFunctionCopyManager.ViewModels
                         p.PrescribedDose = query.First().PrescribedDose;
                         continue;
                     }
-                    
-                    if(p.PlanLabel == PlanLabelCombinedDose)
+
+                    if (p.PlanLabel == PlanLabelCombinedDose)
                     {
                         p.PrescribedDose = planSumDose;
                     }
@@ -262,7 +270,7 @@ namespace OptimizationFunctionCopyManager.ViewModels
                         var prescribedDose = prescription.PrescribedDose;
                         if (DoesRescaleDose)
                         {
-                            if ( originalPrescribedDose == 0)
+                            if (originalPrescribedDose == 0)
                             {
                                 Message = $"No rescale because the original prescribed dose = 0";
                                 scale = 1.0;
@@ -273,7 +281,7 @@ namespace OptimizationFunctionCopyManager.ViewModels
                             }
                         }
                     }
-                    
+
                     var functionType = o.Arguments["FunctionType"].ToObject<string>();
                     if (functionType == "DoseFallOff")
                     {
