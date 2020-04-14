@@ -54,6 +54,7 @@
                     </i:Interaction.Triggers>
                 </Button>
             </StackPanel>
+            <CheckBox IsChecked="{Binding DoesUseCombinedDose, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="Use Combined dose"></CheckBox>
             <TextBlock>Plan label</TextBlock>
             <DataGrid ItemsSource="{Binding PlanLabels}" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>

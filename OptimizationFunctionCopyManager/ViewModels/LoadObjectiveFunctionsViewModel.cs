@@ -42,6 +42,13 @@ namespace OptimizationFunctionCopyManager.ViewModels
 
         public bool DoesRescaleDose { get; set; } = true;
 
+        private bool doesUseCombinedDose = false;
+        public bool DoesUseCombinedDose
+        {
+            get { return doesUseCombinedDose; }
+            set { SetProperty(ref doesUseCombinedDose, value); }
+        }
+
         public ObservableCollection<Models.ObjectiveFunction> ObjectiveFunctions { get; private set; } = new ObservableCollection<Models.ObjectiveFunction>();
 
         public JObject ObjectiveFunctionsJObject { get; private set; }
@@ -108,10 +115,16 @@ namespace OptimizationFunctionCopyManager.ViewModels
         {
             DefaultDirectoryPath = defaultDirectoryPath;
 
-            PlanLabels = new ObservableCollection<Models.PlanLabel>(planLabels);
-            foreach (var p in PlanLabels)
+            PlanLabels.Clear();
+            foreach (var p in planLabels)
             {
+                if (p.Label == PlanLabelCombinedDose)
+                {
+                    DoesUseCombinedDose = true;
+                    continue;
+                }
                 p.LabelInObjectiveFunction = PlanLabelNone;
+                PlanLabels.Add(p);
             }
             PlanLabelsInObjectiveFuntions.Add(PlanLabelNone);
 
@@ -231,37 +244,40 @@ namespace OptimizationFunctionCopyManager.ViewModels
 
                 foreach (var o in query)
                 {
-                    var planLabelInObjectiveFunction = o.Arguments["PlanLabel"].ToObject<string>();
-
-                    var planLabelQuery = PlanLabels.Where(p => p.LabelInObjectiveFunction == planLabelInObjectiveFunction);
+                    var planLabelQuery = PlanLabels.Where(p => p.LabelInObjectiveFunction == o.PlanLabel);
                     string newLabel = string.Empty;
                     if (planLabelQuery.Count() > 0)
                     {
                         var newPlanLabel = planLabelQuery.First();
                         bool inUse = newPlanLabel.InUse;
-                        if (!inUse) break;
+                        if (!inUse) continue;
                         newLabel = newPlanLabel.Label;
                         if (planLabelQuery.Count() >= 2)
                         {
-                            Message = $"Multiple plans are assigned to {planLabelInObjectiveFunction}. Use {newLabel}.";
+                            Message = $"Multiple plans are assigned to {o.PlanLabel}. Use {newLabel}.";
                         }
                         o.SetPlanLabelInArguments(newLabel);
                     }
-                    else if (!(planLabelInObjectiveFunction == PlanLabelCombinedDose))
+                    else if (!(o.PlanLabel == PlanLabelCombinedDose))
                     {
-                        break;
+                        continue;
                     }
 
                     o.UpdateWeightInArguments();
                     o.SetRoiNameInArguments(r.Name);
 
-                    if (o.PlanLabel == PlanLabelCombinedDose) newLabel = PlanLabelCombinedDose;
-                    var prescriptionQuery = Prescriptions.Where(p => p.PlanLabel == newLabel);
+                    if (o.PlanLabel == PlanLabelCombinedDose)
+                    {
+                        if (!DoesUseCombinedDose) continue;
+                        newLabel = PlanLabelCombinedDose;
+                    }
+
+                    var prescriptionQuery = Prescriptions.Where(p => p.PlanLabel == o.PlanLabel);
                     double scale = 0;
                     if (prescriptionQuery.Count() == 0)
                     {
                         scale = 1.0;
-                        Message = $"Prescription does not exist for {newLabel}";
+                        Message = $"Prescription does not exist for new: {newLabel} and original: {o.PlanLabel}";
                     }
                     else
                     {
