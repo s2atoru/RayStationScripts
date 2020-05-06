@@ -29,9 +29,16 @@
     <InterpreterReference Include="IronPython|2.7-32" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClearObjectiveFunctions.py" />
+    <Compile Include="GetCenterOfRois.py" />
+    <Compile Include="GetPointDose.py" />
+    <Compile Include="GetPointDose_New.py" />
     <Compile Include="Helpers.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MlcLeafShifts.py" />
+    <Compile Include="RecomputeDose.py" />
+    <Compile Include="ScaleDose.py" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RoiFormulaMaker\RoiFormulaMaker.csproj">

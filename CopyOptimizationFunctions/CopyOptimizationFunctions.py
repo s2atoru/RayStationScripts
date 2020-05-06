@@ -22,7 +22,7 @@ dllsPath = dllsPath + r"\Desktop\RayStationScripts\Dlls"
 print(dllsPath)
 sys.path.append(dllsPath)
 
-RayStationScriptsPath = os.environ["USERPROFILE"] + r"\DeskTop\RayStationScripts" + "\\"
+RayStationScriptsPath = os.environ["USERPROFILE"] + r"\Desktop\RayStationScripts" + "\\"
 scriptsPath = RayStationScriptsPath + "Scripts"
 print(scriptsPath)
 sys.path.append(scriptsPath)
@@ -170,7 +170,3 @@ with CompositeAction('Copy Objective Functions'):
                 IsRobust=arg_dict['IsRobust'], RestrictToBeamSet=restrictToBeamSet)
 
         set_function_arguments(f, arg_dict)
-
-
-
-

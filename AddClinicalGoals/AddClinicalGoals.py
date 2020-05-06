@@ -12,21 +12,30 @@ from System.Collections.ObjectModel import ObservableCollection
 RayStationScriptsPath = os.environ["USERPROFILE"] + r"\DeskTop\RayStationScripts" + "\\"
 
 dllsPath = RayStationScriptsPath + "Dlls"
-print(dllsPath)
+print 'DLL path: ', dllsPath
 sys.path.append(dllsPath)
 
-scriptsPath = RayStationScriptsPath + "Scripts"
-print(scriptsPath)
+#scriptsPath = RayStationScriptsPath + "Scripts"
+#print(scriptsPath)
+#sys.path.append(scriptsPath)
+
+RayStationScriptsCommonPath = r"\\10.208.223.10\RayStation\RayStationScripts" + "\\"
+scriptsPath = RayStationScriptsCommonPath + "Scripts"
+print 'Script path: ', scriptsPath
 sys.path.append(scriptsPath)
+
 
 clr.AddReference("ClinicalGoal")
 from ClinicalGoal.Views import MainWindow
 from ClinicalGoal.ViewModels import ClinicalGoalViewModel
 from ClinicalGoal.Models import ClinicalGoal
+from ClinicalGoal.Models import PlanPrescription
 
 from Helpers import GetStructureSet
 from Helpers import GetRoiDetails
+from Helpers import SizeOfIterator
 
+patient = get_current("Patient")
 case = get_current("Case")
 examination = get_current("Examination")
 structureSet = GetStructureSet(case, examination)
@@ -37,18 +46,46 @@ roiDetails = GetRoiDetails(structureSet)
 
 plan = get_current("Plan")
 
-clinicalGoalViewModel = ClinicalGoalViewModel()
-
 dvhCheckerDirectoryPath = r"\\10.208.223.10\Eclipse\DvhChecker"
-clinicalGoalViewModel.DvhCheckerDirectoryPath = dvhCheckerDirectoryPath
+planCheckerDirectoryPath = r"\\10.208.223.10\Eclipse"
 
 structureNames = List[str]()
 for roiName in roiDetails.keys():
     structureNames.Add(roiName)
 
-#structureNames = List[str]({'PTV', 'CTV', 'Rectal outline', 'Bladder outline'})
+#planPrescriptions = List[PlanPrescription]()
+#beamSet = get_current('BeamSet')
+#planPrescription = PlanPrescription()
+#planPrescription.PlanId = beamSet.DicomPlanLabel
+#planPrescription.PrescribedDose = beamSet.Prescription.DosePrescriptions[0].DoseValue
+#planPrescription.NumberOfFractions = beamSet.FractionationPattern.NumberOfFractions
+#planPrescriptions.Add(planPrescription)
 
-clinicalGoalViewModel.StructureNames = ObservableCollection[str](structureNames)
+planPrescriptions = List[PlanPrescription]()
+totalDose = 0
+for beamSet in plan.BeamSets:
+    planPrescription = PlanPrescription()
+    planPrescription.PlanId = beamSet.DicomPlanLabel
+    planPrescription.PrescribedDose = beamSet.Prescription.DosePrescriptions[0].DoseValue
+    totalDose += planPrescription.PrescribedDose
+    planPrescription.NumberOfFractions = beamSet.FractionationPattern.NumberOfFractions
+    planPrescriptions.Add(planPrescription)
+
+if SizeOfIterator(plan.BeamSets) >= 2:
+    planPrescription = PlanPrescription()
+    planPrescription.PlanId = "Combined dose"
+    planPrescription.PrescribedDose = totalDose
+    planPrescription.NumberOfFractions = 1
+    planPrescriptions.Add(planPrescription)
+
+patientId = patient.PatientID
+patientNameDicom = patient.PatientName
+
+clinicalGoalViewModel = ClinicalGoalViewModel(patientId, patientNameDicom, planPrescriptions, structureNames, dvhCheckerDirectoryPath, planCheckerDirectoryPath)
+clinicalGoalViewModel.ClearAllExistingClinicalGoals = True
+
+beamSet = get_current('BeamSet')
+clinicalGoalViewModel.SelectDvhObjectivesViewModel(beamSet.DicomPlanLabel)
 
 mainWindow = MainWindow(clinicalGoalViewModel)
 
@@ -58,15 +95,20 @@ if not clinicalGoalViewModel.CanExecute:
     print 'Canceled'
     sys.exit()
 
-dvhObjectives = clinicalGoalViewModel.DvhObjectives;
-prescribedDose = clinicalGoalViewModel.PrescribedDose;
+dvhObjectivesViewModel = clinicalGoalViewModel.DvhObjectivesViewModels[0]
+dvhObjectives = dvhObjectivesViewModel.DvhObjectives
+prscrivedDose = dvhObjectivesViewModel.PrescribedDose 
+clearAllExistingClinicalGoals = clinicalGoalViewModel.ClearAllExistingClinicalGoals
 
-from Helpers import AddClinicalGoal
+from Helpers import AddClinicalGoal, ClearAllClinicalGoals
 
+if clearAllExistingClinicalGoals:
+    ClearAllClinicalGoals(plan)
+    
 with CompositeAction('Add Clinical Goals'):
     for dvhObjective in dvhObjectives:
         if len(dvhObjective.StructureNameTps) > 0 and dvhObjective.InUse:
-            clinicalGoal = ClinicalGoal(dvhObjective, prescribedDose=prescribedDose)
+            clinicalGoal = ClinicalGoal(dvhObjective, prescribedDose=prscrivedDose)
             print clinicalGoal
             AddClinicalGoal(plan, clinicalGoal)
   # CompositeAction ends   

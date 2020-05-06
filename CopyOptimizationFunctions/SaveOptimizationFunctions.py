@@ -11,33 +11,81 @@ import sys, os, codecs
 import json
 from collections import OrderedDict
 
-dllsPath = os.environ["USERPROFILE"]
-dllsPath = dllsPath + r"\Desktop\RayStationScripts\Dlls"
-print(dllsPath)
+#dllsPath = os.environ["USERPROFILE"]
+#dllsPath = dllsPath + r"\Desktop\RayStationScripts\Dlls"
+#print(dllsPath)
+#sys.path.append(dllsPath)
+
+#RayStationScriptsPath = os.environ["USERPROFILE"] + r"\DeskTop\RayStationScripts" + "\\"
+#scriptsPath = RayStationScriptsPath + "Scripts"
+#print(scriptsPath)
+#sys.path.append(scriptsPath)
+
+#objectiveFunctionsPath = r"\\10.208.223.10\RayStation\RayStationScripts\ObjectiveFunctions"
+
+RayStationScriptsPath = os.environ["USERPROFILE"] + r"\Desktop\RayStationScripts" + "\\"
+dllsPath = RayStationScriptsPath + "Dlls"
+print 'DLL path: ', dllsPath
 sys.path.append(dllsPath)
 
-RayStationScriptsPath = os.environ["USERPROFILE"] + r"\DeskTop\RayStationScripts" + "\\"
-scriptsPath = RayStationScriptsPath + "Scripts"
-print(scriptsPath)
+RayStationScriptsCommonPath = r"\\10.208.223.10\RayStation\RayStationScripts" + "\\"
+scriptsPath = RayStationScriptsCommonPath + "Scripts"
+print 'Script path: ', scriptsPath
 sys.path.append(scriptsPath)
+
+objectiveFunctionsPath = RayStationScriptsCommonPath + "ObjectiveFunctions"
+print 'Objective function path: ', objectiveFunctionsPath
 
 from Helpers import ClearObjectiveFunctions
 from Helpers import GetObjectiveFunctionDescription
 from Helpers import GetPlanLabelForConstituentFunction
 from Helpers import IsCombinedConstituentFunction
 from Helpers import SizeOfIterator
+from Helpers import GetPlanOptimizationForBeamSet
 
 clr.AddReference("OptimizationFunctionCopyManager")
 from OptimizationFunctionCopyManager.Views import SaveWindow
-
-objectiveFunctionsPath = r"\\10.208.223.10\RayStation\RayStationScripts\ObjectiveFunctions"
+from OptimizationFunctionCopyManager.Models import Prescription
 
 case = get_current("Case")
 # Get handles to "Original plan" and "Copy plan".
 original_plan = get_current('Plan')
-original_beamSet = original_plan.BeamSets[0]
-new_plan = get_current('Plan')
-new_beamSets = new_plan.BeamSets
+#original_beamSet = original_plan.BeamSets[0]
+original_beamSet = get_current('BeamSet')
+
+prescription_list = []
+prescriptions = List[Prescription]()
+
+totalDose = 0
+for beamSet in original_plan.BeamSets:
+    prescription = Prescription()
+    prescription.PlanLabel = beamSet.DicomPlanLabel
+    prescription.PrescribedDose = beamSet.Prescription.DosePrescriptions[0].DoseValue
+    prescription.PrescribedDoseInObjectiveFunction = prescription.PrescribedDose
+    totalDose += prescription.PrescribedDose
+    prescriptions.Add(prescription)
+
+    prescription_dict = {}
+    prescription_dict['PlanLabel'] = prescription.PlanLabel
+    prescription_dict['PrescribedDose'] = prescription.PrescribedDose
+    prescription_dict['PrescribedDoseInObjectiveFunction'] = prescription.PrescribedDoseInObjectiveFunction
+    prescription_list.append(prescription_dict)
+
+if SizeOfIterator(original_plan.BeamSets) >= 2:
+    prescription = Prescription()
+    prescription.PlanLabel = "Combined dose"
+    prescription.PrescribedDose = totalDose
+    prescription.PrescribedDoseInObjectiveFunction = prescription.PrescribedDose
+    prescriptions.Add(prescription)
+
+    prescription_dict = {}
+    prescription_dict['PlanLabel'] = prescription.PlanLabel
+    prescription_dict['PrescribedDose'] = prescription.PrescribedDose
+    prescription_dict['PrescribedDoseInObjectiveFunction'] = prescription.PrescribedDoseInObjectiveFunction
+    prescription_list.append(prescription_dict)
+
+#new_plan = get_current('Plan')
+#new_beamSets = new_plan.BeamSets
 
 # Define a function that will retrieve the necessary information
 # and put it in a dictionary.
@@ -92,7 +140,8 @@ with CompositeAction('Copy Objective Functions'):
     # Loop over all objectives and constraints in the original plan
     # to retrieve information. It is assumed that the original plan
     # only contains one beam set.
-    po_original = original_plan.PlanOptimizations[0]
+    #po_original = original_plan.PlanOptimizations[0]
+    po_original = GetPlanOptimizationForBeamSet(original_plan.PlanOptimizations, original_beamSet)
     arguments = [] # List to hold arg_dicts of all functions.
     # Get arguments from objective functions.
     if po_original.Objective != None:
@@ -118,10 +167,12 @@ with CompositeAction('Copy Objective Functions'):
         arg_dict['IsCombined'] = IsCombinedConstituentFunction(original_beamSet, po_original, cf)
         arguments.append(arg_dict)
 
-    prescribedDose = 6500
+    prescribedDose = original_beamSet.Prescription.DosePrescriptions[0].DoseValue
     objectiveFunctions = OrderedDict()
-    objectiveFunctions['PrescribedDose'] = prescribedDose
+    #objectiveFunctions['PrescribedDose'] = prescribedDose
     objectiveFunctions['Arguments'] = arguments
+
+    objectiveFunctions['Prescriptions'] = prescription_list
     
     from StringIO import StringIO
     objectiveFunctionsJson = StringIO()
@@ -148,21 +199,3 @@ with CompositeAction('Copy Objective Functions'):
     #for arg_dict in objectiveFunctions['arguments']:
     #    description = GetObjectiveFunctionDescription(arg_dict)
     #    print arg_dict['IsCombined'], arg_dict['PlanLabel'], arg_dict['FunctionType'], description
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

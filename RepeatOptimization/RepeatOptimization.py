@@ -56,13 +56,13 @@ for i, f in enumerate(objectiveConstituentFunctions):
     optimizationFunctions.Add(optimizationFunction)
 
 for optimizationFunction in optimizationFunctions:
-    print optimizationFunction.Order, optimizationFunction
+    print optimizationFunction.Order, optimizationFunction, optimizationFunction.IsBoosted 
 
 mainWindow = MainWindow(repetitionParameters, optimizationFunctions)
 mainWindow.ShowDialog()
 
 for optimizationFunction in optimizationFunctions:
-    print optimizationFunction.Order, optimizationFunction.RoiName, optimizationFunction, optimizationFunction.Weight, optimizationFunction.BoostedWeight
+    print optimizationFunction.Order, optimizationFunction.RoiName, optimizationFunction, optimizationFunction.Weight, optimizationFunction.IsBoosted, optimizationFunction.BoostedWeight
 
 #print 'Exit'
 #sys.exit()
@@ -84,7 +84,7 @@ if (canExecute):
     if(resetBeforeStartingOptimization):
         MessageBox.Show("Reset Optimization")
         #Execute Reset Optimization
-        planOptimizatoin.ResetOptimization()
+        planOptimization.ResetOptimization()
         
     UpdateObjectiveConstituentFunctionWeights(objectiveConstituentFunctions, optimizationFunctions)
                 
@@ -99,7 +99,7 @@ if (canExecute):
         
 
         # Execute Optimization
-        planOptimizatoin.RunOptimization()
+        planOptimization.RunOptimization()
 
         if(i+1 == numberOfRepetitionTimes and scaleDoseAfterLastIteration):
             print "Scale dose after last iteration {0}".format(i+1)
@@ -111,4 +111,3 @@ if (canExecute):
             #Execute Scale dose
             ScaleDoseBeamSets(plan, beamSet)
 pass
-

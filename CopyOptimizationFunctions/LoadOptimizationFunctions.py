@@ -11,33 +11,49 @@ import sys, os, codecs
 import json
 from collections import OrderedDict
 
-dllsPath = os.environ["USERPROFILE"]
-dllsPath = dllsPath + r"\Desktop\RayStationScripts\Dlls"
-print(dllsPath)
+#dllsPath = os.environ["USERPROFILE"]
+#dllsPath = dllsPath + r"\Desktop\RayStationScripts\Dlls"
+#print(dllsPath)
+#sys.path.append(dllsPath)
+
+#RayStationScriptsPath = os.environ["USERPROFILE"] + r"\DeskTop\RayStationScripts" + "\\"
+#scriptsPath = RayStationScriptsPath + "Scripts"
+#print(scriptsPath)
+#sys.path.append(scriptsPath)
+
+#objectiveFunctionsPath = r"\\10.208.223.10\RayStation\RayStationScripts\ObjectiveFunctions"
+
+RayStationScriptsPath = os.environ["USERPROFILE"] + r"\Desktop\RayStationScripts" + "\\"
+dllsPath = RayStationScriptsPath + "Dlls"
+print 'DLL path: ', dllsPath
 sys.path.append(dllsPath)
 
-RayStationScriptsPath = os.environ["USERPROFILE"] + r"\DeskTop\RayStationScripts" + "\\"
-scriptsPath = RayStationScriptsPath + "Scripts"
-print(scriptsPath)
+RayStationScriptsCommonPath = r"\\10.208.223.10\RayStation\RayStationScripts" + "\\"
+scriptsPath = RayStationScriptsCommonPath + "Scripts"
+print 'Script path: ', scriptsPath
 sys.path.append(scriptsPath)
 
+objectiveFunctionsPath = RayStationScriptsCommonPath + "ObjectiveFunctions"
+
+print 'Objective function path: ', objectiveFunctionsPath
 from Helpers import ClearObjectiveFunctions
 from Helpers import GetObjectiveFunctionDescription
 from Helpers import GetPlanLabelForConstituentFunction
 from Helpers import IsCombinedConstituentFunction
 from Helpers import SizeOfIterator
+from Helpers import GetPlanOptimizationForBeamSet
 
 clr.AddReference("OptimizationFunctionCopyManager")
 from OptimizationFunctionCopyManager.ViewModels import LoadObjectiveFunctionsViewModel
 from OptimizationFunctionCopyManager.Views import LoadWindow
 from OptimizationFunctionCopyManager.Models import Roi
-
-objectiveFunctionsPath = r"\\10.208.223.10\RayStation\RayStationScripts\ObjectiveFunctions"
+from OptimizationFunctionCopyManager.Models import PlanLabel
 
 case = get_current("Case")
 # Get handles to "Original plan" and "Copy plan".
 plan = get_current('Plan')
 beamSets = plan.BeamSets
+beamSet = get_current('BeamSet')
 
 from Helpers import GetStructureSet, GetRoiDetails
 examination = get_current("Examination")
@@ -49,9 +65,30 @@ for key, value in roiDetails.items():
     if value['HasContours']:
         rois.Add(Roi(key))
     
-planLabels = List[str]()
-for bs in beamSets:
-    planLabels.Add(bs.DicomPlanLabel)
+#planLabels = List[str]()
+planLabels = List[PlanLabel]()
+
+# Add optimization functions to the new plan.
+#po = plan.PlanOptimizations[0]
+po = GetPlanOptimizationForBeamSet(plan.PlanOptimizations, beamSet)
+if SizeOfIterator(po.OptimizedBeamSets) == 2:
+    hasMultipleBeamSets = True
+    totalDose = 0
+    for bs in beamSets:
+        #planLabels.Add(bs.DicomPlanLabel)
+        prescribedDose = bs.Prescription.DosePrescriptions[0].DoseValue
+        planLabel = PlanLabel(bs.DicomPlanLabel,prescribedDose)
+        totalDose += prescribedDose
+        planLabels.Add(planLabel)
+    planLabel = PlanLabel('Combined dose', totalDose)
+    planLabels.Add(planLabel)
+        
+else:
+    hasMultipleBeamSets = False
+    #planLabels.Add(beamSet.DicomPlanLabel)
+    prescribedDose = beamSet.Prescription.DosePrescriptions[0].DoseValue
+    planLabel = PlanLabel(beamSet.DicomPlanLabel,prescribedDose)
+    planLabels.Add(planLabel)
 
 loadObjectiveFunctionsViewModel = LoadObjectiveFunctionsViewModel(rois, planLabels, objectiveFunctionsPath)
 #loadWindow = LoadWindow(rois, planLabels, objectiveFunctionsPath)
@@ -116,13 +153,6 @@ if loadObjectiveFunctionsViewModel.DoesClearObjectiveFunctions:
 
 with CompositeAction('Load Objective Functions'):
 
-    # Add optimization functions to the new plan.
-    po = plan.PlanOptimizations[0]
-    if SizeOfIterator(po.OptimizedBeamSets) == 2:
-        hasMultipleBeamSets = True
-    else:
-        hasMultipleBeamSets = False
-
     for r in rois:
         argumentsList = r.ObjectiveFunctionArguments
         for a in argumentsList:
@@ -147,15 +177,3 @@ with CompositeAction('Load Objective Functions'):
                         IsRobust=arg_dict['IsRobust'], RestrictToBeamSet=restrictToBeamSet)
 
             set_function_arguments(f, arg_dict)
-
-
-
-
-
-
-
-
-
-
-
-

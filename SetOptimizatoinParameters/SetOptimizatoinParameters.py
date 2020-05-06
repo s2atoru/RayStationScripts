@@ -27,6 +27,7 @@ iterationsInPreparationsPhase = 20
 computeFinalDose = True
 constrainMaxMu = True
 maxMuPerFxPerBeam = 250
+doseGrid = 2
 
 settingParameters = SettingParameters()
 
@@ -35,6 +36,7 @@ settingParameters.IterationsInPreparationsPhase = iterationsInPreparationsPhase
 settingParameters.ComputeFinalDose = computeFinalDose
 settingParameters.MaxMuPerFxPerBeam = maxMuPerFxPerBeam
 settingParameters.ConstrainMaxMu = constrainMaxMu 
+settingParameters.DoseGrid = doseGrid
 
 #print("{0}, {1}, {2}, {3}, {4}".format(settingParameters.MaxNumberOfIterations, settingParameters.IterationsInPreparationsPhase, settingParameters.ComputeFinalDose, settingParameters.IsValid, settingParameters.CanSetParameters))
 
@@ -46,6 +48,7 @@ iterationsInPreparationsPhase = settingParameters.IterationsInPreparationsPhase
 computeFinalDose = settingParameters.ComputeFinalDose
 constrainMaxMu = settingParameters.ConstrainMaxMu
 maxMuPerFxPerBeam = settingParameters.MaxMuPerFxPerBeam
+doseGrid = settingParameters.DoseGrid
 
 canSetParameters = settingParameters.CanSetParameters
 isValid = settingParameters.IsValid
@@ -95,12 +98,14 @@ def SetOptimizatonParameters():
                     SetMaxArcMu(beamSetting, maxMuPerFxPerBeam)
                 else:
                     SetMaxArcMu(beamSetting, None)
-                
+
+from Helpers import SetDoseGridResolution
 with CompositeAction('Plan optimization settings ({})'.format(plan.Name)):
     if(canSetParameters):
         #print("Perform Optimization settings")
         SetOptimizatonParameters()
 
+        SetDoseGridResolution(plan, doseGrid)
+        
     # CompositeAction ends 
 #pass
-

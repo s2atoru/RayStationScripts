@@ -718,6 +718,16 @@ def ClearObjectiveFunctions(plan):
     for of in planOptimization.Objective.ConstituentFunctions:
         of.DeleteFunction()
 
+def ClearBeamSetObjectiveFunction(plan, beamSet):
+    planOptimization = GetPlanOptimizationForBeamSet(plan.PlanOptimizations, beamSet)
+    for of in planOptimization.Constraints:
+        of.DeleteFunction()
+    if planOptimization.Objective == None:
+        return
+    for of in planOptimization.Objective.ConstituentFunctions:
+        of.DeleteFunction()
+
+
 def GetObjectiveFunctionDescription(arg_dict):
     if arg_dict['FunctionType'] == 'DoseFallOff':
         description = 'Dose Fall-Off [H]{0:.0f} cGy [L]{1:.0f} cGy, Low dose distance {2:.2f} cm'.format(arg_dict['HighDoseLevel'], arg_dict['LowDoseLevel'], arg_dict['LowDoseDistance'])
@@ -748,7 +758,7 @@ def IsCombinedConstituentFunction(currentBeamSet, planOptimization, constituentF
     else:
         return False
 
-def CheckDvhIndex(objective, prescribedDose=0, roiDetails=None, planDose=None, numberOfFractions = 1):
+def CheckDvhIndex(objective, prescribedDose=0, roiDetails=None, planDose=None, numberOfFractions = 1, slack = 1.e-6, isCheckNormalized = False):
     """DVH index for objective.
 
     Calculates DVH index and set objective.Value and objective.EvalResut
@@ -758,7 +768,9 @@ def CheckDvhIndex(objective, prescribedDose=0, roiDetails=None, planDose=None, n
         prescribedDose (float): Prescribed dose in cGy.
         roiDetails (dictionary): Dictionary of ROIs. roiDetails['roiName']['Volume'] should give the volume of the ROI.
         planDose (plan dose RayStation): Plan dose in RayStation.
-        numberOfFractions: Number of Fractions for evaluation
+        numberOfFractions: Number of Fractions for evaluation.
+        slack (float): Slack for check.
+        isCheckNormalized: If true, normalization is used for check.
 
     Returns:
         float: DVH index. -1 if ROI is not available.
@@ -846,22 +858,28 @@ def CheckDvhIndex(objective, prescribedDose=0, roiDetails=None, planDose=None, n
     objective.Value = value
 
     normalization = 1.0
-    if(targetType == DvhTargetType.Dose):
-        if(targetUnit == DvhPresentationType.Rel):
-            normalization = 100.0
-        elif(targetUnit == DvhPresentationType.Abs):
-            normalization = prescribedDose
-    elif(targetType == DvhTargetType.Volume):
-        if(targetUnit == DvhPresentationType.Rel):
-            normalization = 100.0
-        elif(targetUnit == DvhPresentationType.Abs):
-            normalization = roiVolume
-        
+    if isCheckNormalized:
+        if(targetType == DvhTargetType.Dose):
+            if(targetUnit == DvhPresentationType.Rel):
+                normalization = 100.0
+            elif(targetUnit == DvhPresentationType.Abs):
+                normalization = prescribedDose
+        elif(targetType == DvhTargetType.Volume):
+            if(targetUnit == DvhPresentationType.Rel):
+                normalization = 100.0
+            elif(targetUnit == DvhPresentationType.Abs):
+                normalization = roiVolume
+    
+    doseSlack = 1.e-2
+    if (targetType == DvhTargetType.Dose and targetUnit == DvhPresentationType.Abs):
+        #Dose in DvhObjective is in Gy
+        #Dose in RayStation is in cGy
+        slack = doseSlack*slack
+
     target = objective.TargetValue
     acceptableLimit = objective.AcceptableLimitValue
     isPass = False
     isAcceptable = False
-    slack = 1.e-6
     if(objectiveType == DvhObjectiveType.Upper 
        or objectiveType == DvhObjectiveType.Max
        or objectiveType == DvhObjectiveType.MeanUpper):
@@ -921,7 +939,7 @@ def CheckLowerLimitWithNormalization(value, lowerLimit, normalization=1, slack=1
         bool: True if value is no less than lowerLimit with slack
 
     """
-
+    
     if(lowerLimit - value <= normalization*slack):
         return True
     else:
@@ -972,4 +990,3 @@ if __name__ == '__main__':
     #structureName = 'zTestBladder_03_UD'
     #baseStructureName = 'Bladder'
     #MakeMarginAddedRoi(case, examination, structureName, baseStructureName, 0.3, isDerived=False)
-
