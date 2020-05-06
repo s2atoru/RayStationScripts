@@ -31,8 +31,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoiNameReplacer", "RoiNameR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvvmCommon", "MvvmCommon\MvvmCommon\MvvmCommon.csproj", "{8FAA44F1-7D9D-452C-81D7-33A09E354B92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DvhChecker", "DvhChecker\DvhChecker\DvhChecker.csproj", "{210B4FF8-D390-477E-9A12-72EE29CB5374}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrainDoseIndices", "BrainDoseIndices\BrainDoseIndices.csproj", "{BFB0F6F8-8CD4-423C-AE4B-707FB0CE5561}"
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "GetGradientIndices", "GetGradientIndices\GetGradientIndices.pyproj", "{D64C3D5E-F6A1-4AC0-8083-C15619EE2A28}"
@@ -55,6 +53,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptimizationFunctionCopyManager", "OptimizationFunctionCopyManager\OptimizationFunctionCopyManager.csproj", "{F4929B91-7C42-44B3-8BFC-54C97E62F28A}"
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "OptimizeIsocenterForBrainSrt", "OptimizeIsocenterForBrainSrt\OptimizeIsocenterForBrainSrt.pyproj", "{E867606A-4EE0-40D0-A4D9-3782C03C0AB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DvhChecker", "DvhChecker\DvhChecker.csproj", "{210B4FF8-D390-477E-9A12-72EE29CB5374}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -152,14 +152,6 @@ Global
 		{8FAA44F1-7D9D-452C-81D7-33A09E354B92}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8FAA44F1-7D9D-452C-81D7-33A09E354B92}.Release|x64.ActiveCfg = Release|Any CPU
 		{8FAA44F1-7D9D-452C-81D7-33A09E354B92}.Release|x64.Build.0 = Release|Any CPU
-		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Debug|x64.ActiveCfg = Debug|x64
-		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Debug|x64.Build.0 = Debug|x64
-		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Release|Any CPU.Build.0 = Release|Any CPU
-		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Release|x64.ActiveCfg = Release|x64
-		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Release|x64.Build.0 = Release|x64
 		{BFB0F6F8-8CD4-423C-AE4B-707FB0CE5561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BFB0F6F8-8CD4-423C-AE4B-707FB0CE5561}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFB0F6F8-8CD4-423C-AE4B-707FB0CE5561}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -212,6 +204,14 @@ Global
 		{E867606A-4EE0-40D0-A4D9-3782C03C0AB6}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{E867606A-4EE0-40D0-A4D9-3782C03C0AB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E867606A-4EE0-40D0-A4D9-3782C03C0AB6}.Release|x64.ActiveCfg = Release|Any CPU
+		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Debug|x64.ActiveCfg = Debug|x64
+		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Debug|x64.Build.0 = Debug|x64
+		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Release|Any CPU.Build.0 = Release|Any CPU
+		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Release|x64.ActiveCfg = Release|x64
+		{210B4FF8-D390-477E-9A12-72EE29CB5374}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
