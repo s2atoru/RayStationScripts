@@ -52,7 +52,7 @@
             </StackPanel>
             <CheckBox Content="Synchronize Structure Name (TPS)" IsChecked="{Binding IsStructureNameTpsSynchronized}"/>
             <Button Command="{Binding SetDoseUnitToAbsCommand}" Content="Set Dose to Abs" Width="120" HorizontalAlignment="Left"/>
-            <DataGrid ItemsSource="{Binding DvhObjectives}" AutoGenerateColumns="False" CanUserAddRows="False" FontSize="12" MaxHeight="700">
+            <DataGrid ItemsSource="{Binding DvhObjectives}" AutoGenerateColumns="False" CanUserAddRows="False" FontSize="12" MaxHeight="500">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn IsReadOnly="True" Header="In Use">
                         <DataGridTemplateColumn.CellTemplate>
@@ -124,7 +124,7 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn
                     Header="Goal"
-                    Binding="{Binding TargetValue, Mode=OneWay}"
+                    Binding="{Binding TargetValue, StringFormat={}{0:0.00}, Mode=OneWay}"
                     IsReadOnly="True">
                     </DataGridTextColumn>
                     <DataGridTextColumn
@@ -133,8 +133,8 @@
                     IsReadOnly="True">
                     </DataGridTextColumn>
                     <DataGridTextColumn
-                    Header="Acceptable Limit"
-                    Binding="{Binding AcceptableLimitValue, Mode=OneTime}"
+                    Header="Acceptable"
+                    Binding="{Binding AcceptableLimitValue, StringFormat={}{0:0.00},Mode=OneTime}"
                     IsReadOnly="True">
                     </DataGridTextColumn>
                     <DataGridTextColumn
