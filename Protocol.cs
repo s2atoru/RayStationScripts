@@ -27,7 +27,7 @@ namespace Juntendo.MedPhys
         public static List<Protocol> GetProtocolsFromFolder(string folderPath)
         {
             var protocols = new List<Protocol>();
-            var filePaths = Directory.GetFiles(folderPath);
+            var filePaths = Directory.GetFiles(folderPath, "*.csv");
 
             foreach (string filePath in filePaths)
             {

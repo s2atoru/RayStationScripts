@@ -318,7 +318,7 @@ namespace Juntendo.MedPhys
 
                 if (string.IsNullOrEmpty(protocolId))
                 {
-                    throw new InvalidOperationException("Protocol ID is empty");
+                    throw new InvalidOperationException("Protocol ID is empty, file: " + filePath);
                 }
                 if (string.IsNullOrEmpty(originalProtocolId))
                 {
