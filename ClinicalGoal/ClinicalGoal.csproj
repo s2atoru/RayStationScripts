@@ -129,7 +129,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DvhChecker\DvhChecker.csproj">
+    <ProjectReference Include="..\DvhCheckerCore\DvhChecker.csproj">
       <Project>{210b4ff8-d390-477e-9a12-72ee29cb5374}</Project>
       <Name>DvhChecker</Name>
     </ProjectReference>

@@ -54,7 +54,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptimizationFunctionCopyMan
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "OptimizeIsocenterForBrainSrt", "OptimizeIsocenterForBrainSrt\OptimizeIsocenterForBrainSrt.pyproj", "{E867606A-4EE0-40D0-A4D9-3782C03C0AB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DvhChecker", "DvhChecker\DvhChecker.csproj", "{210B4FF8-D390-477E-9A12-72EE29CB5374}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DvhChecker", "DvhCheckerCore\DvhChecker.csproj", "{210B4FF8-D390-477E-9A12-72EE29CB5374}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
