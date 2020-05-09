@@ -266,7 +266,7 @@ namespace ClinicalGoal.ViewModels
                 jObject["ProtocolId"] = dvhObjectivesViewModel.ProtocolId;
                 jObject["DvhObjectives"] = dvhObjectivesJArray;
                 jObject["MaxDose"] = dvhObjectivesViewModel.MaxDose;
-                jObject[" NumberOfFractions"] = dvhObjectivesViewModel.NumberOfFractions;
+                jObject["NumberOfFractions"] = dvhObjectivesViewModel.NumberOfFractions;
 
                 string json = jObject.ToString(Formatting.Indented);
                 //string json = JsonConvert.SerializeObject(dvhObjectivesInUse.ToList(), Formatting.Indented);
