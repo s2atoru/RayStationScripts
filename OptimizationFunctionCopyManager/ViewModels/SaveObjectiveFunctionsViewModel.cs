@@ -3,8 +3,10 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Prism.Commands;
 using Prism.Mvvm;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 
 namespace OptimizationFunctionCopyManager.ViewModels
 {
@@ -58,15 +60,23 @@ namespace OptimizationFunctionCopyManager.ViewModels
 
             var objectiveFunctionsJObject = JObject.Parse(objectiveFunctionsJson);
             var objectiveFunctionArguments = (JArray)objectiveFunctionsJObject["Arguments"];
-
-            var prescriptionsJArray = (JArray)objectiveFunctionsJObject["Prescriptions"];
-            Prescriptions = prescriptionsJArray.ToObject<ObservableCollection<Models.Prescription>>();
-
+            
             ObjectiveFunctions.Clear();
             foreach (var a in objectiveFunctionArguments)
             {
                 var jObject = JObject.Parse(a.ToString());
                 ObjectiveFunctions.Add(new Models.ObjectiveFunction(jObject));
+            }
+
+            var prescriptionsJArray = (JArray)objectiveFunctionsJObject["Prescriptions"];
+            var PrescriptionsAll = prescriptionsJArray.ToObject<List<Models.Prescription>>();
+            Prescriptions.Clear();
+            foreach (var p in PrescriptionsAll)
+            {
+                if (ObjectiveFunctions.Where( o => (o.PlanLabel == p.PlanLabel)).Count() > 0)
+                {
+                    Prescriptions.Add(p);
+                }
             }
 
             OkCommand = new DelegateCommand(() => { CanExecute = true; });
