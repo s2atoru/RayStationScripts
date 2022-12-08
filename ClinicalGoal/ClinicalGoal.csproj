@@ -119,7 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.2</Version>
+      <Version>13.0.2</Version>
     </PackageReference>
     <PackageReference Include="Prism.Wpf">
       <Version>7.1.0.431</Version>
